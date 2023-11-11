@@ -9,6 +9,14 @@ admin_router
 .post(admin_controller.postAdminRoute);
 
 admin_router
+.route('/adminLogout')
+.get(admin_controller.getAdminLogout)
+
+admin_router
+.route('/dashboard')
+.get(admin_controller.getAdminDashboard)
+
+admin_router
 .route("/categories")
 .get(category.getCategories);
 
