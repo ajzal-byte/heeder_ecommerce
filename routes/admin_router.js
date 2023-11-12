@@ -20,4 +20,10 @@ admin_router
 .route("/categories")
 .get(category.getCategories);
 
+admin_router
+.route("/addCategories")
+.post(category.addCategories);
+
+
+
 module.exports = admin_router

@@ -13,6 +13,7 @@ module.exports.getAdminRoute = async(req, res)=>{
 
 //checking entered deatils and database deatils of admin
 module.exports.postAdminRoute = async (req, res) => {
+  
   const data = await adminCollection.findOne({ email: req.body.email });
   // const users = await userCollection.find({});
   if (data) {
