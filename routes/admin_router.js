@@ -32,6 +32,14 @@ admin_router
 .route('/updateCategories/:category_id')
 .post(category.updateCategories);
 
+admin_router
+.route('/blockCategories/:category_id')
+.get(category.blockCategories);
+
+admin_router
+.route('/unblockCategories/:category_id')
+.get(category.unblockCategories);
+
 
 
 

@@ -214,7 +214,7 @@
                                 <div class="d-grid">
                                     <button type="submit" class="btn btn-primary">Create category</button>
                                 </div>
-                            </form>
+                            </form> 
                         </div>
                         <div class="col-md-9">
                             <div class="table-responsive">
@@ -228,7 +228,7 @@
                                         </tr>
                                     </thead>
 
-                                    <% if (message) { %>
+                                    <% if (locals.message) { %>
                                         <div class="alert alert-success" role="alert">
                                           <%= message %>
                                         </div>
@@ -242,9 +242,9 @@
                                             <td><%= category.isListed %></td>
                                             <td>  <a href="/admin/editCategories/<%= category._id %>" class="btn btn-dark"> Edit </a> 
                                                 <% if(category.isListed === "Active") { %>
-                                                <button class="btn btn-danger mx-3">Block</button>
+                                                <a class="btn btn-danger mx-3" href="/admin/blockCategories/<%= category._id %>" >Block</a>
                                                 <% } else { %>
-                                                <button class="btn btn-success mx-3">Unblock</button> 
+                                                <a class="btn btn-success mx-3" href="/admin/unblockCategories/<%= category._id %> ">Unblock</a> 
                                                 <% } %>
                                             </td>
                                         </tr>
