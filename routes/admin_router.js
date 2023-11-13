@@ -24,6 +24,18 @@ admin_router
 .route("/addCategories")
 .post(category.addCategories);
 
+admin_router
+.route('/editCategories/:category_id')
+.get(category.editCategories)
+
+admin_router
+.route('/updateCategories/:category_id')
+.post(category.updateCategories);
+
+
+
+
+
 
 
 module.exports = admin_router
