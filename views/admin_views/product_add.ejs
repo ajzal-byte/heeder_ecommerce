@@ -2,10 +2,10 @@
 <html lang="en">
 
 
-<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-categories.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:21 GMT -->
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-form-product-1.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:31 GMT -->
 <head>
     <meta charset="utf-8">
-    <title>Category</title>
+    <title>Add Product</title>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -37,13 +37,13 @@
                         <span class="text">Dashboard</span>
                     </a>
                 </li>
-                <li class="menu-item has-submenu">
+                <li class="menu-item has-submenu active">
                     <a class="menu-link" href="page-products-list.html"> <i class="icon material-icons md-shopping_bag"></i>
                         <span class="text">Products</span>
                     </a>
                     <div class="submenu">
                         <a href="/admin/products">Product View</a>
-                        <a href="/admin/addProduct">Add Product</a>
+                        <a href="/admin/addProduct" class="active">Add Product</a>
                     </div>
                 </li>
                 <li class="menu-item has-submenu">
@@ -56,7 +56,7 @@
                         <a href="page-orders-detail.html">Order detail</a>
                     </div>
                 </li>
-                <li class="menu-item active">
+                <li class="menu-item">
                     <a class="menu-link" href="/admin/categories"> <i class="icon material-icons md-local_offer"></i>
                         <span class="text">Categories</span>
                     </a>
@@ -176,84 +176,156 @@
                             <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
                             <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help center</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item text-danger" href="/admin/adminLogout"><i class="material-icons md-exit_to_app"></i>Logout</a>
+                            <a class="dropdown-item text-danger" href="#"><i class="material-icons md-exit_to_app"></i>Logout</a>
                         </div>
                     </li>
                 </ul>
             </div>
         </header>
         <section class="content-main">
-            <div class="content-header">
-                <div>
-                    <h2 class="content-title card-title">Categories </h2>
-                    <p>Add, edit or block a category</p>
+            <div class="row">
+                <div class="col-9">
+                    <div class="content-header">
+                        <h2 class="content-title">Add New Product</h2>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4>Basic</h4>
+                            <% if (locals.message) { %>
+                                <div class="alert alert-success" role="alert">
+                                  <%= message %>
+                                </div>
+                              <% } %>
+                        </div>
+                        <div class="card-body">
+                            <form action="/admin/postAddProduct" method="post" enctype="multipart/form-data">
+                                <div class="mb-4">
+                                    <label for="product_name" class="form-label">Product Name</label>
+                                    <input type="text" placeholder="Type here" class="form-control" name="product_name" id="product_name">
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">Full description</label>
+                                    <textarea placeholder="Type here" class="form-control" name="product_desc" rows="4"></textarea>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="mb-4 ">
+                                            <label class="form-label">Brand</label>
+                                            <div class="row gx-2">
+                                                <input placeholder="Type Here" type="text" name="product_brand" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+                                            <label class="form-label">Category</label>
+                                            <div class="row gx-2">
+                                                <select class="form-select" name="product_cat">
+                                                  <% categories.reverse().forEach(category => { %>
+                                                    <% if(category.isListed === "Active") { %>
+                                                    <option><%= category.categoryName %> </option>
+                                                  <% } %>
+                                                  <% }) %>
+                                                </select>
+                                            </div>                                              
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="mb-4 ">
+                                            <label class="form-label">Colour</label>
+                                            <div class="row gx-2">
+                                                <input placeholder="Type Here" type="text" class="form-control" name="product_colour">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+                                            <label class="form-label">Form Factor</label>
+                                            <div class="row gx-2">
+                                                <select class="form-select" name="product_factor">
+                                                    <option> Over-ear </option>
+                                                    <option> On-ear </option>
+                                                    <option> In-ear </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+                                            <label class="form-label">Connectivity</label>
+                                            <div class="row gx-2">
+                                                <select class="form-select" name="product_connect">
+                                                    <option> Wireless </option>
+                                                    <option> Wired </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="mb-4 ">
+                                            <label class="form-label">Stock</label>
+                                            <div class="row gx-2">
+                                                <input placeholder="Type Here" type="number" class="form-control" name="product_stock">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+                                            <label class="form-label">Status</label>
+                                            <div class="row gx-2">
+                                                <select class="form-select" name="product_status">
+                                                    <option> Active </option>
+                                                    <option> Inactive </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+                                            <label class="form-label">Regular price</label>
+                                            <div class="row gx-2">
+                                                <input placeholder="₹" type="text" class="form-control" name="product_reg_price">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+                                            <label class="form-label">Sale price</label>
+                                            <input placeholder="₹" type="text" class="form-control" name="product_sale_price">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <button type="submit" class="btn btn-md rounded font-sm hover-up ms-auto">Publish</button>
+                                </div>
+                            </div>
+                            </div> <!-- card end// -->
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <h4>Media</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="input-upload">
+                                            <img src="/admin_assets/imgs/theme/upload.svg" alt="">
+                                            <input class="form-control" type="file" name="productImages" multiple>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </form>
+                    </div> <!-- card end// -->
                 </div>
             </div>
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <form action="/admin/addCategories", method="post">
-                                <!-- <div class="mb-4"> -->
-                                    <!-- <label for="product_id" class="form-label">#ID</label> -->
-                                    <!-- <input type="text" placeholder="Type here" class="form-control" id="product_id" name="cat_id"/> -->
-                                <!-- </div> -->
-                                <div class="mb-4">
-                                    <label for="product_name" class="form-label">Name</label>
-                                    <input type="text" placeholder="Type here" class="form-control" id="product_name" name="cat_name" required/>
-                                </div>
-                                <div class="mb-4">
-                                    <label class="form-label">Status</label>
-                                    <select class="form-select" name="cat_status">
-                                        <option>Active</option>
-                                        <option>Inactive</option>
-                                    </select>
-                                </div>
-                                <div class="d-grid">
-                                    <button type="submit" class="btn btn-primary">Create category</button>
-                                </div>
-                            </form> 
-                        </div>
-                        <div class="col-md-9">
-                            <div class="table-responsive">
-                                <table class="table table-hover" id="category">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Name</th>
-                                            <th>Status</th>
-                                            <th class=>Action</th>
-                                        </tr>
-                                    </thead>
-
-                                    <% if (locals.message) { %>
-                                        <div class="alert alert-success" role="alert">
-                                          <%= message %>
-                                        </div>
-                                      <% } %>
-                                        
-                                    <tbody>
-                                        <% categories.reverse().forEach(category => { %>
-                                        <tr> 
-                                            <td><%= category._id %></td>
-                                            <td><%= category.categoryName %></td>
-                                            <td><%= category.isListed %></td>
-                                            <td>  <a href="/admin/editCategories/<%= category._id %>" class="btn btn-dark"> Edit </a> 
-                                                <% if(category.isListed === "Active") { %>
-                                                <a class="btn btn-danger mx-3" href="/admin/blockCategories/<%= category._id %>" >Block</a>
-                                                <% } else { %>
-                                                <a class="btn btn-success mx-3" href="/admin/unblockCategories/<%= category._id %> ">Unblock</a> 
-                                                <% } %>
-                                            </td>
-                                        </tr>
-                                        <% }) %>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div> <!-- .col// -->
-                    </div> <!-- .row // -->
-                </div> <!-- card body .// -->
-            </div> <!-- card .// -->
         </section> <!-- content-main end// -->
         <footer class="main-footer font-xs">
             <div class="row pb-30 pt-15">
@@ -275,22 +347,10 @@
     <script src="/admin_assets/js/vendors/select2.min.js"></script>
     <script src="/admin_assets/js/vendors/perfect-scrollbar.js"></script>
     <script src="/admin_assets/js/vendors/jquery.fullscreen.min.js"></script>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-       <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-       <script>
-          $(document).ready(function () {
-              new DataTable('#category', {
-                  order: [[0, 'desc']] 
-              });
-          });
-          </script>
-
     <!-- Main Script -->
     <script src="/admin_assets/js/main.js" type="text/javascript"></script>
 </body>
 
 
-<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-categories.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:21 GMT -->
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-form-product-1.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:32 GMT -->
 </html>
