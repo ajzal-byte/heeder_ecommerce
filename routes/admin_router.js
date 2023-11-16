@@ -63,4 +63,12 @@ admin_router
 .route('/unblockProduct/:product_id')
 .get(products.unblockProduct);
 
+admin_router
+.route('/editProduct/:product_id')
+.get(products.editProduct);
+
+admin_router
+.route('/updateProduct/:product_id')
+.post(products.updateProduct);
+
 module.exports = admin_router

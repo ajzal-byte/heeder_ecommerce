@@ -42,8 +42,8 @@
                         <span class="text">Products</span>
                     </a>
                     <div class="submenu">
-                        <a href="/admin/products">Product View</a>
-                        <a href="/admin/addProduct" class="active">Add Product</a>
+                        <a href="/admin/products" class="active">Product View</a>
+                        <a href="/admin/addProduct" >Add Product</a>
                     </div>
                 </li>
                 <li class="menu-item has-submenu">
@@ -186,7 +186,7 @@
             <div class="row">
                 <div class="col-9">
                     <div class="content-header">
-                        <h2 class="content-title">Add New Product</h2>
+                        <h2 class="content-title">Edit Product</h2>
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -200,21 +200,21 @@
                               <% } %>
                         </div>
                         <div class="card-body">
-                            <form action="/admin/postAddProduct" method="post" enctype="multipart/form-data">
+                            <form action="/admin/updateProduct/<%= product_edit._id %>" method="post" >
                                 <div class="mb-4">
                                     <label for="product_name" class="form-label">Product Name</label>
-                                    <input type="text" placeholder="Type here" class="form-control" name="product_name" id="product_name">
+                                    <input type="text" value="<%= product_edit.productName %>" class="form-control" name="product_name" id="product_name">
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label">Full description</label>
-                                    <textarea placeholder="Type here" class="form-control" name="product_desc" rows="4"></textarea>
+                                    <textarea class="form-control" name="product_desc" rows="4"><%= product_edit.description %></textarea>
                                 </div>
                                 <div class="row">
                                     <div class="col-lg-4">
                                         <div class="mb-4 ">
                                             <label class="form-label">Brand</label>
                                             <div class="row gx-2">
-                                                <input placeholder="Type Here" type="text" name="product_brand" class="form-control">
+                                                <input value="<%= product_edit.brand %>" type="text" name="product_brand" class="form-control">
                                             </div>
                                         </div>
                                     </div>
@@ -223,13 +223,14 @@
                                             <label class="form-label">Category</label>
                                             <div class="row gx-2">
                                                 <select class="form-select" name="product_cat">
-                                                  <% categories.reverse().forEach(category => { %>
-                                                    <% if(category.isListed === "Active") { %>
-                                                    <option><%= category.categoryName %> </option>
-                                                  <% } %>
+                                                  <% categories.forEach(category => { %>
+                                                    <% if (category.isListed === "Active") { %>
+                                                      <option <%= category.categoryName === product_edit.category ? 'selected' : '' %>><%= category.categoryName %></option>
+                                                    <% } %>
                                                   <% }) %>
                                                 </select>
-                                            </div>                                              
+                                              </div>
+                                                                                         
                                         </div>
                                     </div>
                                 </div>
@@ -238,7 +239,7 @@
                                         <div class="mb-4 ">
                                             <label class="form-label">Colour</label>
                                             <div class="row gx-2">
-                                                <input placeholder="Type Here" type="text" class="form-control" name="product_colour">
+                                                <input value="<%= product_edit.colour%>" type="text" class="form-control" name="product_colour">
                                             </div>
                                         </div>
                                     </div>
@@ -247,11 +248,12 @@
                                             <label class="form-label">Form Factor</label>
                                             <div class="row gx-2">
                                                 <select class="form-select" name="product_factor">
-                                                    <option> Over-ear </option>
-                                                    <option> On-ear </option>
-                                                    <option> In-ear </option>
+                                                  <option <%= product_edit.formfactor === 'Over-ear' ? 'selected' : '' %>>Over-ear</option>
+                                                  <option <%= product_edit.formfactor === 'On-ear' ? 'selected' : '' %>>On-ear</option>
+                                                  <option <%= product_edit.formfactor === 'In-ear' ? 'selected' : '' %>>In-ear</option>
                                                 </select>
-                                            </div>
+                                              </div>
+                                              
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
@@ -259,9 +261,9 @@
                                             <label class="form-label">Connectivity</label>
                                             <div class="row gx-2">
                                                 <select class="form-select" name="product_connect">
-                                                    <option> Wireless </option>
-                                                    <option> Wired </option>
-                                                </select>
+                                                    <option <%= product_edit.connectivity === 'Wireless' ? 'selected' : '' %>>Wireless</option>
+                                                    <option <%= product_edit.connectivity === 'Wired' ? 'selected' : '' %>>Wired</option>
+                                                  </select>
                                             </div>
                                         </div>
                                     </div>
@@ -271,8 +273,8 @@
                                         <div class="mb-4 ">
                                             <label class="form-label">Stock</label>
                                             <div class="row gx-2">
-                                                <input placeholder="Type Here" type="number" class="form-control" name="product_stock">
-                                            </div>
+                                                <input placeholder="Type Here" type="number" class="form-control" name="product_stock" value="<%= product_edit.stock %>">
+                                              </div>                                              
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
@@ -280,10 +282,10 @@
                                             <label class="form-label">Status</label>
                                             <div class="row gx-2">
                                                 <select class="form-select" name="product_status">
-                                                    <option> Active </option>
-                                                    <option> Inactive </option>
+                                                  <option <%= product_edit.status === 'Active' ? 'selected' : '' %>>Active</option>
+                                                  <option <%= product_edit.status === 'Inactive' ? 'selected' : '' %>>Inactive</option>
                                                 </select>
-                                            </div>
+                                              </div>                                              
                                         </div>
                                     </div>
                                 </div>
@@ -292,14 +294,14 @@
                                         <div class="mb-4">
                                             <label class="form-label">Regular price</label>
                                             <div class="row gx-2">
-                                                <input placeholder="₹" type="number" class="form-control" name="product_reg_price">
+                                                <input value="<%= product_edit.regularPrice %>" type="text" class="form-control" name="product_reg_price">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="mb-4">
                                             <label class="form-label">Sale price</label>
-                                            <input placeholder="₹" type="number" class="form-control" name="product_sale_price">
+                                            <input value="<%= product_edit.salePrice %>" type="text" class="form-control" name="product_sale_price">
                                         </div>
                                     </div>
                                 </div>

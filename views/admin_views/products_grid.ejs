@@ -233,7 +233,7 @@
                                         <div class="col-auto price mt-1" style="width: fit-content;"><%= product.status %></div> 
                                     </div>
                                     <!-- Edit and Block/Unblock buttons -->
-                                    <a href="#" class="btn btn-sm font-sm rounded btn-dark" style="margin-right: 10px;">
+                                    <a href="/admin/editProduct/<%= product._id %>" class="btn btn-sm font-sm rounded btn-dark" style="margin-right: 10px;">
                                         Edit
                                     </a>
                                     <% if (product.status == 'Inactive') { %>

@@ -95,3 +95,42 @@ module.exports.unblockProduct = async (req, res)=>{
 }
 
 
+
+//view edit product page
+module.exports.editProduct = async (req, res)=>{
+  try{
+    const product_id = req.params.product_id;
+  const product_edit = await productCollection.findById(product_id);
+  const categories = await category.find();
+  res.render('edit_product', {product_edit, categories})
+  }catch (error) {
+    console.error(error);
+  }
+}
+
+module.exports.updateProduct = async (req, res)=>{
+  try{
+    const product_id = req.params.product_id;
+    const {product_name, product_desc, product_brand,product_cat,product_colour,product_factor,product_connect,product_reg_price,product_sale_price,product_stock,product_status} = req.body
+    console.log(req.body);
+    await productCollection.findByIdAndUpdate(product_id, {
+      productName : product_name,
+      description : product_desc,
+      brand : product_brand,
+      category : product_cat,
+      colour : product_colour,
+      formfactor : product_factor,
+      connectivity : product_connect,
+      regularPrice : product_reg_price,
+      salePrice : product_sale_price,
+      stock : product_stock,
+      status : product_status,
+      // productImage: productImages,
+    });
+    res.redirect('/admin/products');
+  }catch (error) {
+    console.error(error);
+  }
+}
+
+
