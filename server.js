@@ -9,6 +9,7 @@ const LOCAL_STR = 'mongodb://localhost:27017/audiophile';
 const db = mongoose.connect(LOCAL_STR);
 
 const adminRouter = require("./routes/admin_router");
+const userRouter = require('./routes/user_router')
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -31,8 +32,9 @@ app.use(session({
 app.get('/', (req,res)=>{
   res.render('user_index');
 });
-// app.use('/', user_router);
 app.use('/admin', adminRouter);
+app.use('/', userRouter);
+
 
 // app.get('/admin', (req, res)=>{
 //   res.redirect('./')
@@ -53,3 +55,4 @@ app.listen(PORT, async (req, res)=>{
   }
   
 });
+
