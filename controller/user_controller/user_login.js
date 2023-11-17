@@ -5,8 +5,9 @@ const nodemailer = require('nodemailer');
 
 module.exports.getUserLogin = async (req, res)=>{
   try{
-    if(req.session.user){
-      res.render('user_index')
+    const userSession = req.session.user;
+    if(userSession){
+      res.render('user_index', {userSession})
     }else{
       res.render('user_login');
     }
@@ -15,23 +16,39 @@ module.exports.getUserLogin = async (req, res)=>{
   }
 };
 
+
 module.exports.postUserLogin = async (req, res)=>{
   try{
     const data = await userCollection.findOne({ email: req.body.email });
-    if(data){
-      // if(
-        // req.body.email === data.email &&
-        // req.body.password === data.password
-      // ){
-        res.render(user_index);
-      // }else{
-
-      // }
+    if(!data){
+      res.status(200).json({error: "This email is not registered"});
+    }else if(data){
+      if(data.status == 'Inactive'){
+        res.status(200).json({error: "This user is blocked"});
+      }else if(req.body.password !== data.password){
+        res.status(200).json({error: "Incorrect Password"});
+      }else{
+        if(req.body.email === data.email && req.body.password === data.password){
+          req.session.user = req.body.email;
+          const userSession = req.session.user;
+          res.render('user_index', {userSession})
+        }
+      }
     }
   }catch(error){
     console.error(error);
   }
 }
+
+
+module.exports.getUserLogout = async (req, res)=>{
+  try{
+    req.session.destroy()
+  res.render('admin_signin', {logout : true});
+  }catch (error) {
+    console.error(error);
+  }
+};
 
 
 module.exports.getUserSignup = async (req, res)=>{
@@ -89,14 +106,17 @@ module.exports.getSendOtp = async (req, res)=>{
         secure: false,
         requireTLS: true,
         auth: {
-          user: 'ajzalaju10@gmail.com',
-          pass: 'kvak sttz odwj sokc',
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS,
         },
       });
 
         // Compose and send an email
         const mailOptions = {
-          from: 'ajzalaju10@gmail.com',
+          from:{
+            name : "audiophile",
+            address : process.env.EMAIL_USER,
+          },
           to: email,
           subject: 'OTP for Account Verification',
           text: `Your OTP is: ${generatedOTP}`,

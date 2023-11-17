@@ -20,14 +20,16 @@ module.exports.postAdminRoute = async (req, res) => {
   try{
     const data = await adminCollection.findOne({ email: req.body.email });
     // const users = await userCollection.find({});
+    if(!data) {
+      res.render('admin_signin', {email: true});
+    }
     if (data) {
         if (
         req.body.email === data.email &&
         req.body.password !== data.password
       ) {
         res.render('admin_signin', {password : true});
-      } else {
-        if (
+      } else if (
           req.body.email === data.email &&
           req.body.password === data.password
         ) {
@@ -35,10 +37,8 @@ module.exports.postAdminRoute = async (req, res) => {
           // console.log(req.session.admin);
           res.render("admin_index");
         }
-      }
-    } else {
-      res.render('admin_signin', {email: true});
-    }
+      
+    } 
   }catch (error) {
     console.error(error);
   }

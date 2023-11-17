@@ -3,7 +3,7 @@ const path = require('path')
 const mongoose = require('mongoose');
 const session = require('express-session');
 const {v4: uuidv4} = require('uuid');
-
+require('dotenv').config();
 const LOCAL_STR = 'mongodb://localhost:27017/audiophile';
 
 const db = mongoose.connect(LOCAL_STR);

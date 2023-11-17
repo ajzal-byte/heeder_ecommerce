@@ -13,6 +13,10 @@ user_router
 .post(user_controller.postUserLogin)
 
 user_router
+.route("/logout")
+.get(user_controller.getUserLogout)
+
+user_router
 .route("/signup")
 .get(user_controller.getUserSignup)
 
