@@ -38,6 +38,12 @@ user_router
 .route("/verifyOtp")
 .post(user_controller.verifyOTP)
 
+user_router
+.route('/productDetails/:product_id')
+.get(user_controller.getProductDetails)
+
+
+
 
 
 

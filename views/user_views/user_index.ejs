@@ -945,7 +945,7 @@
                                 <div class="product-cart-wrap mb-30">
                                     <div class="product-img-action-wrap">
                                         <div class="product-img product-img-zoom">
-                                            <a href="shop-product-right.html">
+                                            <a href="/productDetails/<%= product._id %>">
                                                 <img class="default-img" src="<%= product.productImage[0].path %>" alt="<%= product.productName %>">
                                                 <img class="hover-img" src="<%= product.productImage[1].path %>" alt="<%= product.productName %>">
                                             </a>
@@ -961,14 +961,14 @@
                                     </div>
                                     <div class="product-content-wrap">
                                         <div class="product-category">
-                                            <a href="shop-grid-right.html"><%= product.category %></a>
+                                            <a href="/productDetails/<%= product._id %>"><%= product.category %></a>
                                         </div>
-                                        <h2><a href="shop-product-right.html"><%= product.productName %></a></h2>
+                                        <h2><a href="/productDetails/<%= product._id %>"><%= product.productName %></a></h2>
                                         
                                         <div class="product-price">
                                             <span>₹<%= product.salePrice%></span>
                                             <span class="old-price">₹   <%= product.regularPrice%></span>
-                                            <span class="save-price  font-md color3 ml-5 text-danger" style="font-size: small;"><%=Math.round(100-((product.regularPrice /product.salePrice)*100))%>% off</span>
+                                            <span class="save-price  font-md color3 ml-5 text-danger" style="font-size: small;"> - <%=Math.round((1 - (product.salePrice / product.regularPrice)) * 100)%>% </span>
                                         </div>
                                         <div class="product-action-1 show">
                                             <a aria-label="Add To Cart" class="action-btn hover-up" href="shop-cart.html"><i class="fi-rs-shopping-bag-add"></i></a>

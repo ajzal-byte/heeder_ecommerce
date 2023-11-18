@@ -157,6 +157,18 @@ module.exports.verifyOTP = async (req, res)=>{
 };
 
 
+//single product page
+
+module.exports.getProductDetails = async (req, res)=>{
+  try{
+    const product_id = req.params.product_id;
+    const product_details = await productCollection.findOne({_id : product_id})
+    // console.log(product_details);
+    res.render('product_view', {product_details});
+  }catch(error){
+    console.error(error);
+  }
+}
 
 
 

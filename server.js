@@ -5,7 +5,6 @@ const session = require('express-session');
 const {v4: uuidv4} = require('uuid');
 require('dotenv').config();
 const LOCAL_STR = 'mongodb://localhost:27017/audiophile';
-const productCollection = require('./models/products_schema')
 
 
 const db = mongoose.connect(LOCAL_STR);
@@ -31,18 +30,10 @@ app.use(session({
   saveUninitialized: true
 }));
 
-// app.get('/', async (req,res)=>{
-//   const products = await productCollection.find()
-//   const userSession = req.session.user;
-//   res.render('user_index', {products, userSession});
-// });
+
 app.use('/admin', adminRouter);
 app.use('/', userRouter);
 
-
-// app.get('/admin', (req, res)=>{
-//   res.redirect('./')
-// })
 
 app.listen(PORT, async (req, res)=>{
   await db;
