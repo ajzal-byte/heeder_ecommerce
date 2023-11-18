@@ -20,7 +20,7 @@ module.exports.getUserLogin = async (req, res)=>{
 };
 
 
-module.exports. postUserLogin = async (req, res)=>{
+module.exports.postUserLogin = async (req, res)=>{
   try{
     const data = await userCollection.findOne({ email: req.body.email });
     if(!data){

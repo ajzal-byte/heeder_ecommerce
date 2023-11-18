@@ -3,7 +3,8 @@ const admin_router = express.Router();
 const admin_controller = require('../controller/admin_controller/admin_login');
 const category = require('../controller/admin_controller/admin_category');
 const products = require('../controller/admin_controller/admin_products');
-const upload = require('../middleware/multer')
+const users= require('../controller/admin_controller/admin_users');
+const upload = require('../middleware/multer');
 
 admin_router
 .route("/")
@@ -70,5 +71,17 @@ admin_router
 admin_router
 .route('/updateProduct/:product_id')
 .post(products.updateProduct);
+
+admin_router
+.route('/users')
+.get(users.getUsers);
+
+admin_router
+.route('/blockUsers/:user_id')
+.get(users.blockUser);
+
+admin_router
+.route('/unblockUsers/:user_id')
+.get(users.unblockUser);
 
 module.exports = admin_router
