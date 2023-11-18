@@ -1,15 +1,18 @@
 const userCollection = require('../../models/user_schema');
+const productCollection = require('../../models/products_schema')
 const nodemailer = require('nodemailer');
+// const { v4: uuidv4 } = require('uuid');
 // const transporter = require('../emailConfig');
 
 
 module.exports.getUserLogin = async (req, res)=>{
   try{
     const userSession = req.session.user;
+    const products = await productCollection.find()
     if(userSession){
-      res.render('user_index', {userSession})
+      res.render('user_index', {userSession, products})
     }else{
-      res.render('user_login');
+      res.render('user_login', {userSession});
     }
   }catch (error) {
     console.error(error);
@@ -17,7 +20,7 @@ module.exports.getUserLogin = async (req, res)=>{
 };
 
 
-module.exports.postUserLogin = async (req, res)=>{
+module.exports. postUserLogin = async (req, res)=>{
   try{
     const data = await userCollection.findOne({ email: req.body.email });
     if(!data){
@@ -31,7 +34,8 @@ module.exports.postUserLogin = async (req, res)=>{
         if(req.body.email === data.email && req.body.password === data.password){
           req.session.user = req.body.email;
           const userSession = req.session.user;
-          res.render('user_index', {userSession})
+          const products = await productCollection.find()
+          res.render('user_index', {userSession, products})
         }
       }
     }
@@ -44,7 +48,7 @@ module.exports.postUserLogin = async (req, res)=>{
 module.exports.getUserLogout = async (req, res)=>{
   try{
     req.session.destroy()
-  res.render('admin_signin', {logout : true});
+  res.render('user_login', {logout : true});
   }catch (error) {
     console.error(error);
   }
@@ -64,10 +68,10 @@ module.exports.postUserSignup = async (req, res)=>{
   try{
     const {username, email, password, phoneNumber, status} = req.body;
     await userCollection.create({
-      username : username,
-      email : email, 
-      password : password, 
-      phoneNumber : phoneNumber,
+     username,
+      email,
+      password,
+      phoneNumber,
       status : "Active"
     });
     res.redirect('/login')

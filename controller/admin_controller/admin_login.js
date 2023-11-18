@@ -1,4 +1,3 @@
-// const adminCollection = require('.../models/adminCollection');
 const adminCollection = require("../../models/admin_schema")
 // const user_schema = require('.../models/user_schema');
 

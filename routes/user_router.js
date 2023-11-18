@@ -1,8 +1,14 @@
 const express = require('express');
 const user_router = express.Router();
 const user_controller = require('../controller/user_controller/user_login')
+const productCollection = require('../models/products_schema')
 
-
+user_router
+.get('/', async (req,res)=>{
+  const products = await productCollection.find()
+  const userSession = req.session.user;
+  res.render('user_index', {products, userSession});
+});
 
 user_router
 .route("/login")
