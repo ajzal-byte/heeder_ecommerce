@@ -29,7 +29,6 @@ module.exports.addCategories = async (req, res)=>{
       isListed : req.body.cat_status
     });
   const categories = await category.find();
-    // console.log("here");
     res.render('page_categories',{message: "Successfully Added",categories}); 
   }
   }catch (error) {
@@ -38,21 +37,40 @@ module.exports.addCategories = async (req, res)=>{
 }
 
 //view edit category page
-  module.exports.editCategories = async (req, res)=>{
-    try{
-      const category_id = req.params.category_id;
-    const category_edit = await category.findById(category_id);
-    res.render('edit_category', {category_edit})
-    }catch (error) {
-      console.error(error);
-    }
+module.exports.editCategories = async (req, res)=>{
+  try{
+    const category_id = req.params.category_id;
+  const category_edit = await category.findById(category_id);
+  res.render('edit_category', {category_edit})
+  }catch (error) {
+    console.error(error);
   }
+}
+  // module.exports.editCategories = async (req, res)=>{
+  //   try{
+  //     const category_id = req.params.category_id;
+  //     const ifExist = await category.findOne({categoryName : req.body.cat_name, _id : {$ne:category_id}});
+  //     if(ifExist){
+  //    const category_edit = await category.findById(category_id);
+  //    return res.render('edit_category', {category_edit, message: "Category already exists"});
+  //     }
+  //   const category_edit = await category.findById(category_id);
+  //   res.render('edit_category', {category_edit})
+  //   }catch (error) {
+  //     console.error(error);
+  //   }
+  // }
 
 module.exports.updateCategories = async (req, res)=>{
   try{
     const category_id = req.params.category_id;
+    const ifExist = await category.findOne({categoryName : req.body.cat_name, _id : {$ne:category_id}});
+    if(ifExist){
+      const category_edit = await category.findById(category_id);
+      res.render('edit_category', {category_edit, message: "Category already exists"})    
+    }
     await category.findByIdAndUpdate(category_id, {
-      categoryName: req.body.cat_name,
+    categoryName: req.body.cat_name,
       isListed: req.body.cat_status
     });
     res.redirect('/admin/categories');
