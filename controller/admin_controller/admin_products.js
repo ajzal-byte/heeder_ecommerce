@@ -112,7 +112,7 @@ module.exports.updateProduct = async (req, res)=>{
   try{
     const product_id = req.params.product_id;
     const {product_name, product_desc, product_brand,product_cat,product_colour,product_factor,product_connect,product_reg_price,product_sale_price,product_stock,product_status} = req.body
-    console.log(req.body);
+    // console.log(req.body);
     await productCollection.findByIdAndUpdate(product_id, {
       productName : product_name,
       description : product_desc,
