@@ -323,6 +323,17 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div>
+                                    <% for (let i = 0; i < product_edit.productImage.length; i++) { %>
+                                        <div class="image-container">
+                                            <figure class="border-radius-10">
+                                                <img src="<%= product_edit.productImage[i].path %>" alt="<%= product_edit.productName %>" class="img-fluid loading="lazy">
+                                            </figure>
+                                            <!-- Close button for deleting the image -->
+                                            
+                                        </div>
+                                    <% } %>
+                                </div>
                             </div>
                             </form>
                     </div> <!-- card end// -->
@@ -356,3 +367,4 @@
 
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-form-product-1.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:32 GMT -->
 </html>
+

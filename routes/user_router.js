@@ -2,6 +2,7 @@ const express = require('express');
 const user_router = express.Router();
 const user_controller = require('../controller/user_controller/user_login')
 const productCollection = require('../models/products_schema')
+const userCollection = require('../models/user_schema');
 
 user_router
 .get('/', async (req,res)=>{

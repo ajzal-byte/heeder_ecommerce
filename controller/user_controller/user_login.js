@@ -31,11 +31,15 @@ module.exports.postUserLogin = async (req, res)=>{
       }else if(req.body.password !== data.password){
         res.status(200).json({error: "Incorrect Password"});
       }else{
-        if(req.body.email === data.email && req.body.password === data.password){
-          req.session.user = req.body.email;
-          const userSession = req.session.user;
-          const products = await productCollection.find()
-          res.render('user_index', {userSession, products})
+        if (req.session.user) {
+          res.redirect('/'); // Redirect to home page if already logged in
+        } else {
+          // Set user session if login is successful
+          req.session.user = {
+            email: req.body.email,
+            username: data.username // Assuming username is a property in your user data
+          };
+          res.redirect('/');
         }
       }
     }
@@ -48,7 +52,7 @@ module.exports.postUserLogin = async (req, res)=>{
 module.exports.getUserLogout = async (req, res)=>{
   try{
     req.session.destroy()
-  res.render('user_login', {logout : true});
+  res.redirect('/login')
   }catch (error) {
     console.error(error);
   }
