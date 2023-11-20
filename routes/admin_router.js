@@ -70,7 +70,11 @@ admin_router
 
 admin_router
 .route('/updateProduct/:product_id')
-.post(products.updateProduct);
+.post(upload.array('productImages', 5),products.updateProduct);
+
+admin_router
+.route('/delete_image')
+.get(products.deleteImage);
 
 admin_router
 .route('/users')
