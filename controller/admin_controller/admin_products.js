@@ -2,6 +2,8 @@ const productCollection = require('../../models/products_schema')
 const category = require('../../models/category_schema');
 const multer = require('../../middleware/multer');
 const path = require('path');
+const sharp = require('sharp')
+const fs = require('fs');
 // const upload = require('../../middleware/multer');
 
 
@@ -35,20 +37,31 @@ module.exports.getAddProduct = async (req, res)=>{
 
 module.exports.postAddProduct = async (req, res)=>{
   try{
-    const ifExist = await productCollection.findOne({productName : req.body.product_name})
-    const categories = await category.find();
-    if(ifExist){
-  res.render('product_add', {message: "Product already exists", categories});
-  }else{
   
     const {product_name, product_desc, product_brand,product_cat,product_colour,product_factor,product_connect,product_reg_price,product_sale_price,product_stock,product_status} = req.body
 
-    const productImages = req.files.map((file) => ({
-      fileName: file.filename,
-      originalname: file.originalname,
-      path: path.join('/uploads', file.filename), // Adjust the path as needed
-    }));
+    const productImages = [];
 
+
+    for(const file of req.files){
+      const filename = `cropped_${file.filename}`;
+      let imagePath = `public/uploads/${filename}`;     
+       await sharp(file.path)
+      .resize({width: 300, height:300, fit:'cover'})
+      .toFile(imagePath); 
+
+      // imagePath =  `/${imagePath.split('/').slice(1).join('/')}`
+      // console.log(imagePath)
+
+      productImages.push({
+        fileName: filename,
+        originalname: file.originalname,
+        path: `/uploads/${filename}`, 
+      });
+  
+    }
+
+     
     await productCollection.create({
       productName : product_name,
       description : product_desc,
@@ -63,9 +76,9 @@ module.exports.postAddProduct = async (req, res)=>{
       status : product_status,
       productImage: productImages,
     });
-    const products = await productCollection.find()
-    res.render('products_grid', {products});
-    }
+    // const products = await productCollection.find()
+    res.redirect('/admin/products');
+    
   
   }catch (error) {
     console.error(error);
@@ -117,14 +130,18 @@ module.exports.updateProduct = async (req, res)=>{
       // Retrieve existing product data
       const existingProduct = await productCollection.findById(product_id);
 
+      // console.log(existingProduct.productImage)
       // Check if new images were uploaded
-      let productImages = [];
+      let productImages = existingProduct.productImage;
       if (req.files && req.files.length > 0) {
-        productImages = req.files.map((file) => ({
-          fileName: file.filename,
+        req.files.forEach(file => {
+          productImages.push({
+            fileName: file.filename,
           originalname: file.originalname,
           path: path.join('/uploads', file.filename),
-        }));
+          })
+        });
+ 
       } else {
         // If no new images, retain the existing images
         if (existingProduct && existingProduct.productImage) {
@@ -132,7 +149,6 @@ module.exports.updateProduct = async (req, res)=>{
         }
       }
 
-    // console.log(req.body);
     await productCollection.findByIdAndUpdate(product_id, {
       productName : product_name,
       description : product_desc,

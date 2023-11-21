@@ -28,8 +28,7 @@ module.exports.addCategories = async (req, res)=>{
       categoryName : req.body.cat_name,
       isListed : req.body.cat_status
     });
-  const categories = await category.find();
-    res.render('page_categories',{message: "Successfully Added",categories}); 
+    res.redirect('/admin/categories');
   }
   }catch (error) {
     console.error(error);

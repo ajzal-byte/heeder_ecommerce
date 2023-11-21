@@ -5,6 +5,19 @@ const category = require('../controller/admin_controller/admin_category');
 const products = require('../controller/admin_controller/admin_products');
 const users= require('../controller/admin_controller/admin_users');
 const upload = require('../middleware/multer');
+const path = require('path')
+
+
+// admin_router.use('/uploads', express.static('uploads'));
+admin_router.use('/public', express.static('public'));
+// admin_router.use('/admin/public', express.static('public'));
+// admin_router.use('/uploads', express.static('uploads'))
+// admin_router.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
+// admin_router.use('public/', express.static('public'));
+
+admin_router.use('/', express.static('public'));
+
+
 
 admin_router
 .route("/")
