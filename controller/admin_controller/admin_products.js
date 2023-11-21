@@ -132,17 +132,25 @@ module.exports.updateProduct = async (req, res)=>{
 
       // console.log(existingProduct.productImage)
       // Check if new images were uploaded
-      let productImages = existingProduct.productImage;
-      if (req.files && req.files.length > 0) {
-        req.files.forEach(file => {
-          productImages.push({
-            fileName: file.filename,
+    let productImages = existingProduct.productImage;
+    if (req.files && req.files.length > 0) {
+      // Process and add new images
+      for (const file of req.files) {
+        const filename = `cropped_${file.filename}`;
+        const imagePath = `public/uploads/${filename}`;
+
+        // Resize and save the cropped image
+        await sharp(file.path)
+          .resize({ width: 300, height: 300, fit: 'cover' })
+          .toFile(imagePath);
+
+        productImages.push({
+          fileName: filename,
           originalname: file.originalname,
-          path: path.join('/uploads', file.filename),
-          })
+          path: `/uploads/${filename}`,
         });
- 
-      } else {
+      }
+    }  else {
         // If no new images, retain the existing images
         if (existingProduct && existingProduct.productImage) {
           productImages = existingProduct.productImage;
