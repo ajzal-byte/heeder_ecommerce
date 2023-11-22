@@ -326,7 +326,7 @@
                                     <% for (let i = 0; i < product_edit.productImage.length; i++) { %>
                                         <div class="image-container" style="margin-bottom: 20px;">
                                             <figure class="border-radius-10">
-                                                <img src="<%= product_edit.productImage[i].path %>" alt="<%= product_edit.productName %>" class="img-fluid loading="lazy">
+                                                <img src="<%= product_edit.productImage[i].path  + '?t=' + new Date().getTime() %>" alt="<%= product_edit.productName %>" class="img-fluid loading="lazy">
                                                 <a href="/admin/delete_image?productId=<%= product_edit.id %>&image=<%= product_edit.productImage[i].path %>" class="btn btn-sm btn-danger" id="deleteImageBtn" name="deleteImageBtn">Delete</a>
                                             </figure>
                                             <!-- Close button for deleting the image -->

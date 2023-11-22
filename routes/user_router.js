@@ -43,6 +43,10 @@ user_router
 .route('/productDetails/:product_id')
 .get(user_controller.getProductDetails)
 
+user_router
+.route("/forgotPassword")
+.post(user_controller.getforgotPassword)
+
 
 
 

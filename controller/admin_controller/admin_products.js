@@ -47,7 +47,7 @@ module.exports.postAddProduct = async (req, res)=>{
       const filename = `cropped_${file.filename}`;
       let imagePath = `public/uploads/${filename}`;     
        await sharp(file.path)
-      .resize({width: 300, height:300, fit:'cover'})
+      .resize({width: 785, height:750, fit:'cover'})
       .toFile(imagePath); 
 
       // imagePath =  `/${imagePath.split('/').slice(1).join('/')}`
@@ -141,7 +141,7 @@ module.exports.updateProduct = async (req, res)=>{
 
         // Resize and save the cropped image
         await sharp(file.path)
-          .resize({ width: 300, height: 300, fit: 'cover' })
+          .resize({ width: 785, height: 750, fit: 'cover' })
           .toFile(imagePath);
 
         productImages.push({
@@ -185,7 +185,7 @@ try{
   console.log("deleting image", imagePath);
   await productCollection.updateOne({_id: productId},  { $pull: { productImage: { path: imagePath } } } )
   const product_edit = await productCollection.findById(productId);
-  const categories = await category.find();
+  const categories = await category.find();   
   res.render('edit_product', {product_edit, categories} );
 }catch(error){
   console.error(error);
