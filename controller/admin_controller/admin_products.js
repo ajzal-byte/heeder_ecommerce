@@ -4,11 +4,10 @@ const multer = require('../../middleware/multer');
 const path = require('path');
 const sharp = require('sharp')
 const fs = require('fs');
-// const upload = require('../../middleware/multer');
 
 
 
-
+//get product page
 module.exports.getProducts = async (req, res)=>{
   try{
     if(req.session.admin){
@@ -22,6 +21,8 @@ module.exports.getProducts = async (req, res)=>{
   }
 }
 
+
+//get add product page
 module.exports.getAddProduct = async (req, res)=>{
   try{
     if(req.session.admin){
@@ -35,6 +36,8 @@ module.exports.getAddProduct = async (req, res)=>{
   }
 }
 
+
+//post add product
 module.exports.postAddProduct = async (req, res)=>{
   try{
   
@@ -85,6 +88,7 @@ module.exports.postAddProduct = async (req, res)=>{
   }
 }
 
+//block product
 module.exports.blockProduct = async (req, res)=>{
   try{
     const product_id = req.params.product_id;
@@ -96,6 +100,8 @@ module.exports.blockProduct = async (req, res)=>{
   }
 }
 
+
+//unblock product
 module.exports.unblockProduct = async (req, res)=>{
   try{
     const product_id = req.params.product_id;
@@ -121,6 +127,7 @@ module.exports.editProduct = async (req, res)=>{
   }
 }
 
+//post edit product
 module.exports.updateProduct = async (req, res)=>{
   try{
     const product_id = req.params.product_id;
@@ -177,6 +184,8 @@ module.exports.updateProduct = async (req, res)=>{
   }
 }
 
+
+//delete image
 module.exports.deleteImage = async(req, res)=>{
 try{
   const productId = req.query.productId;

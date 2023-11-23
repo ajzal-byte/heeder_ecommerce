@@ -45,7 +45,19 @@ user_router
 
 user_router
 .route("/forgotPassword")
-.post(user_controller.getforgotPassword)
+.get(user_controller.getforgotPassword)
+
+user_router
+.route('/forgotSendOtp')
+.get(user_controller.getforgotSendOtp)
+
+user_router
+.route('/forgotVerifyOtp')
+.post(user_controller.forgotVerifyOtp)
+
+user_router
+.route('/forgotChangePassword')
+.post(user_controller.forgotChangePassword)
 
 
 

@@ -45,20 +45,7 @@ module.exports.editCategories = async (req, res)=>{
     console.error(error);
   }
 }
-  // module.exports.editCategories = async (req, res)=>{
-  //   try{
-  //     const category_id = req.params.category_id;
-  //     const ifExist = await category.findOne({categoryName : req.body.cat_name, _id : {$ne:category_id}});
-  //     if(ifExist){
-  //    const category_edit = await category.findById(category_id);
-  //    return res.render('edit_category', {category_edit, message: "Category already exists"});
-  //     }
-  //   const category_edit = await category.findById(category_id);
-  //   res.render('edit_category', {category_edit})
-  //   }catch (error) {
-  //     console.error(error);
-  //   }
-  // }
+
 
 module.exports.updateCategories = async (req, res)=>{
   try{

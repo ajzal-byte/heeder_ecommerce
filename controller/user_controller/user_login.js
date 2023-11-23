@@ -85,7 +85,7 @@ module.exports.postUserSignup = async (req, res)=>{
 };
 
 
-
+//otp generator function
 let generatedOTP = null;
 const generateOTP = () => {
   // Generate a random 6-digit OTP
@@ -149,7 +149,7 @@ module.exports.getSendOtp = async (req, res)=>{
 
 module.exports.verifyOTP = async (req, res)=>{
   try{
-    userEnteredOTP = req.query.otpInput;
+    let userEnteredOTP = req.query.otpInput;
     if(userEnteredOTP === generatedOTP){
       res.status(200).json({message: "OTP Verification Successfull"});
     }else{
@@ -177,11 +177,96 @@ module.exports.getProductDetails = async (req, res)=>{
   }
 }
 
+// view forgot password page
 module.exports.getforgotPassword = async (req, res)=>{
-  
+  try{
+    res.render('forgot_password');
+  }catch(error){
+    console.log('error')
+  }
 }
 
 
+// send otp for forgot password
+module.exports.getforgotSendOtp = async (req, res)=>{
+  try{
+    const ifExist = await userCollection.findOne({email: req.query.email});
+    if(!ifExist){
+      res.status(200).json({error: "This email is not registered"});
+    }else{
+      const email = req.query.email;
+    generatedOTP = generateOTP();
 
+     // Create a transporter
+     const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      requireTLS: true,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
 
+      // Compose and send an email
+      const mailOptions = {
+        from:{
+          name : "audiophile",
+          address : process.env.EMAIL_USER,
+        },
+        to: email,
+        subject: 'OTP for Account Verification',
+        text: `Your OTP is: ${generatedOTP}`,
+      };
+    
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.error(error);
+        } else {
+          console.log('Email has been sent: ' + info.response);
+        }
+      });
+
+      res.status(200).json({message : "OTP send to email successfully"})
+    }
+    
+
+  }catch(error){
+    console.error(error);
+  }
+}
+
+// verify otp for forgot password
+module.exports.forgotVerifyOtp = async (req, res)=>{
+  try{
+    let userEnteredOTP = req.query.otpInput;
+    if(Number(userEnteredOTP) == Number(generatedOTP)){
+      return res.status(200).json({message: "OTP Verification Successfull"});
+    }else{
+      return res.status(400).json({message: "Incorrect OTP"});
+    }
+  }catch(error){
+    console.log(error);
+  }
+}
+
+module.exports.forgotChangePassword = async (req, res)=>{
+  try{
+      const email = req.query.email;
+      const newPassword = req.query.password;
+      const user = await userCollection.findOne({email});
+      console.log(newPassword);
+      console.log(user.password);
+    if(newPassword == user.password){
+      return res.status(400).json({error:"Your new password must be different from your old password"})
+    }else{
+      await userCollection.updateOne({email}, {$set:{password: newPassword}})
+      // return res.status(200).json({message: "Password Changed Successfuly"});
+      res.redirect('/login')
+    }
+  }catch(error){
+    console.error(error)
+  }
+}
 
