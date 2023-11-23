@@ -27,24 +27,18 @@ module.exports.postUserLogin = async (req, res)=>{
     console.log(email)
     console.log(password)
     const data = await userCollection.findOne({ email});
-    // console.log(data )
     if(!data){
-    // console.log('no email')
     res.status(200).json({ error: "This email is not registered" });
     }else if(data){
       if(data.status == 'Inactive'){
         res.status(200).json({ error: "This user is blocked" });
       }else if(password !== data.password){
-        // console.log('no pass')
         res.status(200).json({ error: "Incorrect Password" });
       }else{
-    // console.log('logged in')
-        // Set user session if login is successful
         req.session.user = {
         email: email,
         username: data.username 
       };
-      // console.log(req.session.user);
       res.status(200).json({ success: true });
       }
     }

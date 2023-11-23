@@ -91,10 +91,12 @@
                     return response.json();
                 })
 
-                .then(data => {
-                // Handle the response from the server
-                if (data.error) {
-                    // Display error using Swal
+                .then((data) => {
+                console.log("Response from server", data);
+                if (data.success) {
+                    window.location.href = "/";
+                } else if (data.error) {
+                    console.log(data.error);
                     Swal.fire({
                         position: 'top-center',
                         icon: 'error',
@@ -102,29 +104,16 @@
                         showConfirmButton: false,
                         timer: 1500
                     });
-                } else {
-                    // If successful, you can redirect or perform other actions
-                    Swal.fire({
-                        position: 'top-center',
-                        icon: 'success',
-                        title: "Login successfull",
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                    window.location.href = "/";
                 }
             })
             .catch(error => {
                 console.error("Error:", error);
-                // Handle other errors if needed
             });
-
-
-
-
-
+            
             }
         });
+
+
 
         function validateForm(){
             const email = document.getElementById('email').value;
