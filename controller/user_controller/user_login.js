@@ -256,14 +256,11 @@ module.exports.forgotChangePassword = async (req, res)=>{
       const email = req.query.email;
       const newPassword = req.query.password;
       const user = await userCollection.findOne({email});
-      console.log(newPassword);
-      console.log(user.password);
-    if(newPassword == user.password){
-      return res.status(400).json({error:"Your new password must be different from your old password"})
-    }else{
-      await userCollection.updateOne({email}, {$set:{password: newPassword}})
-      // return res.status(200).json({message: "Password Changed Successfuly"});
-      res.redirect('/login')
+     if(newPassword == user.password){
+       return res.status(200).json({same:true})
+     }else{
+        await userCollection.updateOne({email}, {$set:{password: newPassword}})
+        return res.status(200).json({same: false});
     }
   }catch(error){
     console.error(error)
