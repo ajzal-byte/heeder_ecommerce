@@ -47,6 +47,12 @@
                                             <button type="button" class="btn btn-sm btn-fill-out btn-block hover-up" id="sendOTPButton" name="sendOTPBtn" onclick="sendOTP()">Send OTP</button>
                                         </div>
                                         <div class="form-group">
+                                            <button class="btn btn-sm btn-fill-out btn-block hover-up" type="button" id="resendOTPButton" style="display: none;">Resend OTP</button>
+                                        </div>
+                                        <div class="form-group">
+                                            <div id="timer" class="mb-3" style="display: none; color: rgb(0, 0, 0);"></div>
+                                        </div>
+                                        <div class="form-group">
                                             <input type="text" required="" name="otpInput" placeholder="Enter OTP" id="otpInput">
                                         </div>  
                                         <div class="form-group">
@@ -88,9 +94,14 @@
     <!-- for sending otp and verifing -->
     <script>
 
+        let countdown;
+        const timerElement = document.getElementById('timer');
+        const sendOTPButton = document.getElementById("sendOTPButton");
+        const resendOTPButton = document.getElementById("resendOTPButton");
+
+
         submitButton.disabled = true;
 
-        const sendOTPButton = document.getElementById("sendOTPButton");
         sendOTPButton.addEventListener("click",  (e)=> {
             e.preventDefault();
 
@@ -127,7 +138,53 @@
                         showConfirmButton: false,
                         timer: 1500
                     });
-                    // startResendTimer();
+                    startResendTimer();
+                    }
+                    })
+                    .catch((error) => {
+                        console.error("Error sending OTP", error);
+                    });
+            }
+        });
+        
+
+        resendOTPButton.addEventListener("click",  (e)=> {
+            e.preventDefault();
+            clearInterval(countdown)
+            // Validate the form before sending OTP
+            if (validateForm()) {
+                const email = document.querySelector('input[name="email"]').value;
+                const phoneNumber = document.querySelector('input[name="phoneNumber"]').value;
+
+                fetch(`/sendOtp?email=${email}&phoneNumber=${phoneNumber}`) 
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then((data) => {
+                        console.log("Response from server", data);
+
+                    if (data.error) {
+                    // User already exists, display error message
+                    Swal.fire({
+                        position: 'top-center',
+                        icon: 'error',
+                        title: data.error,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    } else {
+                    // User doesn't exist, continue with OTP sending logic
+                    Swal.fire({
+                        position: 'top-center',
+                        icon: 'success',
+                        title: data.message,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    startResendTimer();
                     }
                     })
                     .catch((error) => {
@@ -194,6 +251,26 @@
             errorElements.forEach((element) => {
                 element.textContent = '';
             });
+        }
+
+        function startResendTimer(){
+            let remainingTime = 5;
+            timerElement.style.display = 'block';
+            resendOTPButton.style.display = 'none';
+            sendOTPButton.style.display = 'none';
+
+            countdown = setInterval(()=>{
+                timerElement.textContent = `Resend OTP in ${remainingTime} seconds`;
+                remainingTime--;
+
+                if(remainingTime<0){
+            timerElement.style.display = 'none';
+            resendOTPButton.style.display = 'block';
+            sendOTPButton.style.display = 'none';
+            }
+
+            }, 1000);
+
         }
         
 
