@@ -22,31 +22,37 @@ module.exports.getUserLogin = async (req, res)=>{
 
 module.exports.postUserLogin = async (req, res)=>{
   try{
-    const data = await userCollection.findOne({ email: req.body.email });
+    const email = req.query.email;
+    const password = req.query.password;
+    console.log(email)
+    console.log(password)
+    const data = await userCollection.findOne({ email});
+    // console.log(data )
     if(!data){
-      res.status(200).json({error: "This email is not registered"});
+    // console.log('no email')
+    res.status(200).json({ error: "This email is not registered" });
     }else if(data){
       if(data.status == 'Inactive'){
-        res.status(200).json({error: "This user is blocked"});
-      }else if(req.body.password !== data.password){
-        res.status(200).json({error: "Incorrect Password"});
+        res.status(200).json({ error: "This user is blocked" });
+      }else if(password !== data.password){
+        // console.log('no pass')
+        res.status(200).json({ error: "Incorrect Password" });
       }else{
-        if (req.session.user) {
-          res.redirect('/'); // Redirect to home page if already logged in
-        } else {
-          // Set user session if login is successful
-          req.session.user = {
-            email: req.body.email,
-            username: data.username // Assuming username is a property in your user data
-          };
-          res.redirect('/');
-        }
+    // console.log('logged in')
+        // Set user session if login is successful
+        req.session.user = {
+        email: email,
+        username: data.username 
+      };
+      // console.log(req.session.user);
+      res.status(200).json({ success: true });
       }
     }
   }catch(error){
     console.error(error);
   }
 }
+
 
 
 module.exports.getUserLogout = async (req, res)=>{
@@ -251,6 +257,7 @@ module.exports.forgotVerifyOtp = async (req, res)=>{
   }
 }
 
+// changing the forgotten password
 module.exports.forgotChangePassword = async (req, res)=>{
   try{
       const email = req.query.email;
@@ -266,4 +273,3 @@ module.exports.forgotChangePassword = async (req, res)=>{
     console.error(error)
   }
 }
-

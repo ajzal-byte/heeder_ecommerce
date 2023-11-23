@@ -30,7 +30,7 @@
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" id="showPasswordCheckbox" onclick="togglePasswordVisibility()">
                                         <label class="form-check-label" for="showPasswordCheckbox">Show Password</label>
-                                      </div>
+                                    </div>
                                     <div class="login_footer form-group">
                                         <a class="text-muted" href="/forgotPassword">Forgot password?</a>
                                     </div>
@@ -47,11 +47,11 @@
                                 
                                     <script>
                                         function togglePasswordVisibility() {
-                                          var passwordInput = document.getElementById('password');
+                                          var password = document.getElementById('password');
                                           if (document.getElementById('showPasswordCheckbox').checked) {
-                                            passwordInput.type = 'text';
+                                            password.type = 'text';
                                           } else {
-                                            passwordInput.type = 'password';
+                                            password.type = 'password';
                                           }
                                         }
                                     </script>
@@ -67,3 +67,125 @@
       </div>
   </section>
 </main>
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", ()=>{
+        const loginButton = document.getElementById('loginButton');
+        
+
+        loginButton.addEventListener('click', (e)=>{
+            e.preventDefault();
+
+
+            if(validateForm()){
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+
+                fetch(`/postLogin?email=${email}&password=${password}`, {method: 'POST'})
+
+                .then((response)=>{
+                    if(!response.ok){
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+
+                .then(data => {
+                // Handle the response from the server
+                if (data.error) {
+                    // Display error using Swal
+                    Swal.fire({
+                        position: 'top-center',
+                        icon: 'error',
+                        title: data.error,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                } else {
+                    // If successful, you can redirect or perform other actions
+                    Swal.fire({
+                        position: 'top-center',
+                        icon: 'success',
+                        title: "Login successfull",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    window.location.href = "/";
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                // Handle other errors if needed
+            });
+
+
+
+
+
+            }
+        });
+
+        function validateForm(){
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            resetErrorMessages();
+             // Validate email
+            const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+            if (!email.match(emailPattern)) {
+                showError('emailError', 'Invalid email address');
+                return false;   
+            }
+
+            // Validate password length
+            if (password.length < 6) {
+                showError('passwordError', 'Password must be at least 6 characters');
+                return false;
+            }
+            return true;
+        }
+
+        // Function to show error message
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = message;
+        }  
+
+        // Function to reset error messages
+        function resetErrorMessages() {
+        const errorElements = document.querySelectorAll('.error-message');
+        errorElements.forEach((element) => {
+            element.textContent = '';
+        });
+        }
+
+
+    });
+
+</script>
+
+      <!-- Vendor JS-->
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+
+    <script src="/userAssets/js/vendor/modernizr-3.6.0.min.js"></script>
+    <script src="/userAssets/js/vendor/jquery-3.6.0.min.js"></script>
+    <script src="/userAssets/js/vendor/jquery-migrate-3.3.0.min.js"></script>
+    <script src="/userAssets/js/vendor/bootstrap.bundle.min.js"></script>
+    <script src="/userAssets/js/plugins/slick.js"></script>
+    <script src="/userAssets/js/plugins/jquery.syotimer.min.js"></script>
+    <script src="/userAssets/js/plugins/wow.js"></script>
+    <script src="/userAssets/js/plugins/jquery-ui.js"></script>
+    <script src="/userAssets/js/plugins/perfect-scrollbar.js"></script>
+    <script src="/userAssets/js/plugins/magnific-popup.js"></script>
+    <script src="/userAssets/js/plugins/select2.min.js"></script>
+    <script src="/userAssets/js/plugins/waypoints.js"></script>
+    <script src="/userAssets/js/plugins/counterup.js"></script>
+    <script src="/userAssets/js/plugins/jquery.countdown.min.js"></script>
+    <script src="/userAssets/js/plugins/images-loaded.js"></script>
+    <script src="/userAssets/js/plugins/isotope.js"></script>
+    <script src="/userAssets/js/plugins/scrollup.js"></script>
+    <script src="/userAssets/js/plugins/jquery.vticker-min.js"></script>
+    <script src="/userAssets/js/plugins/jquery.theia.sticky.js"></script>
+    <!-- Template  JS -->
+    <script src="/userAssets/js/maind134.js?v=3.4"></script>
