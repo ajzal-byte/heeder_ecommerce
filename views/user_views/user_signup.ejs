@@ -98,6 +98,7 @@
         const timerElement = document.getElementById('timer');
         const sendOTPButton = document.getElementById("sendOTPButton");
         const resendOTPButton = document.getElementById("resendOTPButton");
+        const submitButton = document.getElementById("submitButton");
 
 
         submitButton.disabled = true;
@@ -193,6 +194,17 @@
             }
         });
 
+
+        submitButton.addEventListener('clcik', (e)=>{
+            e.preventDefault();
+
+            if(validateForm()){
+                fetch(``)
+            }
+        })
+
+
+
         // Function to validate the form
         function validateForm() {
             // Reset previous error messages
@@ -231,8 +243,8 @@
             }
 
             // Validate phoneNumber (should be a number with exactly 10 digits)
-            if (isNaN(phoneNumber) || phoneNumber.length !== 10) {
-                showError('phoneNumberError', 'Phone number must be a number with exactly 10 digits');
+            if (isNaN(phoneNumber) || phoneNumber.length !== 10 || phoneNumber[0] === '0') {
+                showError('phoneNumberError', 'Phone number must be a number with exactly 10 digits and should not start with 0');
                 return false;
             }
 
