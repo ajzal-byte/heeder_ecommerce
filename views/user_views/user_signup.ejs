@@ -95,7 +95,7 @@
     <script>
 
         let countdown;
-        const timerElement = document.getElementById('timer');
+        const timerElement = document.getElementById('timer'); 
         const sendOTPButton = document.getElementById("sendOTPButton");
         const resendOTPButton = document.getElementById("resendOTPButton");
         const submitButton = document.getElementById("submitButton");
@@ -195,15 +195,6 @@
         });
 
 
-        submitButton.addEventListener('clcik', (e)=>{
-            e.preventDefault();
-
-            if(validateForm()){
-                fetch(``)
-            }
-        })
-
-
 
         // Function to validate the form
         function validateForm() {
@@ -216,12 +207,13 @@
             const confirmPassword = document.getElementById('confirmpassword').value;
             const phoneNumber = document.getElementById('phoneNumber').value;
 
-            // Validate username (should contain only characters without whitespace)
-            const usernamePattern = /^[A-Za-z]+$/;
+            // Validate username (should contain only characters without whitespace and allow numbers after at least one character)
+            const usernamePattern = /^[A-Za-z][A-Za-z0-9]*$/;
             if (!username.match(usernamePattern)) {
-                showError('usernameError', 'Username should contain only characters without whitespace');
+                showError('usernameError', 'Username should contain only characters without whitespace and numbers after at least one character');
                 return false;
             }
+
 
             // Validate email
             const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
@@ -230,11 +222,12 @@
                 return false;   
             }
 
-            // Validate password length
-            if (password.length < 6) {
-                showError('passwordError', 'Password must be at least 6 characters');
+            // Validate password length and no whitespaces at the beginning
+            if (password.trim().length < 6 || password !== password.trim()) {
+                showError('passwordError', 'Password must be at least 6 characters and should not start with whitespaces');
                 return false;
             }
+
 
             // Validate password confirmation
             if (password !== confirmPassword) {
@@ -287,47 +280,55 @@
         
 
 
-        // verify otp
-        const verifyOTPButton = document.getElementById("verifyOTPButton");
+       // verify otp
+const verifyOTPButton = document.getElementById("verifyOTPButton");
+const form = document.querySelector('form');
 
-        verifyOTPButton.addEventListener("click", (e)=> {
-            e.preventDefault();
+verifyOTPButton.addEventListener("click", (e) => {
+    e.preventDefault();
 
-            // const phoneNumber = document.querySelector('input[name="phoneNumber"]').value;
-            const otpInput = document.querySelector('input[name="otpInput"]').value;
-            fetch(`/verifyOtp?otpInput=${otpInput}`,{
-                method: "POST"})
-            
-            .then((Response) => {
-                if(!Response.ok) {
-                    throw new Error(`HTTP error! status: ${Response.status}`)
-                }
-                return Response.json();
-            })  
-            .then((data)=>{
-                console.log("Response from server", data)
-                Swal.fire({
-                    position: 'top-center',
-                    icon: 'success',
-                    title: 'OTP verified succssfully',
-                    showConfirmButton: false,
-                    timer: 1500
-                })
-                // startResendTimer()
-                submitButton.disabled = false;  
+    const otpInput = document.querySelector('input[name="otpInput"]').value;
+    fetch(`/verifyOtp?otpInput=${otpInput}`, {
+        method: "POST"
+    })
 
-            })
-            .catch((error)=>{
-                console.error("Invalid OTP",error);
-                Swal.fire({
-                position: 'top-center',
-                icon: 'error',
-                title: "Invalid OTP",
-                showConfirmButton: false,
-                timer: 1500
-            });
-            })
-        }) 
+    .then((Response) => {
+        if (!Response.ok) {
+            throw new Error(`HTTP error! status: ${Response.status}`)
+        }
+        return Response.json();
+    })
+    .then((data) => {
+        console.log("Response from server", data)
+        Swal.fire({
+            position: 'top-center',
+            icon: 'success',
+            title: 'OTP verified successfully',
+            showConfirmButton: false,
+            timer: 1500
+        });
+
+       // Disable all form fields
+        Array.from(form.elements).forEach(element => {
+            // element.disabled = true; // Change this line
+            element.readOnly = true; // Set readonly instead of disabled
+        });
+        submitButton.disabled = false;
+
+
+    })
+    .catch((error) => {
+        console.error("Invalid OTP", error);
+        Swal.fire({
+            position: 'top-center',
+            icon: 'error',
+            title: "Invalid OTP",
+            showConfirmButton: false,
+            timer: 1500
+        });
+    })
+});
+
     </script>
 
    

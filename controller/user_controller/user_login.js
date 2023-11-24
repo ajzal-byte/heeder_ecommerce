@@ -70,7 +70,7 @@ module.exports.getUserSignup = async (req, res)=>{
 
 module.exports.postUserSignup = async (req, res)=>{
   try{
-    const {username, email, password, phoneNumber, status} = req.body;
+    const {username, email, password, phoneNumber} = req.body;
     await userCollection.create({
      username,
       email,
