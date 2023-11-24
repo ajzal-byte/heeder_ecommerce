@@ -188,13 +188,10 @@
                     <div class="row">
                         <div class="col-md-3">
                             <form action="/admin/addCategories", method="post">
-                                <!-- <div class="mb-4"> -->
-                                    <!-- <label for="product_id" class="form-label">#ID</label> -->
-                                    <!-- <input type="text" placeholder="Type here" class="form-control" id="product_id" name="cat_id"/> -->
-                                <!-- </div> -->
                                 <div class="mb-4">
                                     <label for="product_name" class="form-label">Name</label>
-                                    <input type="text" placeholder="Type here" class="form-control" id="product_name" name="cat_name" required/>
+                                    <input type="text" placeholder="Type here" class="form-control" id="categoryName" name="cat_name" />
+                                    <div id="categoryNameError" class="error-message"></div>
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label">Status</label>
@@ -204,7 +201,7 @@
                                     </select>
                                 </div>
                                 <div class="d-grid">
-                                    <button type="submit" class="btn btn-primary">Create category</button>
+                                    <button type="submit" class="btn btn-primary" id="createCategory" >Create category</button>
                                 </div>
                             </form> 
                         </div>
@@ -264,6 +261,102 @@
             </div>
         </footer>
     </main>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", ()=>{
+        const createCategory = document.getElementById('createCategory');
+
+        createCategory.addEventListener('click', (e)=>{
+            e.preventDefault();
+
+
+            if(validateForm()){
+                const categoryName = document.getElementById('categoryName').value;
+            console.log(categoryName);
+            fetch(`addCategories?categoryName=${categoryName}`, {method: 'POST'})
+
+            .then((response)=>{
+                    if(!response.ok){
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+
+                .then((data) => {
+                console.log("Response from server", data);
+                if (data.success) {
+                    window.location.href = "/admin/categories";
+                } else if (data.error) {
+                    Swal.fire({
+                        position: 'top-center',
+                        icon: 'error',
+                        title: data.error,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+            }
+
+        })
+
+        function validateForm(){
+            resetErrorMessages();
+
+            const categoryNameInput= document.getElementById('categoryName').value;
+            const categoryName = categoryNameInput.trim();
+            if (/^\d/.test(categoryName)) {
+                showError('categoryNameError', 'Category name cannot start with a number');
+                return false;
+            }
+
+            if (categoryName !== categoryNameInput) {
+                showError('categoryNameError', 'Category name cannot have whitespaces');
+                return false;
+            }
+
+            if (categoryName.length === 0) {
+                showError('categoryNameError', 'Category name cannot be empty');
+                return false;
+            }
+            return true;
+        }
+
+        // Function to show error message
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = message;
+        }  
+
+        // Function to reset error messages
+        function resetErrorMessages() {
+        const errorElements = document.querySelectorAll('.error-message');
+        errorElements.forEach((element) => {
+            element.textContent = '';
+        });
+        }
+
+
+
+    });
+
+
+</script>
+
+
+
+
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
     <script src="/admin_assets/js/vendors/jquery-3.6.0.min.js"></script>
     <script src="/admin_assets/js/vendors/bootstrap.bundle.min.js"></script>
     <script src="/admin_assets/js/vendors/select2.min.js"></script>

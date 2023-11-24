@@ -18,17 +18,19 @@ module.exports.getCategories = async (req, res)=>{
 // add category
 module.exports.addCategories = async (req, res)=>{
   try{
-    const ifExist = await category.findOne({categoryName : req.body.cat_name});
+    const categoryName = req.query.categoryName;
+    console.log(categoryName);
+    const ifExist = await category.findOne({categoryName});
   if(ifExist){
-  const categories = await category.find();
-  res.render('page_categories', {message: "Category already exists",categories});
+    res.status(200).json({error: "Category already exists"})
   }else{
     
     await category.create({
-      categoryName : req.body.cat_name,
-      isListed : req.body.cat_status
+      categoryName,
+      isListed : "Active"
     });
-    res.redirect('/admin/categories');
+    // res.redirect('/admin/categories');
+    res.status(200).json({ success: true });
   }
   }catch (error) {
     console.error(error);
