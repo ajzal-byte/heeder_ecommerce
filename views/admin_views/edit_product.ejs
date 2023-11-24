@@ -203,18 +203,21 @@
                             <form action="/admin/updateProduct/<%= product_edit._id %>" method="post" enctype="multipart/form-data">
                                 <div class="mb-4">
                                     <label for="product_name" class="form-label">Product Name</label>
-                                    <input type="text" value="<%= product_edit.productName %>" class="form-control" name="product_name" id="product_name">
+                                    <input type="text" value="<%= product_edit.productName %>" class="form-control" name="product_name" id="productName">
+                                    <div id="productNameError" class="error-message"></div>
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label">Full description</label>
-                                    <textarea class="form-control" name="product_desc" rows="4"><%= product_edit.description %></textarea>
+                                    <textarea id="productDesc" class="form-control" name="product_desc" rows="4"><%= product_edit.description %></textarea>
+                                    <div id="productDescError" class="error-message"></div>
                                 </div>
                                 <div class="row">
                                     <div class="col-lg-4">
                                         <div class="mb-4 ">
                                             <label class="form-label">Brand</label>
                                             <div class="row gx-2">
-                                                <input value="<%= product_edit.brand %>" type="text" name="product_brand" class="form-control">
+                                                <input value="<%= product_edit.brand %>" type="text" name="product_brand" class="form-control" id="productBrand" >
+                                                <div id="productBrandError" class="error-message"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -238,7 +241,8 @@
                                         <div class="mb-4 ">
                                             <label class="form-label">Colour</label>
                                             <div class="row gx-2">
-                                                <input value="<%= product_edit.colour%>" type="text" class="form-control" name="product_colour">
+                                                <input value="<%= product_edit.colour%>" type="text" class="form-control" name="product_colour" id="productColour" >
+                                                <div id="productColourError" class="error-message"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -271,7 +275,8 @@
                                         <div class="mb-4 ">
                                             <label class="form-label">Stock</label>
                                             <div class="row gx-2">
-                                                <input placeholder="Type Here" type="number" class="form-control" name="product_stock" value="<%= product_edit.stock %>">
+                                                <input placeholder="Type Here" type="number" class="form-control" name="product_stock" value="<%= product_edit.stock %>" id="productStock" >
+                                                <div id="productStockError" class="error-message"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -292,19 +297,21 @@
                                         <div class="mb-4">
                                             <label class="form-label">Regular price</label>
                                             <div class="row gx-2">
-                                                <input value="<%= product_edit.regularPrice %>" type="text" class="form-control" name="product_reg_price">
+                                                <input value="<%= product_edit.regularPrice %>" type="number" class="form-control" name="product_reg_price" id="productRegPrice" >
+                                                <div id="productRegPriceError" class="error-message"></div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="mb-4">
                                             <label class="form-label">Sale price</label>
-                                            <input value="<%= product_edit.salePrice %>" type="text" class="form-control" name="product_sale_price">
+                                            <input value="<%= product_edit.salePrice %>" type="number" class="form-control" name="product_sale_price" id="productSalePrice" >
+                                            <div id="productSalePriceError" class="error-message"></div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-between">
-                                    <button type="submit" class="btn btn-md rounded font-sm hover-up ms-auto">Publish</button>
+                                    <button id="publishButton" type="submit" class="btn btn-md rounded font-sm hover-up ms-auto">Publish</button>
                                 </div>
                             </div>
                             </div> <!-- card end// -->
@@ -372,6 +379,7 @@
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-form-product-1.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:32 GMT -->
 </html>
 
+<!-- script for image preview while adding -->
 <script>
     function previewImages(input) {
         var previewContainer = document.getElementById('imagePreviewContainer');
@@ -395,6 +403,88 @@
             }
         }
     }
+</script>
+
+
+<!-- script for add product form vaidation -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const publishButton = document.getElementById('publishButton');
+
+        publishButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            validateForm();
+        });
+
+        function validateForm() {
+                resetErrorMessages();
+
+                const inputFields = [
+                    { id: 'productName', name: 'Product Name' },
+                    { id: 'productDesc', name: 'Product Description' },
+                    { id: 'productBrand', name: 'Product Brand' },
+                    { id: 'productColour', name: 'Product Colour' },
+                    { id: 'productStock', name: 'Product Stock' },
+                    { id: 'productRegPrice', name: 'Product Regular Price' },
+                    { id: 'productSalePrice', name: 'Product Sale Price' }
+                ];
+
+                let isValid = true;
+
+                inputFields.forEach((field) => {
+                    const originalValue = document.getElementById(field.id).value;
+                    const trimmedValue = originalValue.trim();
+
+                    if (trimmedValue.length === 0) {
+                        showError(`${field.id}Error`, `${field.name} cannot be empty`);
+                        isValid = false;
+                    }
+
+                    if (originalValue !== trimmedValue) {
+                        showError(`${field.id}Error`, `${field.name} cannot have whitespaces`);
+                        isValid = false;
+                    }
+                });
+
+                // Validations for stock and prices
+                const stockValue = parseFloat(document.getElementById('productStock').value);
+                const regPriceValue = parseFloat(document.getElementById('productRegPrice').value);
+                const salePriceValue = parseFloat(document.getElementById('productSalePrice').value);
+
+                if (isNaN(stockValue) || stockValue < 0) {
+                    showError('productStockError', 'Stock must be a number and cannot be less than 0');
+                    isValid = false;
+                }
+
+                if (isNaN(regPriceValue) || regPriceValue <= 0) {
+                    showError('productRegPriceError', 'Regular Price must be a number and greater than 0');
+                    isValid = false;
+                }
+
+                if (isNaN(salePriceValue) || salePriceValue <= 0) {
+                    showError('productSalePriceError', 'Sale Price must be a number and greater than 0');
+                    isValid = false;
+                }
+
+                return isValid;
+            }
+
+
+
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = message;
+        }
+
+        
+        function resetErrorMessages() {
+            const errorElements = document.querySelectorAll('.error-message');
+            errorElements.forEach((element) => {
+                element.textContent = '';
+            });
+        }
+
+    });
 </script>
 
 

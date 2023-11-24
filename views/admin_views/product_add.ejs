@@ -203,18 +203,21 @@
                             <form action="/admin/postAddProduct" method="post" enctype="multipart/form-data">
                                 <div class="mb-4">
                                     <label for="product_name" class="form-label">Product Name</label>
-                                    <input type="text" placeholder="Type here" class="form-control" name="product_name" id="product_name">
+                                    <input type="text" placeholder="Type here" class="form-control" name="product_name" id="productName">
+                                    <div id="productNameError" class="error-message"></div>
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label">Full description</label>
-                                    <textarea placeholder="Type here" class="form-control" name="product_desc" rows="4"></textarea>
+                                    <textarea placeholder="Type here" class="form-control" name="product_desc" id="productDesc" rows="4"></textarea>
+                                    <div id="productDescError" class="error-message"></div>
                                 </div>
                                 <div class="row">
                                     <div class="col-lg-4">
                                         <div class="mb-4 ">
                                             <label class="form-label">Brand</label>
                                             <div class="row gx-2">
-                                                <input placeholder="Type Here" type="text" name="product_brand" class="form-control">
+                                                <input placeholder="Type Here" type="text" name="product_brand" id="productBrand" class="form-control">
+                                                <div id="productBrandError" class="error-message"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -238,7 +241,8 @@
                                         <div class="mb-4 ">
                                             <label class="form-label">Colour</label>
                                             <div class="row gx-2">
-                                                <input placeholder="Type Here" type="text" class="form-control" name="product_colour">
+                                                <input placeholder="Type Here" type="text" class="form-control" id="productColour" name="product_colour">
+                                                <div id="productColourError" class="error-message"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -271,7 +275,8 @@
                                         <div class="mb-4 ">
                                             <label class="form-label">Stock</label>
                                             <div class="row gx-2">
-                                                <input placeholder="Type Here" type="number" class="form-control" name="product_stock">
+                                                <input placeholder="Type Here" type="number" class="form-control" name="product_stock" id="productStock">
+                                                <div id="productStockError" class="error-message"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -292,14 +297,16 @@
                                         <div class="mb-4">
                                             <label class="form-label">Regular price</label>
                                             <div class="row gx-2">
-                                                <input placeholder="₹" type="number" class="form-control" name="product_reg_price">
+                                                <input placeholder="₹" type="number" class="form-control" name="product_reg_price" id="productRegPrice" >
+                                                <div id="productRegPriceError" class="error-message"></div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="mb-4">
                                             <label class="form-label">Sale price</label>
-                                            <input placeholder="₹" type="number" class="form-control" name="product_sale_price">
+                                            <input placeholder="₹" type="number" class="form-control" name="product_sale_price" id="productSalePrice" >
+                                            <div id="productSalePriceError" class="error-message"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -388,3 +395,83 @@
 
 
 <!-- script for add product form vaidation -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const publishButton = document.getElementById('publishButton');
+
+        publishButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            validateForm();
+        });
+
+        function validateForm() {
+                resetErrorMessages();
+
+                const inputFields = [
+                    { id: 'productName', name: 'Product Name' },
+                    { id: 'productDesc', name: 'Product Description' },
+                    { id: 'productBrand', name: 'Product Brand' },
+                    { id: 'productColour', name: 'Product Colour' },
+                    { id: 'productStock', name: 'Product Stock' },
+                    { id: 'productRegPrice', name: 'Product Regular Price' },
+                    { id: 'productSalePrice', name: 'Product Sale Price' }
+                ];
+
+                let isValid = true;
+
+                inputFields.forEach((field) => {
+                    const originalValue = document.getElementById(field.id).value;
+                    const trimmedValue = originalValue.trim();
+
+                    if (trimmedValue.length === 0) {
+                        showError(`${field.id}Error`, `${field.name} cannot be empty`);
+                        isValid = false;
+                    }
+
+                    if (originalValue !== trimmedValue) {
+                        showError(`${field.id}Error`, `${field.name} cannot have whitespaces`);
+                        isValid = false;
+                    }
+                });
+
+                // Validations for stock and prices
+                const stockValue = parseFloat(document.getElementById('productStock').value);
+                const regPriceValue = parseFloat(document.getElementById('productRegPrice').value);
+                const salePriceValue = parseFloat(document.getElementById('productSalePrice').value);
+
+                if (isNaN(stockValue) || stockValue < 0) {
+                    showError('productStockError', 'Stock must be a number and cannot be less than 0');
+                    isValid = false;
+                }
+
+                if (isNaN(regPriceValue) || regPriceValue <= 0) {
+                    showError('productRegPriceError', 'Regular Price must be a number and greater than 0');
+                    isValid = false;
+                }
+
+                if (isNaN(salePriceValue) || salePriceValue <= 0) {
+                    showError('productSalePriceError', 'Sale Price must be a number and greater than 0');
+                    isValid = false;
+                }
+
+                return isValid;
+            }
+
+
+
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = message;
+        }
+
+        
+        function resetErrorMessages() {
+            const errorElements = document.querySelectorAll('.error-message');
+            errorElements.forEach((element) => {
+                element.textContent = '';
+            });
+        }
+
+    });
+</script>
+
