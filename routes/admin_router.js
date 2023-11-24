@@ -67,7 +67,7 @@ admin_router
 
 admin_router
 .route('/postAddProduct')
-.post(upload.array('productImages', 5),products.postAddProduct);
+.post(upload.array('productImages'),products.postAddProduct);
 
 admin_router
 .route('/blockProduct/:product_id')
@@ -83,7 +83,7 @@ admin_router
 
 admin_router
 .route('/updateProduct/:product_id')
-.post(upload.array('productImages', 5),products.updateProduct);
+.post(upload.array('productImages'),products.updateProduct);
 
 admin_router
 .route('/delete_image')

@@ -412,8 +412,9 @@
         const publishButton = document.getElementById('publishButton');
 
         publishButton.addEventListener('click', (e) => {
-            e.preventDefault();
-            validateForm();
+            if (!validateForm()) {
+                event.preventDefault();
+            }
         });
 
         function validateForm() {
