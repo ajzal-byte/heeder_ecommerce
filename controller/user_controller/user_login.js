@@ -24,8 +24,8 @@ module.exports.postUserLogin = async (req, res)=>{
   try{
     const email = req.query.email;
     const password = req.query.password;
-    console.log(email)
-    console.log(password)
+    // console.log(email)
+    // console.log(password)
     const data = await userCollection.findOne({ email});
     if(!data){
     res.status(200).json({ error: "This email is not registered" });

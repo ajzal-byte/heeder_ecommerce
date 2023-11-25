@@ -45,7 +45,7 @@ admin_router
 .get(category.editCategories)
 
 admin_router
-.route('/updateCategories/:category_id')
+.route('/updateCategories')
 .post(category.updateCategories);
 
 admin_router

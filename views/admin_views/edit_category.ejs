@@ -61,16 +61,10 @@
                         <span class="text">Categories</span>
                     </a>
                 </li>
-                <li class="menu-item has-submenu">
-                    <a class="menu-link" href="page-form-product-1.html"> <i class="icon material-icons md-add_box"></i>
-                        <span class="text">Add product</span>
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/users"> <i class="icon material-icons md-person"></i>
+                        <span class="text">Users</span>
                     </a>
-                    <div class="submenu">
-                        <a href="page-form-product-1.html">Add product 1</a>
-                        <a href="page-form-product-2.html">Add product 2</a>
-                        <a href="page-form-product-3.html">Add product 3</a>
-                        <a href="page-form-product-4.html">Add product 4</a>
-                    </div>
                 </li>
                 <li class="menu-item has-submenu">
                     <a class="menu-link" href="page-transactions-1.html"> <i class="icon material-icons md-monetization_on"></i>
@@ -185,15 +179,16 @@
         <section class="content-main">
             
             <% if (locals.message) { %>
-                <div class="alert alert-success" role="alert">
+                <div class="alert alert-danger" role="alert">
                   <%= message %>
                 </div>
               <% } %>
 
-            <form action="/admin/updateCategories/<%= category_edit._id %>" method="post">
+            <form action="/admin/updateCategories", method="post">
                 <div class="mb-3">
                   <label>Category Name:</label>
-                  <input value="<%= category_edit.categoryName %>" class="form-control" type="text" name="cat_name" required>
+                  <input value="<%= category_edit.categoryName %>" class="form-control" type="text" name="cat_name" id="categoryName" required>
+                  <div id="categoryNameError" class="error-message"></div>
                 </div>
                 <div class="mb-3">
                   <label>Status:</label>
@@ -203,7 +198,7 @@
                   </select>
                 </div>
                 <div class="mb-4">
-                  <button type="submit" class="btn btn-primary w-100"> Save Changes </button>
+                  <button id="saveChanges" type="submit" class="btn btn-primary w-100"> Save Changes </button>
                 </div>
               </form>
               
@@ -223,6 +218,98 @@
             </div>
         </footer>
     </main>
+
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", ()=>{
+            const saveChanges = document.getElementById('saveChanges');
+    
+            saveChanges.addEventListener('click', (e)=>{
+                e.preventDefault();
+                console.log('here');
+    
+    
+                if(validateForm()){
+                    const categoryId = '<%= category_edit._id %>'
+                    console.log(categoryId);
+                    const categoryName = document.getElementById('categoryName').value;
+                    console.log(categoryName);
+                fetch(`/admin/updateCategories?categoryID=${categoryId}&categoryName=${categoryName}`, {method: 'POST'})
+    
+                .then((response)=>{
+                        if(!response.ok){
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+    
+                    .then((data) => {
+                    console.log("Response from server", data);
+                    if (data.success) {
+                        window.location.href = "/admin/categories";
+                    } else if (data.error) {
+                        Swal.fire({
+                            position: 'top-center',
+                            icon: 'error',
+                            title: data.error,
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                });
+                }
+    
+            })
+    
+            function validateForm(){
+                resetErrorMessages();
+    
+                const categoryNameInput= document.getElementById('categoryName').value;
+                const categoryName = categoryNameInput.trim();
+                if (/^\d/.test(categoryName)) {
+                    showError('categoryNameError', 'Category name cannot start with a number');
+                    return false;
+                }
+    
+                if (categoryName !== categoryNameInput) {
+                    showError('categoryNameError', 'Category name cannot have whitespaces');
+                    return false;
+                }
+    
+                if (categoryName.length === 0) {
+                    showError('categoryNameError', 'Category name cannot be empty');
+                    return false;
+                }
+                return true;
+            }
+    
+            // Function to show error message
+            function showError(elementId, message) {
+                const errorElement = document.getElementById(elementId);
+                errorElement.textContent = message;
+            }  
+    
+            // Function to reset error messages
+            function resetErrorMessages() {
+            const errorElements = document.querySelectorAll('.error-message');
+            errorElements.forEach((element) => {
+                element.textContent = '';
+            });
+            }
+    
+    
+    
+        });
+    
+    
+    </script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="/admin_assets/js/vendors/jquery-3.6.0.min.js"></script>
     <script src="/admin_assets/js/vendors/bootstrap.bundle.min.js"></script>
     <script src="/admin_assets/js/vendors/select2.min.js"></script>

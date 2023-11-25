@@ -187,7 +187,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-3">
-                            <form action="/admin/addCategories", method="post">
+                            <form action="/admin/addCategories" method="post">
                                 <div class="mb-4">
                                     <label for="product_name" class="form-label">Name</label>
                                     <input type="text" placeholder="Type here" class="form-control" id="categoryName" name="cat_name" />
@@ -272,9 +272,8 @@
 
 
             if(validateForm()){
-                const categoryName = document.getElementById('categoryName').value;
-            console.log(categoryName);
-            fetch(`addCategories?categoryName=${categoryName}`, {method: 'POST'})
+            const categoryName = document.getElementById('categoryName').value;
+            fetch(`/admin/addCategories?categoryName=${categoryName}`, {method: 'POST'})
 
             .then((response)=>{
                     if(!response.ok){
