@@ -1,6 +1,8 @@
 const userCollection = require('../../models/user_schema');
 const productCollection = require('../../models/products_schema')
 const nodemailer = require('nodemailer');
+const bcrypt = require('bcrypt');
+const saltRounds = 10; // The number of salt rounds determines the computational cost (higher is slower but more secure)
 // const { v4: uuidv4 } = require('uuid');
 // const transporter = require('../emailConfig');
 
@@ -24,15 +26,14 @@ module.exports.postUserLogin = async (req, res)=>{
   try{
     const email = req.query.email;
     const password = req.query.password;
-    // console.log(email)
-    // console.log(password)
     const data = await userCollection.findOne({ email});
     if(!data){
     res.status(200).json({ error: "This email is not registered" });
     }else if(data){
+      const passwordMatch = await bcrypt.compare(password, data.password)
       if(data.status == 'Inactive'){
         res.status(200).json({ error: "This user is blocked" });
-      }else if(password !== data.password){
+      }else if(!passwordMatch){
         res.status(200).json({ error: "Incorrect Password" });
       }else{
         req.session.user = {
@@ -71,15 +72,25 @@ module.exports.getUserSignup = async (req, res)=>{
 module.exports.postUserSignup = async (req, res)=>{
   try{
     const {username, email, password, phoneNumber} = req.body;
-    await userCollection.create({
-     username,
-      email,
-      password,
-      phoneNumber,
-      status : "Active"
+    bcrypt.hash(password, saltRounds, async(err, hash)=>{
+      if(err){
+        console.error('Error hashing password:', err);
+        return;
+      }
+      await userCollection.create({
+        username,
+        email,
+        password: hash,
+        phoneNumber,
+        status: 'Active'
+    }).then((data)=>{
+      if(data){
+        res.redirect('/login');
+      }
     });
-    res.redirect('/login')
-  }catch(error){
+    });
+    
+  }catch(error){  
     console.error(error);
   }
 };
