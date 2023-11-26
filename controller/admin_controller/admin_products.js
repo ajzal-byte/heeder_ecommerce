@@ -93,8 +93,7 @@ module.exports.blockProduct = async (req, res)=>{
   try{
     const product_id = req.params.product_id;
     await productCollection.findByIdAndUpdate(product_id, {status: 'Inactive'});
-    const products = await productCollection.find()
-    res.render('products_grid', {products});
+    res.redirect('/admin/products')
   }catch (error) {
     console.error(error);
   }
@@ -106,8 +105,7 @@ module.exports.unblockProduct = async (req, res)=>{
   try{
     const product_id = req.params.product_id;
     await productCollection.findByIdAndUpdate(product_id, {status: 'Active'});
-    const products = await productCollection.find()
-    res.render('products_grid', {products});
+    res.redirect('/admin/products')
   }catch (error) {
     console.error(error);
   }

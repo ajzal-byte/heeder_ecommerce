@@ -231,11 +231,11 @@
                                         Edit
                                     </a>
                                     <% if (product.status == 'Inactive') { %>
-                                        <a href="/admin/unblockProduct/<%= product._id %>" class="btn btn-sm font-sm btn-success rounded">
+                                        <a  class="btn btn-sm font-sm btn-success rounded block-unblock-button" data-action="/admin/unblockProduct/<%= product._id %>">
                                             Unblock
                                         </a>
                                     <% } else { %>
-                                        <a href="/admin/blockProduct/<%= product._id %>" class="btn btn-sm font-sm btn-danger rounded">
+                                        <a class="btn btn-sm font-sm btn-danger rounded block-unblock-button" data-action="/admin/blockProduct/<%= product._id %>">
                                         Block
                                         </a>
                                     <% } %>
@@ -245,6 +245,39 @@
                       <% }) %>
                     </div>
                   </div>
+
+
+                  <script>
+                    document.addEventListener("DOMContentLoaded", ()=>{
+                        const blockUnblockButton = document.querySelectorAll('.block-unblock-button')
+            
+                        blockUnblockButton.forEach(button=>{
+                            button.addEventListener('click', (e)=>{
+                            e.preventDefault();
+            
+                            const action = button.getAttribute('data-action');
+            
+                            Swal.fire({
+                                title: "Are you sure?",
+                                text: "You will be able to revert this!",
+                                icon: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: "#3085d6",
+                                cancelButtonColor: "#d33",
+                                confirmButtonText: "Yes!"
+                                }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.href = action;
+                                }
+                                });
+                        })
+            
+                        })
+            
+                    });
+            
+                </script>
+
                   
                    <!-- card-body end// -->
             </div> <!-- card end// -->
@@ -276,6 +309,7 @@
             </div>
         </footer>
     </main>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="/admin_assets/js/vendors/jquery-3.6.0.min.js"></script>
     <script src="/admin_assets/js/vendors/bootstrap.bundle.min.js"></script>
     <script src="/admin_assets/js/vendors/select2.min.js"></script>

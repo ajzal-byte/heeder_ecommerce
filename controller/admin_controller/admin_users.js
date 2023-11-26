@@ -17,8 +17,9 @@ module.exports.blockUser = async (req, res)=>{
   try{
     const user_id = req.params.user_id;
     await userCollection.findByIdAndUpdate(user_id, {status: 'Inactive'});
-    const users = await userCollection.find()
-    res.render('users_list', {users});
+    // const users = await userCollection.find()
+    // res.render('users_list', {users});
+    res.redirect('/admin/users')
   }catch (error) {
     console.error(error);
   }
@@ -28,8 +29,9 @@ module.exports.unblockUser = async (req, res)=>{
   try{
     const user_id = req.params.user_id;
     await userCollection.findByIdAndUpdate(user_id, {status: 'Active'});
-    const users = await userCollection.find()
-    res.render('users_list', {users});
+    // const users = await userCollection.find()
+    // res.render('users_list', {users});
+    res.redirect('/admin/users')
   }catch (error) {
     console.error(error);
   }

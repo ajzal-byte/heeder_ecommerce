@@ -77,7 +77,7 @@ module.exports.blockCategories = async (req, res)=>{
     const category_id = req.params.category_id;
     await category.findByIdAndUpdate(category_id, {isListed: 'Inactive'});
     const categories = await category.find(); 
-    res.render('page_categories', {categories});
+    res.redirect('/admin/categories');
   }catch (error) {
     console.error(error);
   }
@@ -88,7 +88,7 @@ module.exports.unblockCategories = async (req, res)=>{
     const category_id = req.params.category_id;
     await category.findByIdAndUpdate(category_id, {isListed: 'Active'});
     const categories = await category.find(); 
-    res.render('page_categories', {categories});
+    res.redirect('/admin/categories');
   }catch (error) {
     console.error(error);
   }
