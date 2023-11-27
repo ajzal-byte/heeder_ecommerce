@@ -268,11 +268,22 @@ module.exports.forgotChangePassword = async (req, res)=>{
       const email = req.query.email;
       const newPassword = req.query.password;
       const user = await userCollection.findOne({email});
-     if(newPassword == user.password){
+      const passwordMatch = await bcrypt.compare(newPassword, user.password)
+     if(passwordMatch){
        return res.status(200).json({same:true})
      }else{
-        await userCollection.updateOne({email}, {$set:{password: newPassword}})
-        return res.status(200).json({same: false});
+      bcrypt.hash(newPassword, saltRounds, async(err, hash)=>{
+        if(err){
+          console.error('Error hashing password:', err);
+          return;
+        }
+        await userCollection.updateOne({email}, {$set:{password: hash}})
+        .then((data)=>{
+          if(data){
+            return res.status(200).json({same: false});
+          }
+        });
+      });
     }
   }catch(error){
     console.error(error)

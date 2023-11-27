@@ -220,7 +220,7 @@
                                             <label class="form-label">Category</label>
                                             <div class="row gx-2">
                                                 <select class="form-select" name="product_cat">
-                                                    <% categories.forEach(category => { %>
+                                                    <% categories.reverse().forEach(category => { %>
                                                       <% if (category.isListed === "Active") { %>
                                                         <option <%= category.categoryName === product_edit.category ? 'selected' : '' %>><%= category.categoryName %></option>
                                                       <% } %>
