@@ -5,7 +5,7 @@
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-categories.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:21 GMT -->
 <head>
     <meta charset="utf-8">
-    <title>Admin Categories</title>
+    <title>Admin Brands</title>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -56,7 +56,7 @@
                         <a href="page-orders-detail.html">Order detail</a>
                     </div>
                 </li>
-                <li class="menu-item active">
+                <li class="menu-item">
                     <a class="menu-link" href="/admin/categories"> <i class="icon material-icons md-local_offer"></i>
                         <span class="text">Categories</span>
                     </a>
@@ -66,7 +66,7 @@
                         <span class="text">Users</span>
                     </a>
                 </li>
-                <li class="menu-item">
+                <li class="menu-item active">
                     <a class="menu-link" href="/admin/brands"> <i class="icon material-icons md-stars"></i>
                         <span class="text">Brands</span> </a>
                 </li>
@@ -179,29 +179,29 @@
         <section class="content-main">
             <div class="content-header">
                 <div>
-                    <h2 class="content-title card-title">Categories </h2>
-                    <p>Add, edit or block a category</p>
+                    <h2 class="content-title card-title">Brands </h2>
+                    <p>Add, edit or block a brand</p>
                 </div>
             </div>
             <div class="card">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-3">
-                            <form action="/admin/addCategories" method="post">
+                            <form action="/admin/addBrands" method="post">
                                 <div class="mb-4">
                                     <label for="product_name" class="form-label">Name</label>
-                                    <input type="text" placeholder="Type here" class="form-control" id="categoryName" name="cat_name" />
-                                    <div id="categoryNameError" class="error-message"></div>
+                                    <input type="text" placeholder="Type here" class="form-control" id="brandName" name="brand_name" />
+                                    <div id="brandNameError" class="error-message"></div>
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label">Status</label>
-                                    <select class="form-select" name="cat_status">
+                                    <select class="form-select" name="brand_status">
                                         <option>Active</option>
                                         <option>Inactive</option>
                                     </select>
                                 </div>
                                 <div class="d-grid">
-                                    <button type="submit" class="btn btn-primary" id="createCategory" >Create category</button>
+                                    <button type="submit" class="btn btn-primary" id="createBrand" >Create Brand</button>
                                 </div>
                             </form> 
                         </div>
@@ -216,24 +216,18 @@
                                             <th class=>Action</th>
                                         </tr>
                                     </thead>
-
-                                    <% if (locals.message) { %>
-                                        <div class="alert alert-success" role="alert">
-                                          <%= message %>
-                                        </div>
-                                      <% } %>
                                         
                                     <tbody>
-                                        <% categories.reverse().forEach(category => { %>
+                                        <% brands.reverse().forEach(brand => { %>
                                         <tr> 
-                                            <td><%= category._id %></td>
-                                            <td><%= category.categoryName %></td>
-                                            <td><%= category.isListed %></td>
-                                            <td>  <a href="/admin/editCategories/<%= category._id %>" class="btn btn-dark"> Edit </a> 
-                                                <% if(category.isListed === "Active") { %>
-                                                <a class="btn btn-danger mx-3 block-unblock-button" data-action="/admin/blockCategories/<%= category._id %>" >Block</a>
+                                            <td><%= brand._id %></td>
+                                            <td><%= brand.brandName %></td>
+                                            <td><%= brand.isListed %></td>
+                                            <td>  <a href="/admin/editBrands/<%= brand._id %>" class="btn btn-dark"> Edit </a> 
+                                                <% if(brand.isListed === "Active") { %>
+                                                <a class="btn btn-danger mx-3 block-unblock-button" data-action="/admin/blockBrands/<%= brand._id %>" >Block</a>
                                                 <% } else { %>
-                                                <a class="btn btn-success mx-3 block-unblock-button" data-action="/admin/unblockCategories/<%= category._id %>" >Unblock</a> 
+                                                <a class="btn btn-success mx-3 block-unblock-button" data-action="/admin/unblockBrands/<%= brand._id %>" >Unblock</a> 
                                                 <% } %>
                                             </td>
                                         </tr>
@@ -299,15 +293,16 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", ()=>{
-        const createCategory = document.getElementById('createCategory');
+        const createBrand = document.getElementById('createBrand');
 
-        createCategory.addEventListener('click', (e)=>{
+        createBrand.addEventListener('click', (e)=>{
             e.preventDefault();
 
 
             if(validateForm()){
-            const categoryName = document.getElementById('categoryName').value;
-            fetch(`/admin/addCategories?categoryName=${categoryName}`, {method: 'POST'})
+            const brandName = document.getElementById('brandName').value;
+            console.log(brandName);
+            fetch(`/admin/addBrands?brandName=${brandName}`, {method: 'POST'})
 
             .then((response)=>{
                     if(!response.ok){
@@ -319,7 +314,7 @@
                 .then((data) => {
                 console.log("Response from server", data);
                 if (data.success) {
-                    window.location.href = "/admin/categories";
+                    window.location.href = "/admin/brands";
                 } else if (data.error) {
                     Swal.fire({
                         position: 'top-center',
@@ -340,20 +335,20 @@
         function validateForm(){
             resetErrorMessages();
 
-            const categoryNameInput= document.getElementById('categoryName').value;
-            const categoryName = categoryNameInput.trim();
-            if (/^\d/.test(categoryName)) {
-                showError('categoryNameError', 'Category name cannot start with a number');
+            const brandNameInput= document.getElementById('brandName').value;
+            const brandName = brandNameInput.trim();
+            if (/^\d/.test(brandName)) {
+                showError('brandNameError', 'Brand name cannot start with a number');
                 return false;
             }
 
-            if (categoryName !== categoryNameInput) {
-                showError('categoryNameError', 'Category name cannot have whitespaces');
+            if (brandName !== brandNameInput) {
+                showError('brandNameError', 'Brand name cannot have whitespaces');
                 return false;
             }
 
-            if (categoryName.length === 0) {
-                showError('categoryNameError', 'Category name cannot be empty');
+            if (brandName.length === 0) {
+                showError('brandNameError', 'Brand name cannot be empty');
                 return false;
             }
             return true;

@@ -207,12 +207,17 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-lg-4">
-                                        <div class="mb-4 ">
-                                            <label class="form-label">Brand</label>
+                                        <div class="mb-4">
+                                            <label class="form-label">Brands</label>
                                             <div class="row gx-2">
-                                                <input value="<%= product_edit.brand %>" type="text" name="product_brand" class="form-control" id="productBrand" >
-                                                <div id="productBrandError" class="error-message"></div>
-                                            </div>
+                                                <select class="form-select" name="product_brand">
+                                                    <% brands.reverse().forEach(brand => { %>
+                                                        <% if(brand.isListed === "Active") { %>
+                                                        <option <%= brand.brandName === product_edit.brand ? 'selected' : '' %>><%= brand.brandName %></option>
+                                                      <% } %>
+                                                    <% }) %>
+                                                  </select>
+                                            </div>                                              
                                         </div>
                                     </div>
                                     <div class="col-lg-4">

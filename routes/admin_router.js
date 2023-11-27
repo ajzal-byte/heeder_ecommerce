@@ -2,6 +2,7 @@ const express = require('express');
 const admin_router = express.Router();
 const admin_controller = require('../controller/admin_controller/admin_login');
 const category = require('../controller/admin_controller/admin_category');
+const brands = require('../controller/admin_controller/admin_brands');
 const products = require('../controller/admin_controller/admin_products');
 const users= require('../controller/admin_controller/admin_users');
 const upload = require('../middleware/multer');
@@ -55,6 +56,30 @@ admin_router
 admin_router
 .route('/unblockCategories/:category_id')
 .get(category.unblockCategories);
+
+admin_router
+.route("/brands")
+.get(brands.getBrands);
+
+admin_router
+.route("/addBrands")
+.post(brands.addBrands);
+
+admin_router
+.route('/editBrands/:brand_id')
+.get(brands.editBrands);
+
+admin_router
+.route('/updateBrands')
+.post(brands.updateBrands);
+
+admin_router
+.route('/blockBrands/:brand_id')
+.get(brands.blockBrands);
+
+admin_router
+.route('/unblockBrands/:brand_id')
+.get(brands.unblockBrands);
 
 
 admin_router

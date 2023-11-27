@@ -1,5 +1,6 @@
 const productCollection = require('../../models/products_schema')
 const category = require('../../models/category_schema');
+const brandCollection = require('../../models/brand_schema')
 const multer = require('../../middleware/multer');
 const path = require('path');
 const sharp = require('sharp')
@@ -27,7 +28,8 @@ module.exports.getAddProduct = async (req, res)=>{
   try{
     if(req.session.admin){
     const categories = await category.find();
-      res.render('product_add', {categories});
+    const brands = await brandCollection.find();
+      res.render('product_add', {categories, brands});
     }else{
       res.redirect('/admin')
     }
@@ -119,7 +121,8 @@ module.exports.editProduct = async (req, res)=>{
     const product_id = req.params.product_id;
   const product_edit = await productCollection.findById(product_id);
   const categories = await category.find();
-  res.render('edit_product', {product_edit, categories})
+  const brands = await brandCollection.find();
+  res.render('edit_product', {product_edit, categories, brands})
   }catch (error) {
     console.error(error);
   }
