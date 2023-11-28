@@ -212,7 +212,7 @@
                                     </a>
                                 </div>
                                 <div class="header-action-icon-2">
-                                    <a class="mini-cart-icon" href="shop-cart.html">
+                                    <a class="mini-cart-icon" href="/cart">
                                         <img alt="Evara" src="/user_assets/imgs/theme/icons/icon-cart.svg">
                                         <span class="pro-count blue">2</span>
                                     </a>
@@ -954,7 +954,7 @@
                                     </div>
                                     <div class="product-content-wrap">
                                         <div class="product-category">
-                                            <a href="/productDetails/<%= product._id %>"><%= product.category %></a>
+                                            <a href="/productDetails/<%= product._id %>"><%= product.category%></a>
                                         </div>
                                         <h2><a href="/productDetails/<%= product._id %>"><%= product.productName %></a></h2>
                                         
@@ -964,13 +964,34 @@
                                             <span class="save-price  font-md color3 ml-5 text-danger" style="font-size: small;"> - <%=Math.round((1 - (product.salePrice / product.regularPrice)) * 100)%>% </span>
                                         </div>
                                         <div class="product-action-1 show">
-                                            <a aria-label="Add To Cart" class="action-btn hover-up" href="shop-cart.html"><i class="fi-rs-shopping-bag-add"></i></a>
+                                            <% if(product.stock>0){%>
+                                                <a aria-label="Add To Cart" class="action-btn hover-up" data-product-id="<%= product._id %>" id="addtoCart" ><i class="fi-rs-shopping-bag-add"></i></a>
+                                            <% }else{ %>
+                                                <span class="badge text-white" style="background-color: rgb(247, 58, 58); border-radius: 7px;" >Out of Stock</span>                                            <% } %>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         <% } %>
                         <% }) %>
+
+                        <script>
+                            document.addEventListener("DOMContentLoaded", ()=>{
+                                const addtoCart = document.querySelectorAll('#addtoCart');
+
+                                addtoCart.forEach(add => {
+                                    add.addEventListener('click', (e)=>{
+                                        e.preventDefault()
+                                        const productID = add.getAttribute('data-product-id')
+                                        console.log(productID);
+                                        fetch(`/addtoCart?productID=${productID}`,{method:'POST'} );
+
+                                        
+                                    })
+                                    
+                                });
+                            });
+                        </script>
                             <!-- <div class="col-lg-3 col-md-4 col-12 col-sm-6">
                                 <div class="product-cart-wrap mb-30">
                                     <div class="product-img-action-wrap">

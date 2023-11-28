@@ -105,7 +105,6 @@ const generateOTP = () => {
 
 module.exports.getSendOtp = async (req, res)=>{
   try{
-    const phoneNumber = req.query.phoneNumber;
     const ifExist = await userCollection.findOne({
       $or: [
         {email : req.query.email},
@@ -176,9 +175,7 @@ module.exports.verifyOTP = async (req, res)=>{
 
 module.exports.getProductDetails = async (req, res)=>{
   try{
-    console.log(req.session.user)
     const userSession = req.session.user;
-    // console.log('userSession:', userSession);
     const product_id = req.params.product_id;
     const product_details = await productCollection.findOne({_id : product_id})
     // console.log(product_details);

@@ -55,9 +55,6 @@ module.exports.postAddProduct = async (req, res)=>{
       .resize({width: 785, height:750, fit:'cover'})
       .toFile(imagePath); 
 
-      // imagePath =  `/${imagePath.split('/').slice(1).join('/')}`
-      // console.log(imagePath)
-
       productImages.push({
         fileName: filename,
         originalname: file.originalname,
@@ -66,12 +63,14 @@ module.exports.postAddProduct = async (req, res)=>{
   
     }
 
+    const productCategory = await category.findOne({ categoryName: product_cat })
+    console.log(productCategory);
      
     await productCollection.create({
       productName : product_name,
       description : product_desc,
       brand : product_brand,
-      category : product_cat,
+      category : productCategory._id,
       colour : product_colour,
       formfactor : product_factor,
       connectivity : product_connect,
@@ -196,7 +195,8 @@ try{
   await productCollection.updateOne({_id: productId},  { $pull: { productImage: { path: imagePath } } } )
   const product_edit = await productCollection.findById(productId);
   const categories = await category.find();   
-  res.render('edit_product', {product_edit, categories} );
+  const brands = await brandCollection.find();
+  res.render('edit_product', {product_edit, categories, brands} );
 }catch(error){
   console.error(error);
 }

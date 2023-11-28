@@ -210,7 +210,7 @@
                                         <div class="mb-4">
                                             <label class="form-label">Brands</label>
                                             <div class="row gx-2">
-                                                <select class="form-select" name="product_brand">
+                                                <select class="form-select" name="product_brand" id="productBrand" >
                                                   <% brands.reverse().forEach(brand => { %>
                                                     <% if(brand.isListed === "Active") { %>
                                                     <option><%= brand.brandName %> </option>
@@ -400,7 +400,7 @@
 
         publishButton.addEventListener('click', (e) => {
             if (!validateForm()) {
-                event.preventDefault();
+                e.preventDefault();
             }
         });
 
@@ -451,6 +451,11 @@
 
                 if (isNaN(salePriceValue) || salePriceValue <= 0) {
                     showError('productSalePriceError', 'Sale Price must be a number and greater than 0');
+                    isValid = false;
+                }
+
+                if (salePriceValue >= regPriceValue) {
+                    showError('productSalePriceError', 'Sale Price must be less than Regular Price');
                     isValid = false;
                 }
 

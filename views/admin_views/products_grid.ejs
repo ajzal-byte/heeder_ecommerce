@@ -211,7 +211,7 @@
                 </header> <!-- card-header end// -->
                 <div class="card-body">
                     <div class="row gx-3 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 row-cols-xxl-5">
-                     <% products.forEach(product => { %>
+                     <% products.reverse().forEach(product => { %>
                         <div class="col">
                           <div class="card card-product-grid">
                                 <% if (product.productImage && product.productImage.length > 0) { %>
