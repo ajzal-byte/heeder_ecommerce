@@ -930,7 +930,7 @@
                         <div class="row product-grid-4">
                             <% products.reverse().forEach(product => { %>
                                 <% if(product.status == "Active"){ %> 
-                            <div class="col-lg-3 col-md-4 col-12 col-sm-6">
+                            <div class="col-lg-4 col-md-4 col-12 col-sm-6">
                                 <div class="product-cart-wrap mb-30">
                                     <div class="product-img-action-wrap">
                                         <div class="product-img product-img-zoom">
@@ -967,7 +967,8 @@
                                             <% if(product.stock>0){%>
                                                 <a aria-label="Add To Cart" class="action-btn hover-up" data-product-id="<%= product._id %>" id="addtoCart" ><i class="fi-rs-shopping-bag-add"></i></a>
                                             <% }else{ %>
-                                                <span class="badge text-white" style="background-color: rgb(247, 58, 58); border-radius: 7px;" >Out of Stock</span>                                            <% } %>
+                                                <span class="badge text-white" style="background-color: rgb(247, 58, 58); border-radius: 7px;" >Out of Stock</span> 
+                                            <% } %>
                                         </div>
                                     </div>
                                 </div>
