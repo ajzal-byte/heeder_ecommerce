@@ -867,7 +867,7 @@
                                         <h2 class="title-detail"><%= product_details.productName %></h2>
                                         <div class="product-detail-rating">
                                             <div class="pro-details-brand">
-                                                <span> Brands: <a href="shop-grid-right.html"><%= product_details.brand %></a></span>
+                                                <span> Brand: <a href="shop-grid-right.html"><%= product_details.brand?.brandName %></a></span>
                                             </div>
                                             <div class="product-rate-cover text-end">
                                                 <div class="product-rate d-inline-block">
@@ -930,7 +930,7 @@
                                             </div>
                                         </div>
                                         <ul class="product-meta font-xs color-grey mt-50">
-                                            <li class="mb-5">Category: <a href="#"><%= product_details.category%></a></li>
+                                            <li class="mb-5">Category: <a href="#"><%= product_details.category?.categoryName%></a></li>
                                             <li class="mb-5">Form Factor: <a href="#"><%= product_details.formfactor%></a></li>
                                             <% if(product_details.stock>0){ %>
                                             <li>Availability:<span class="in-stock text-success ml-5"><%= product_details.stock%> Items In Stock</span></li>
@@ -948,7 +948,7 @@
                                     <div class="description mb-50">
                                         <p><%= product_details.description %></p>
                                         <ul class="product-more-infor mt-30">
-                                            <li><span>Brand</span> <%= product_details.brand%></li>
+                                            <li><span>Brand</span> <%= product_details.brand?.brandName%></li>
                                             <li><span>Colour</span> <%= product_details.colour%></li>
                                             <li><span>Connectivity</span> <%= product_details.connectivity %></li>
                                         </ul>

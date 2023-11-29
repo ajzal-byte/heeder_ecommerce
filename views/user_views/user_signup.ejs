@@ -99,9 +99,11 @@
         const sendOTPButton = document.getElementById("sendOTPButton");
         const resendOTPButton = document.getElementById("resendOTPButton");
         const submitButton = document.getElementById("submitButton");
+        const verifyOTPButton = document.getElementById("verifyOTPButton");
 
 
         submitButton.disabled = true;
+        verifyOTPButton.disabled = true;
 
         sendOTPButton.addEventListener("click",  (e)=> {
             e.preventDefault();
@@ -139,6 +141,7 @@
                         showConfirmButton: false,
                         timer: 1500
                     });
+                    verifyOTPButton.disabled = false;
                     startResendTimer();
                     }
                     })
@@ -281,7 +284,7 @@
 
 
        // verify otp
-const verifyOTPButton = document.getElementById("verifyOTPButton");
+// const verifyOTPButton = document.getElementById("verifyOTPButton");  
 const form = document.querySelector('form');
 
 verifyOTPButton.addEventListener("click", (e) => {
@@ -310,7 +313,6 @@ verifyOTPButton.addEventListener("click", (e) => {
 
        // Disable all form fields
         Array.from(form.elements).forEach(element => {
-            // element.disabled = true; // Change this line
             element.readOnly = true; // Set readonly instead of disabled
         });
         submitButton.disabled = false;

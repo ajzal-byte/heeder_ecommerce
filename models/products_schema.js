@@ -10,8 +10,8 @@ const productSchema = new mongoose.Schema({
     required: true,
   },
   brand: {
-    type: String,
-    required: true,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "brandCollection"
   },
   category: {
     type: mongoose.Schema.Types.ObjectId,

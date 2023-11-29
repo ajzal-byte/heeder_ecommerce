@@ -66,6 +66,10 @@
                         <span class="text">Users</span>
                     </a>
                 </li>
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/brands"> <i class="icon material-icons md-stars"></i>
+                        <span class="text">Brands</span> </a>
+                </li>
                 <li class="menu-item has-submenu">
                     <a class="menu-link" href="page-transactions-1.html"> <i class="icon material-icons md-monetization_on"></i>
                         <span class="text">Transactions</span>
@@ -89,10 +93,6 @@
                     <a class="menu-link" href="page-reviews.html"> <i class="icon material-icons md-comment"></i>
                         <span class="text">Reviews</span>
                     </a>
-                </li>
-                <li class="menu-item">
-                    <a class="menu-link" href="page-brands.html"> <i class="icon material-icons md-stars"></i>
-                        <span class="text">Brands</span> </a>
                 </li>
                 <li class="menu-item">
                     <a class="menu-link" disabled href="#"> <i class="icon material-icons md-pie_chart"></i>
@@ -213,7 +213,7 @@
                                                 <select class="form-select" name="product_brand" id="productBrand" >
                                                     <% brands.reverse().forEach(brand => { %>
                                                         <% if(brand.isListed === "Active") { %>
-                                                        <option <%= brand.brandName === product_edit.brand ? 'selected' : '' %>><%= brand.brandName %></option>
+                                                        <option <%= brand.brandName === product_edit.brand?.brandName ? 'selected' : '' %>><%= brand.brandName %></option>
                                                       <% } %>
                                                     <% }) %>
                                                   </select>
@@ -227,7 +227,7 @@
                                                 <select class="form-select" name="product_cat">
                                                     <% categories.reverse().forEach(category => { %>
                                                       <% if (category.isListed === "Active") { %>
-                                                        <option <%= category.categoryName === product_edit.category ? 'selected' : '' %>><%= category.categoryName %></option>
+                                                        <option <%= category.categoryName === product_edit.category?.categoryName ? 'selected' : '' %>><%= category.categoryName %></option>
                                                       <% } %>
                                                     <% }) %>
                                                   </select>
@@ -329,15 +329,13 @@
                                         <div id="imagePreviewContainer" class="mt-3"></div> <!-- Add this line for image preview -->
                                     </div>
                                 </div>
-                                <div>
+                                <div id="existingImagesContainer">
                                     <% for (let i = 0; i < product_edit.productImage.length; i++) { %>
-                                        <div class="image-container" style="margin-bottom: 20px;">
+                                        <div class="image-container existing-image" style="margin-bottom: 20px;">
                                             <figure class="border-radius-10">
                                                 <img src="<%= product_edit.productImage[i].path  + '?t=' + new Date().getTime() %>" alt="<%= product_edit.productName %>" class="img-fluid loading="lazy">
-                                                <a href="/admin/delete_image?productId=<%= product_edit.id %>&image=<%= product_edit.productImage[i].path %>" class="btn btn-sm btn-danger" id="deleteImageBtn" name="deleteImageBtn">Delete</a>
+                                                <a href="/admin/delete_image?productId=<%= product_edit.id %>&image=<%= product_edit.productImage[i].path %>" class="btn btn-sm btn-danger deleteImageBtn">Delete</a>
                                             </figure>
-                                            <!-- Close button for deleting the image -->
-                                            
                                         </div>
                                     <% } %>
                                 </div>
@@ -366,6 +364,7 @@
             </div>
         </footer>
     </main>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="/admin_assets/js/vendors/jquery-3.6.0.min.js"></script>
     <script src="/admin_assets/js/vendors/bootstrap.bundle.min.js"></script>
     <script src="/admin_assets/js/vendors/select2.min.js"></script>
@@ -428,14 +427,17 @@
                     { id: 'productStock', name: 'Product Stock' },
                     { id: 'productRegPrice', name: 'Product Regular Price' },
                     { id: 'productSalePrice', name: 'Product Sale Price' },
-                    { id: 'productImages', name: 'Product Image' }
+                    { id: 'productSalePrice', name: 'Product Sale Price' },
                 ];
 
-                let isValid = true;
 
+                let isValid = true;
+                                
                 inputFields.forEach((field) => {
                     const originalValue = document.getElementById(field.id).value;
                     const trimmedValue = originalValue.trim();
+
+                   
 
                     if (trimmedValue.length === 0) {
                         showError(`${field.id}Error`, `${field.name} cannot be empty`);

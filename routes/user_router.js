@@ -3,11 +3,12 @@ const user_router = express.Router();
 const user_controller = require('../controller/user_controller/user_login');
 const user_cart = require('../controller/user_controller/user_cart');
 const productCollection = require('../models/products_schema')
+const category = require('../models/category_schema')
 const userCollection = require('../models/user_schema');
 
 user_router
 .get('/', async (req,res)=>{
-  const products = await productCollection.find()
+  const products = await productCollection.find().populate({path:'category', model:'Categories'})
   const userSession = req.session.user;
   res.render('user_index', {products, userSession});
 });

@@ -63,13 +63,14 @@ module.exports.postAddProduct = async (req, res)=>{
   
     }
 
-    const productCategory = await category.findOne({ categoryName: product_cat })
+    const productCategory = await category.findOne({ categoryName: product_cat });
+    const productBrand = await brandCollection.findOne({brandName: product_brand});
     console.log(productCategory);
      
     await productCollection.create({
       productName : product_name,
       description : product_desc,
-      brand : product_brand,
+      brand : productBrand._id,
       category : productCategory._id,
       colour : product_colour,
       formfactor : product_factor,
@@ -118,7 +119,7 @@ module.exports.unblockProduct = async (req, res)=>{
 module.exports.editProduct = async (req, res)=>{
   try{
     const product_id = req.params.product_id;
-  const product_edit = await productCollection.findById(product_id);
+  const product_edit = await productCollection.findById(product_id).populate({path:'category', model:'Categories'}).populate({path:'brand', model: 'brandCollection'})
   const categories = await category.find();
   const brands = await brandCollection.find();
   res.render('edit_product', {product_edit, categories, brands})
@@ -164,11 +165,18 @@ module.exports.updateProduct = async (req, res)=>{
         }
       }
 
+      if (!productImages || productImages.length === 0) {
+        return res.status(200).json({ message: 'Product must have at least one image' });
+      }
+
+      const productCategory = await category.findOne({ categoryName: product_cat });
+      const productBrand = await brandCollection.findOne({brandName: product_brand});
+
     await productCollection.findByIdAndUpdate(product_id, {
       productName : product_name,
       description : product_desc,
-      brand : product_brand,
-      category : product_cat,
+      brand : productBrand._id,
+      category : productCategory._id,
       colour : product_colour,
       formfactor : product_factor,
       connectivity : product_connect,
