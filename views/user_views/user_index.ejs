@@ -983,11 +983,34 @@
                                 addtoCart.forEach(add => {
                                     add.addEventListener('click', (e)=>{
                                         e.preventDefault()
-                                        const productID = add.getAttribute('data-product-id')
-                                        console.log(productID);
-                                        fetch(`/addtoCart?productID=${productID}`,{method:'POST'} );
+                                        const productId = add.getAttribute('data-product-id')
+                                        console.log(productId);
+                                        fetch(`/addtoCart?productId=${productId}`,{method:'POST'} )
+                                        .then((response)=>{
+                                            if(!response.ok){
+                                              throw new Error(`HTTP error! status: ${Response.status}`)
+                                            }
+                                            return response.json();
+                                        })
 
-                                        
+                                        .then((data)=>{
+                                            console.log("Response from server", data);
+                                            console.log('here')
+                                            if(data.message){
+                                            Swal.fire({
+                                            position: 'top-center',
+                                            icon: 'success',
+                                            title: data.message,
+                                            showConfirmButton: false,
+                                            timer: 1500
+                                        });
+                                            }else if (data.error){
+                                                window.location.href = '/login';
+                                            }
+                                        }).catch(error => {
+                                            console.error("Error:", error);
+                                        });         
+
                                     })
                                     
                                 });
@@ -3283,6 +3306,7 @@
         </div>
     </div>
     <!-- Vendor JS-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="/user_assets/js/vendor/modernizr-3.6.0.min.js"></script>
     <script src="/user_assets/js/vendor/jquery-3.6.0.min.js"></script>
     <script src="/user_assets/js/vendor/jquery-migrate-3.3.0.min.js"></script>
