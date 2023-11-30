@@ -7,11 +7,14 @@ const userCollection = require('../../models/user_schema');
 module.exports.getCart = async (req, res)=>{
   try{
     const userSession = req.session.user;
-    const cart = await cartCollection.find
-    if(userSession){
-      res.render('shop_cart', {userSession, cart});
-    }else{
+    if(!userSession){
       res.redirect('/login')
+    }else{
+      const user = await userCollection.findOne({email: userSession.email})
+      console.log(user);
+      const userCart = await cartCollection
+      .findOne({userId: user._id}).populate({path:'products.productId', model:'Product', populate: {path:'brand', model: 'brandCollection'}})
+      res.render('shop_cart', {userSession, userCart});
     }
   }catch(error){
     console.error(error);
