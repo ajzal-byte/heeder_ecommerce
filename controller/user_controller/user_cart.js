@@ -6,16 +6,12 @@ const userCollection = require('../../models/user_schema');
 
 module.exports.getCart = async (req, res)=>{
   try{
-    const userSession = req.session.user;
-    if(!userSession){
-      res.redirect('/login')
-    }else{
+      const userSession = req.session.user;
       const user = await userCollection.findOne({email: userSession.email})
-      console.log(user);
       const userCart = await cartCollection
       .findOne({userId: user._id}).populate({path:'products.productId', model:'Product', populate: {path:'brand', model: 'brandCollection'}})
       res.render('shop_cart', {userSession, userCart});
-    }
+
   }catch(error){
     console.error(error);
   }
@@ -61,5 +57,30 @@ module.exports.addtoCart = async (req, res)=>{
     
   }catch(error){
     console.error(error);
+  }
+}
+
+module.exports.updateCart = async (req, res)=>{
+  try{
+    const userSession = req.session.user;
+    console.log("session in cart:" + userSession);
+    const productId = req.body.productId;
+    console.log(productId);
+    const quantity = req.body.quantity;
+    console.log(quantity );
+     await cartCollection.updateOne({
+      userId: userSession.userId,
+      'products.productId': productId
+    },
+    {
+      $set:{
+        'products.$.quantity': quantity,
+      }
+    }
+    );
+    return res.json(200)
+
+  }catch(error){
+    console.error(error)
   }
 }

@@ -1,5 +1,6 @@
 const express = require('express');
 const user_router = express.Router();
+const userAuth = require('../middleware/userAuth')
 const user_controller = require('../controller/user_controller/user_login');
 const user_cart = require('../controller/user_controller/user_cart');
 const productCollection = require('../models/products_schema')
@@ -61,14 +62,10 @@ user_router
 .route('/forgotChangePassword')
 .post(user_controller.forgotChangePassword)
 
-user_router
-.route('/cart')
-.get(user_cart.getCart)
-
+//cart
+user_router.get('/cart', userAuth.userSession, user_cart.getCart)
 user_router.post('/addtoCart', user_cart.addtoCart)
-
-
-
+user_router.post('/updateCart', userAuth.userSession, user_cart.updateCart)
 
 
 module.exports = user_router

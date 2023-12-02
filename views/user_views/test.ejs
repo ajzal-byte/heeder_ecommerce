@@ -1,0 +1,33 @@
+<script>
+                                    
+    const qty_change = document.querySelectorAll('.qty-change');
+    
+    qty_change.forEach(button=>{    
+        button.addEventListener("click", (e)=>{
+            const qty_value = document.querySelector('.qty-val').textContent;
+            const productId = button.getAttribute('data-product-id')
+            console.log(productId);
+            console.log(qty_value);
+            e.preventDefault();
+            
+
+
+                fetch('/updateCart', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ productId, qty_value })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    console.error('Failed to update cart:', response.status);
+                }
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+            });
+
+            })
+        });
+</script>
