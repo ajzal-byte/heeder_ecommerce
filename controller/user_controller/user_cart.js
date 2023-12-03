@@ -63,13 +63,11 @@ module.exports.addtoCart = async (req, res)=>{
 module.exports.updateCart = async (req, res)=>{
   try{
     const userSession = req.session.user;
-    console.log("session in cart:" + userSession);
+    const user = await userCollection.findOne({email: userSession.email});
     const productId = req.body.productId;
-    console.log(productId);
-    const quantity = req.body.quantity;
-    console.log(quantity );
+    const quantity = req.body.quantity; 
      await cartCollection.updateOne({
-      userId: userSession.userId,
+      userId: user._id,
       'products.productId': productId
     },
     {
@@ -78,9 +76,46 @@ module.exports.updateCart = async (req, res)=>{
       }
     }
     );
-    return res.json(200)
+    const cart = await cartCollection.findOne({
+      userId: user._id
+    }).populate({path: 'products.productId', model: 'Product'})
+    console.log(cart);
+     // Find the updated product in the cart
+    const updatedProduct = cart.products.find(product => product.productId._id.toString() === productId.toString());
+    console.log(updatedProduct);
+    const subTotal = updatedProduct.productId.salePrice * updatedProduct.quantity;
+    console.log(updatedProduct.quantity);
+    console.log(subTotal);
+    return res.status(200).json({newQuantity: updatedProduct.quantity, subTotal})
 
   }catch(error){
     console.error(error)
+  }
+}
+
+module.exports.removeCart = async (req, res)=>{
+  try{
+    const userSession = req.session.user;
+    console.log(userSession);
+    const user = await userCollection.findOne({email: userSession.email});
+    console.log(user);
+    const productId = req.query.productId;
+    console.log(productId);
+    await cartCollection.findOneAndUpdate(
+      {
+        userId: user._id,
+        'products.productId': productId,
+      },
+      {
+        $pull: {
+          'products': { productId: productId },
+        },
+      }
+    );
+
+    res.status(200).json({success: true})
+
+  }catch(error){
+    console.error(error);
   }
 }
