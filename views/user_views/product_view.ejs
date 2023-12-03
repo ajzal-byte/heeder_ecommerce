@@ -923,7 +923,7 @@
                                             </div>
                                             <div class="product-extra-link2">
                                                 <% if(product_details.stock>0){%>
-                                                    <button type="submit" class="button button-add-to-cart">Add to cart</button>
+                                                    <button type="submit" class="button button-add-to-cart" data-product-id="<%= product_details._id %>" id="addtoCart">Add to cart</button>
                                                 <% } %>
                                                 <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
                                                 <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
@@ -939,6 +939,46 @@
                                             <% } %>
                                         </ul>
                                     </div>
+                                    <script>
+                                        document.addEventListener("DOMContentLoaded", ()=>{
+                                            const addtoCart = document.querySelectorAll('#addtoCart');
+            
+                                            addtoCart.forEach(add => {
+                                                add.addEventListener('click', (e)=>{
+                                                    e.preventDefault()
+                                                    const productId = add.getAttribute('data-product-id')
+                                                    console.log(productId);
+                                                    fetch(`/addtoCart?productId=${productId}`,{method:'POST'} )
+                                                    .then((response)=>{
+                                                        if(!response.ok){
+                                                          throw new Error(`HTTP error! status: ${Response.status}`)
+                                                        }
+                                                        return response.json();
+                                                    })
+            
+                                                    .then((data)=>{
+                                                        console.log("Response from server", data);
+                                                        console.log('here')
+                                                        if(data.message){
+                                                        Swal.fire({
+                                                        position: 'top-center',
+                                                        icon: 'success',
+                                                        title: data.message,
+                                                        showConfirmButton: false,
+                                                        timer: 1500
+                                                    });
+                                                        }else if (data.error){
+                                                            window.location.href = '/login';
+                                                        }
+                                                    }).catch(error => {
+                                                        console.error("Error:", error);
+                                                    });         
+            
+                                                })
+                                                
+                                            });
+                                        });
+                                    </script>
                                     <!-- Detail Info -->
                                 </div>
                             </div>
@@ -1485,6 +1525,7 @@
         </div>
     </div>
     <!-- Vendor JS-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="/user_assets/js/vendor/modernizr-3.6.0.min.js"></script>
     <script src="/user_assets/js/vendor/jquery-3.6.0.min.js"></script>
     <script src="/user_assets/js/vendor/jquery-migrate-3.3.0.min.js"></script>

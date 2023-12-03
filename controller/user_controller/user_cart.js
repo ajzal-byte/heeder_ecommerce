@@ -79,14 +79,11 @@ module.exports.updateCart = async (req, res)=>{
     const cart = await cartCollection.findOne({
       userId: user._id
     }).populate({path: 'products.productId', model: 'Product'})
-    console.log(cart);
      // Find the updated product in the cart
     const updatedProduct = cart.products.find(product => product.productId._id.toString() === productId.toString());
-    console.log(updatedProduct);
     const subTotal = updatedProduct.productId.salePrice * updatedProduct.quantity;
-    console.log(updatedProduct.quantity);
-    console.log(subTotal);
-    return res.status(200).json({newQuantity: updatedProduct.quantity, subTotal})
+    const stock = updatedProduct.productId.stock
+    return res.status(200).json({newQuantity: updatedProduct.quantity, subTotal, stock})
 
   }catch(error){
     console.error(error)
