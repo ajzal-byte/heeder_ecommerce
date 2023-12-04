@@ -116,3 +116,11 @@ module.exports.removeCart = async (req, res)=>{
     console.error(error);
   }
 }
+
+module.exports.checkout = async (req, res)=>{
+    const userSession = req.session.user;
+    const user = await userCollection.findOne({email: userSession.email});
+    const usercart = await cartCollection.findOne(
+      {userId: user._id}).populate({path: 'products.productId', model:'Product', populate: {path: 'brand', model: 'brandCollection'}});
+      
+}

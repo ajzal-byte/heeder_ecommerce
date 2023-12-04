@@ -67,6 +67,7 @@ user_router.get('/cart', userAuth.userSession, user_cart.getCart)
 user_router.post('/addtoCart', user_cart.addtoCart)
 user_router.post('/updateCart', userAuth.userSession, user_cart.updateCart)
 user_router.post('/removeFromCart', userAuth.userSession, user_cart.removeCart)
+user_router.get('/checkout', userAuth.userSession, user_cart.checkout)
 
 
 

@@ -446,8 +446,10 @@
                               <tr>
                                 <td class="cart_total_label">Total</td>
                                 <td class="cart_total_amount">
-                                  <strong>₹<span id="grand-total" class="font-xl fw-900 text-brand">
-                                    
+                                  <strong class="font-xl fw-900 text-brand rupee-sign">₹<span id="grand-total" class="font-xl fw-900 text-brand">
+                                    </span></strong>
+                                    <strong><span id="grand-total" class="font-xl fw-900 text-brand no-total">
+                                        Total can't be added
                                     </span></strong>
                                 </td>
                               </tr>
@@ -455,14 +457,14 @@
                           </table>
                         </div>
                         <div class="checkout-button">
-                            <a href="/checkout" class="btn">
+                            <a class="btn proceed-to-checkout">
                                 <i class="fi-rs-box-alt mr-10"></i> Proceed To CheckOut
                             </a>
                         </div>
                         <div class="dont-checkout">
-                            <a href="javascript:void(0);" class="btn">
-                                <i class="fi-rs-box-alt mr-10"></i> Can't CheckOut
-                            </a>
+                            <button class="btn" disabled>
+                                <i class="fi-rs-box-alt mr-10"></i> Product Out of Stock 
+                            </button>
                         </div>                        
                       </div>
                     </div>
@@ -491,6 +493,8 @@
                 const quantityUpButton = document.querySelector(`.qty-up[data-productId="${productId}"]`);
                 const proceedCheckout = document.querySelector('.checkout-button');
                 const dontCheckout = document.querySelector('.dont-checkout');
+                const rupeeSign = document.querySelector('.rupee-sign');
+                const noTotal = document.querySelector('.no-total');
 
                 console.log('Quantity:', quantity);
                 console.log('Product Stock:', productStock);
@@ -506,9 +510,13 @@
                 if (hasOutOfStockProduct) {
                     proceedCheckout.style.display = 'none';
                     dontCheckout.style.display = 'inline';
+                    rupeeSign.style.display = 'none'
+                    noTotal.style.display = 'inline'
                 } else {
                     proceedCheckout.style.display = 'inline';
                     dontCheckout.style.display = 'none';
+                    rupeeSign.style.display = 'inline'
+                    noTotal.style.display = 'none'
                 }
 
                 if(quantity > productStock || quantity == productStock){
@@ -523,7 +531,13 @@
 
         function grandTotal(){
             let grandTotal = 0;
+            // const quantityElement = document.querySelector(`.qty-val[data-productId="${productId}"]`);
+            // const quantity = parseInt(quantityElement.textContent, 10);
+            // const productStock = parseInt(quantityElement.getAttribute('data-stock'), 10);
             document.querySelectorAll('.subtotal').forEach((elem)=>{
+                // if(quantity > productStock){
+                //     elem.textContent = 0;
+                // }
                 grandTotal += Number(elem.textContent)
             })
             document.querySelector('#grand-total').innerHTML = grandTotal;
@@ -613,6 +627,14 @@
             }
         })
         })
+    })
+
+
+    const proceedToCheckout  = document.getElementById('proceed-to-checkout');
+    proceedToCheckout.addEventListener("click", (e)=>{
+        e.preventDefault();
+
+        fetch(`/checkout? `)
     })
 
     });
