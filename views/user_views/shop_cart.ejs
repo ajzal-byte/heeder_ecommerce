@@ -457,7 +457,7 @@
                           </table>
                         </div>
                         <div class="checkout-button">
-                            <a class="btn proceed-to-checkout">
+                            <a href="/checkout" class="btn proceed-to-checkout">
                                 <i class="fi-rs-box-alt mr-10"></i> Proceed To CheckOut
                             </a>
                         </div>
@@ -630,12 +630,33 @@
     })
 
 
-    const proceedToCheckout  = document.getElementById('proceed-to-checkout');
-    proceedToCheckout.addEventListener("click", (e)=>{
-        e.preventDefault();
-
-        fetch(`/checkout? `)
-    })
+    // const proceedToCheckout  = document.querySelector('.proceed-to-checkout');
+    // proceedToCheckout.addEventListener("click", (e)=>{
+    //     e.preventDefault();
+    //     console.log('here');
+    //     fetch('/checkout')
+    //     .then(response=>{
+    //         if(!response.ok){
+    //             console.log('error');
+    //             throw new Error(`HTTP Error! status:${response.status}`)
+    //         }
+    //         return response.json();
+    //     })
+    //     .then(data=>{
+    //             if(data.error){
+    //             console.log('error.message');
+    //             Swal.fire({
+    //                     position: 'top-center',
+    //                     icon: 'error',
+    //                     title: data.error,
+    //                     showConfirmButton: false,
+    //                     timer: 1500
+    //                 });
+    //                 window.location.href = '/cart'
+    //         }
+    //     })
+        
+    // })
 
     });
     
