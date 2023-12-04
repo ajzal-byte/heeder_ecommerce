@@ -118,15 +118,18 @@ module.exports.removeCart = async (req, res)=>{
 }
 
 module.exports.checkout = async (req, res)=>{
-    const userSession = req.session.user;
-    const user = await userCollection.findOne({email: userSession.email});
-    const userCart = await cartCollection.findOne(
-      {userId: user._id}).populate({path: 'products.productId', model:'Product', populate: {path: 'brand', model: 'brandCollection'}});
-      // console.log(userCart);
-      for(let i = 0; i < userCart.products.length; i++){
-        if(userCart.products[i].quantity > userCart.products[i].productId.stock || userCart.products[i].productId.stock == 0){
-         return res.redirect('/cart')
-        } 
-      }
-        res.render('shop-checkout', {userSession, userCart});
+try{
+  const userSession = req.session.user;
+  const user = await userCollection.findOne({email: userSession.email});
+  const userCart = await cartCollection.findOne(
+    {userId: user._id}).populate({path: 'products.productId', model:'Product', populate: {path: 'brand', model: 'brandCollection'}});
+    for(let i = 0; i < userCart.products.length; i++){
+      if(userCart.products[i].quantity > userCart.products[i].productId.stock || userCart.products[i].productId.stock == 0){
+       return res.redirect('/cart')
+      } 
+    }
+      res.render('shop-checkout', {userSession, userCart});
+}catch(error){
+  console.error(error);
+}
 }
