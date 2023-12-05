@@ -1,3 +1,4 @@
+const addressCollection = require('../../models/address_schema');
 const cartCollection = require('../../models/cart_schema');
 const productCollection = require('../../models/products_schema');
 const userCollection = require('../../models/user_schema');
@@ -42,8 +43,6 @@ module.exports.addtoCart = async (req, res)=>{
           // Save the changes to the database
           await userCart.save();
       }else{
-        console.log(user._id);
-        console.log('cart creation');
           await cartCollection.create({
           userId: user._id, 
           products:[{productId: product._id, quantity:1}]})
@@ -120,7 +119,10 @@ module.exports.removeCart = async (req, res)=>{
 module.exports.checkout = async (req, res)=>{
 try{
   const userSession = req.session.user;
+  console.log(userSession);
   const user = await userCollection.findOne({email: userSession.email});
+  const userAddress = await addressCollection.findOne({userId: user._id});
+  console.log(userAddress);
   const userCart = await cartCollection.findOne(
     {userId: user._id}).populate({path: 'products.productId', model:'Product', populate: {path: 'brand', model: 'brandCollection'}});
     for(let i = 0; i < userCart.products.length; i++){
@@ -128,7 +130,7 @@ try{
        return res.redirect('/cart')
       } 
     }
-      res.render('shop-checkout', {userSession, userCart});
+      res.render('shop-checkout', {userSession, userCart, userAddress});
 }catch(error){
   console.error(error);
 }

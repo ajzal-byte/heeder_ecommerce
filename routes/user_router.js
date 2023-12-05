@@ -4,6 +4,7 @@ const userAuth = require('../middleware/userAuth')
 const user_controller = require('../controller/user_controller/user_login');
 const user_cart = require('../controller/user_controller/user_cart');
 const user_profile = require('../controller/user_controller/user_profile');
+const user_address = require('../controller/user_controller/user_address');
 const productCollection = require('../models/products_schema')
 const category = require('../models/category_schema')
 const userCollection = require('../models/user_schema');
@@ -69,7 +70,9 @@ user_router.post('/addtoCart', user_cart.addtoCart)
 user_router.post('/updateCart', userAuth.userSession, user_cart.updateCart)
 user_router.post('/removeFromCart', userAuth.userSession, user_cart.removeCart)
 user_router.get('/checkout', userAuth.userSession, user_cart.checkout)
-user_router.get('/profile', userAuth.userSession, user_profile.getProfile)
+user_router.get('/profile', userAuth.userSession, user_profile.getProfile);
+user_router.get('/add-address', userAuth.userSession, user_address.getAddAddress);
+user_router.post('/post-add-address', userAuth.userSession, user_address.postAddAddress);
 
 
 

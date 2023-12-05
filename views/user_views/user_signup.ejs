@@ -315,6 +315,7 @@ verifyOTPButton.addEventListener("click", (e) => {
         Array.from(form.elements).forEach(element => {
             element.readOnly = true; // Set readonly instead of disabled
         });
+
         submitButton.disabled = false;
     })
     .catch((error) => {

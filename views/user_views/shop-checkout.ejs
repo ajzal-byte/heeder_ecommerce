@@ -730,52 +730,30 @@
                         <div class="mb-25">
                             <h4>Billing Details</h4>
                         </div>
-                        <form method="post">
-                            <div class="ship_detail">
-                                <div class="form-group">
-                                    <div class="chek-form">
-                                        <div class="custome-checkbox">
-                                            <input class="form-check-input" type="checkbox" name="checkbox" id="differentaddress">
-                                            <label class="form-check-label label_info" data-bs-toggle="collapse" data-target="#collapseAddress" href="#collapseAddress" aria-controls="collapseAddress" for="differentaddress"><span>Ship to a different address?</span></label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="collapseAddress" class="different_address collapse in">
-                                    <div class="form-group">
-                                        <input type="text" required="" name="fname" placeholder="First name *">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="text" required="" name="lname" placeholder="Last name *">
-                                    </div>
-                                    <div class="form-group">
-                                        <input required="" type="text" name="cname" placeholder="Company Name">
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="custom_select">
-                                            <select class="form-control select-active">
-                                                <option value="">Select an option...</option>
-                                                <option value="AX">Aland Islands</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="text" name="billing_address" required="" placeholder="Address *">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="text" name="billing_address2" required="" placeholder="Address line2">
-                                    </div>
-                                    <div class="form-group">
-                                        <input required="" type="text" name="city" placeholder="City / Town *">
-                                    </div>
-                                    <div class="form-group">
-                                        <input required="" type="text" name="state" placeholder="State / County *">
-                                    </div>
-                                    <div class="form-group">
-                                        <input required="" type="text" name="zipcode" placeholder="Postcode / ZIP *">
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
+                        <% if (userAddress?.address.length > 0) { %>
+                            <% userAddress.address.forEach(address => { %>
+                                 <div class="addresses">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                                        <label class="form-check-label" for="flexRadioDefault1">
+                                          <%= address.name %>
+                                          <br>
+                                          <%= address.addressType %>
+                                          <br>
+                                          <%= address.phone %>
+                                        </label>
+                                      </div>
+                                 </div>
+                            <% }); %>
+                        <% }else{ %>
+                        <h2>No saved Addresses</h2>
+                       <% } %>
+                       
+                       
+                        
+                        <div>
+                            <a href="/add-address">Ship to a new address?</a>
+                        </div>
                     </div>
                     <div class="col-md-6">
                         <div class="order_review">
