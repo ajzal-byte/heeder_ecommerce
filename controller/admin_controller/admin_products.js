@@ -81,7 +81,7 @@ module.exports.postAddProduct = async (req, res)=>{
       status : product_status,
       productImage: productImages,
     });
-    // const products = await productCollection.find()
+
     res.redirect('/admin/products');
     
   

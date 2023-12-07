@@ -32,12 +32,10 @@ module.exports.addtoCart = async (req, res)=>{
         let productIndex = userCart.products.findIndex(p => p.productId == productId)
         //if product exists
         if(productIndex > -1){
-          console.log('quantity updation');
           let productItem = userCart.products[productIndex];
           productItem.quantity += 1;
           userCart.products[productIndex] = productItem;
         }else{
-          console.log('product addition');
           userCart.products.push({productId: product._id, quantity:1})
         }
           // Save the changes to the database
@@ -50,7 +48,6 @@ module.exports.addtoCart = async (req, res)=>{
       res.status(200).json({message: "Item Added to Cart"})
 
     }else{
-      console.log('not logged in')
       res.status(200).json({ error: "User not logged in" });
     }
     
@@ -118,19 +115,24 @@ module.exports.removeCart = async (req, res)=>{
 
 module.exports.checkout = async (req, res)=>{
 try{
+  let grandTotal = 0;
   const userSession = req.session.user;
-  console.log(userSession);
   const user = await userCollection.findOne({email: userSession.email});
   const userAddress = await addressCollection.findOne({userId: user._id});
-  console.log(userAddress);
   const userCart = await cartCollection.findOne(
     {userId: user._id}).populate({path: 'products.productId', model:'Product', populate: {path: 'brand', model: 'brandCollection'}});
-    for(let i = 0; i < userCart.products.length; i++){
-      if(userCart.products[i].quantity > userCart.products[i].productId.stock || userCart.products[i].productId.stock == 0){
-       return res.redirect('/cart')
-      } 
-    }
-      res.render('shop-checkout', {userSession, userCart, userAddress});
+      if(userCart){
+        for(let i = 0; i < userCart.products.length; i++){
+          if(userCart.products[i].quantity > userCart.products[i].productId.stock || userCart.products[i].productId.stock == 0){
+            return res.redirect('/cart')
+          } 
+          let subTotal = userCart.products[i].quantity * userCart.products[i].productId.salePrice;
+          grandTotal += subTotal;
+          }
+      }else{
+        return res.redirect('/cart')
+      }
+      res.render('shop-checkout', {userSession, userCart, userAddress, grandTotal});
 }catch(error){
   console.error(error);
 }

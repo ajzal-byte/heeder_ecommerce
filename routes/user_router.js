@@ -5,6 +5,7 @@ const user_controller = require('../controller/user_controller/user_login');
 const user_cart = require('../controller/user_controller/user_cart');
 const user_profile = require('../controller/user_controller/user_profile');
 const user_address = require('../controller/user_controller/user_address');
+const user_order = require('../controller/user_controller/user_order');
 const productCollection = require('../models/products_schema')
 const category = require('../models/category_schema')
 const userCollection = require('../models/user_schema');
@@ -73,6 +74,7 @@ user_router.get('/checkout', userAuth.userSession, user_cart.checkout)
 user_router.get('/profile', userAuth.userSession, user_profile.getProfile);
 user_router.get('/add-address', userAuth.userSession, user_address.getAddAddress);
 user_router.post('/post-add-address', userAuth.userSession, user_address.postAddAddress);
+user_router.get('/order-placed/cod', user_order.getOrderPlacedCod);
 
 
 

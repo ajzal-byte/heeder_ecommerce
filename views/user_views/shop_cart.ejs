@@ -353,7 +353,7 @@
           <div class="container">
             <div class="row">
               <div class="col-12">
-                <%if(userCart?.products.length>0){%>
+                <%if(userCart?.products){%>
                   <div class="table-responsive">
                     <table class="table shopping-summery text-center clean">
                       <thead>
@@ -449,7 +449,7 @@
                                   <strong class="font-xl fw-900 text-brand rupee-sign">₹<span id="grand-total" class="font-xl fw-900 text-brand">
                                     </span></strong>
                                     <strong><span id="grand-total" class="font-xl fw-900 text-brand no-total">
-                                        Total can't be added
+                                        Total can't be added    
                                     </span></strong>
                                 </td>
                               </tr>
@@ -471,6 +471,10 @@
                   </div>
                   <%}else{%>
                     <h3>No items in cart</h3>
+
+                    <div class="cart-action text-end">
+                        <a class="btn" href="/"><i class="fi-rs-shopping-bag mr-10"></i>Shop Now</a>
+                      </div>
                     <%}%>
               </div>
             </div>
@@ -628,35 +632,6 @@
         })
         })
     })
-
-
-    // const proceedToCheckout  = document.querySelector('.proceed-to-checkout');
-    // proceedToCheckout.addEventListener("click", (e)=>{
-    //     e.preventDefault();
-    //     console.log('here');
-    //     fetch('/checkout')
-    //     .then(response=>{
-    //         if(!response.ok){
-    //             console.log('error');
-    //             throw new Error(`HTTP Error! status:${response.status}`)
-    //         }
-    //         return response.json();
-    //     })
-    //     .then(data=>{
-    //             if(data.error){
-    //             console.log('error.message');
-    //             Swal.fire({
-    //                     position: 'top-center',
-    //                     icon: 'error',
-    //                     title: data.error,
-    //                     showConfirmButton: false,
-    //                     timer: 1500
-    //                 });
-    //                 window.location.href = '/cart'
-    //         }
-    //     })
-        
-    // })
 
     });
     
