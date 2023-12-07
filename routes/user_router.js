@@ -1,5 +1,6 @@
 const express = require('express');
 const user_router = express.Router();
+user_router.use(express.json());
 const userAuth = require('../middleware/userAuth')
 const user_controller = require('../controller/user_controller/user_login');
 const user_cart = require('../controller/user_controller/user_cart');
@@ -75,6 +76,11 @@ user_router.get('/profile', userAuth.userSession, user_profile.getProfile);
 user_router.get('/add-address', userAuth.userSession, user_address.getAddAddress);
 user_router.post('/post-add-address', userAuth.userSession, user_address.postAddAddress);
 user_router.get('/order-placed/cod', user_order.getOrderPlacedCod);
+user_router.get('/edit-address', userAuth.userSession, user_address.getEditAddress);
+user_router.post('/post-edit-address', userAuth.userSession, user_address.postEditAddress);
+
+
+
 
 
 
