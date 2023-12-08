@@ -80,4 +80,5 @@ user_router.get('/edit-address', userAuth.userSession, user_address.getEditAddre
 user_router.post('/post-edit-address', userAuth.userSession, user_address.postEditAddress);
 user_router.get('/delete-address', userAuth.userSession, user_address.deleteAddress);
 user_router.post('/edit-profile', userAuth.userSession, user_profile.editProfile);
+user_router.post('/change-password', userAuth.userSession, user_profile.changePassword);
 module.exports = user_router

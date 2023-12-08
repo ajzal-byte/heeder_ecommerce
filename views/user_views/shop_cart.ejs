@@ -614,7 +614,6 @@
         remove.addEventListener('click', (e)=>{
             e.preventDefault();
         var productId = remove.getAttribute('data-productId');
-        console.log(productId);
 
         
         fetch(`/removeFromCart?productId=${productId}`, {method: 'POST'})

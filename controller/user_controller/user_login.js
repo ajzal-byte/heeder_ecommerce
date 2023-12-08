@@ -269,7 +269,7 @@ module.exports.forgotChangePassword = async (req, res)=>{
      if(passwordMatch){
        return res.status(200).json({same:true})
      }else{
-      bcrypt.hash(newPassword, saltRounds, async(err, hash)=>{
+      bcrypt.hash(newPassword, saltRounds, async(err, hash)=>{  
         if(err){
           console.error('Error hashing password:', err);
           return;
