@@ -14,7 +14,6 @@ try{
 module.exports.postAddAddress = async (req, res)=>{
 try{
   const {name, addressType, city, landMark, state, pincode, phone, altPhone} = req.body;
-  console.log(name, addressType, city, landMark, state, pincode, phone, altPhone);
   const userSession = req.session.user;
   const user = await userCollection.findOne({email: userSession.email});
   const userAddress= await addressCollection.findOne({userId: user._id});
@@ -41,11 +40,7 @@ try{
   const user = await userCollection.findOne({email: userSession.email});
   const addressId = req.query.addressId;
   const objectId = req.query.objectId;
-  console.log(objectId);
-  console.log(typeof(addressId));
-  // console.log(addressId);
   const userAddress = await addressCollection.findOne({userId: user._id, "address._id": addressId}, { "address.$": 1 });
-  console.log(userAddress);
   if (userAddress && userAddress.address){
     res.render('edit-address', {userSession, userAddress})
   }else {
@@ -58,5 +53,27 @@ try{
 
 
 module.exports.postEditAddress = async (req, res)=>{
+  try{
+    const {name, addressType, city, landMark, state, pincode, phone, altPhone} = req.body;
+    const userSession = req.session.user;
+    const addressId = req.query.addressId;
+    const user = await userCollection.findOne({email: userSession.email});
+    const userAddress = await addressCollection.findOneAndUpdate({"address._id": addressId},
+    {$set:{
+      "address.$":{
+        addressType,
+        name,
+        city,
+        landMark,
+        state,
+        pincode,
+        phone,
+        altPhone,
+      }
+    }});
+    res.redirect('/profile')
   
+  }catch(error){
+    console.error(error);
+  }
 }

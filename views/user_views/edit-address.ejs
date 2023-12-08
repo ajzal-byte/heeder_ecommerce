@@ -411,8 +411,8 @@
                                             </div>
                                             <div class="card-body">
                                               <% if(userAddress){ %>
-                                                  <form method="post" action="/post-edit-address" id="myForm">
-                                                    <% userAddress.address.forEach(address => { %>
+                                                <% userAddress.address.forEach(address => { %>
+                                                  <form method="post" action="/post-edit-address?addressId=<%= address._id %>" id="myForm">
                                                       <div class="ship_detail">
                                                         <div id="collapseAddress" class="different_address">
                                                           <div class="form-group">
@@ -452,8 +452,8 @@
                                                           </div>
                                                       </div>
                                                     </div>
-                                                    <% }) %>
                                                   </form>
+                                                  <% }) %>
                                             <%  } %>
                                                 
 
