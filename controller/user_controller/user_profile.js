@@ -8,3 +8,6 @@ module.exports.getProfile = async (req, res)=>{
   res.render('user_account', {userDetails, userSession, userAddress});
 }
 
+module.exports.editProfile = async (req, res)=>{
+  
+}

@@ -77,3 +77,19 @@ module.exports.postEditAddress = async (req, res)=>{
     console.error(error);
   }
 }
+
+module.exports.deleteAddress = async (req, res)=>{
+try{
+  const userSession = req.session.user;
+  const addressId = req.query.addressId;
+  const user = await userCollection.findOne({email: userSession.email});
+  const userAddress = await addressCollection.updateOne({userId: user._id},
+  {$pull:{ address:{
+    _id: addressId
+  }
+  }});
+  res.redirect('/profile');
+}catch(error){
+  console.error(error)
+}
+}

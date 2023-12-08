@@ -78,10 +78,5 @@ user_router.post('/post-add-address', userAuth.userSession, user_address.postAdd
 user_router.get('/order-placed/cod', user_order.getOrderPlacedCod);
 user_router.get('/edit-address', userAuth.userSession, user_address.getEditAddress);
 user_router.post('/post-edit-address', userAuth.userSession, user_address.postEditAddress);
-
-
-
-
-
-
+user_router.get('/delete-address', userAuth.userSession, user_address.deleteAddress);
 module.exports = user_router
