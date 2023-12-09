@@ -23,6 +23,10 @@ const orderSchema = new mongoose.Schema({
       },
     },
   ],
+  orderDate: {
+    type: Date,
+    default: Date.now,
+  },
   totalAmount: {
     type: Number,
     required: true,
@@ -46,6 +50,7 @@ const orderSchema = new mongoose.Schema({
     required: true,
   },
 },
+{ timestamps: true }
 );
 
 const orderCollection = mongoose.model("orderCollection", orderSchema)

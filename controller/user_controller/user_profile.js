@@ -1,4 +1,5 @@
 const addressCollection = require("../../models/address_schema");
+const orderCollection = require("../../models/orders_schema");
 const userCollection = require("../../models/user_schema");
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
@@ -7,7 +8,8 @@ module.exports.getProfile = async (req, res)=>{
   const userSession = req.session.user;
   const userDetails = await userCollection.findOne({email: userSession.email});
   const userAddress = await addressCollection.findOne({userId: userDetails._id});
-  res.render('user_account', {userDetails, userSession, userAddress});
+  const userOrders = await orderCollection.findOne({userId: userDetails._id});
+  res.render('user_account', {userDetails, userSession, userAddress, user});
 }
 
 module.exports.editProfile = async (req, res)=>{
@@ -35,15 +37,11 @@ const userSession = req.session.user;
 const user = await userCollection.findOne({email: userSession.email});
 const currentPassword = req.body.currentPassword;
 const newPassword = req.body.newPassword;
-console.log(currentPassword);
-console.log(newPassword);
 const passwordMatch = await bcrypt.compare(currentPassword, user.password);
-console.log(passwordMatch);
 if(!passwordMatch){
   return res.status(200).json({error:"Current Password is Incorrect"})
 }else{
   const newPasswordMatch = await bcrypt.compare(newPassword, user.password);
-  console.log(newPasswordMatch);
   if(newPasswordMatch){
   return res.status(200).json({error:"You cannot use the old password"})
   }else{
