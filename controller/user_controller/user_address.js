@@ -3,9 +3,10 @@ const addressCollection = require('../../models/address_schema')
 
 module.exports.getAddAddress = async (req, res)=>{
 try{
+  const source = req.query.source;
   const userSession = req.session.user;
   const user = userCollection.findOne({email: userSession.email});
-  res.render('add-address', {userSession, user})
+  res.render('add-address', {userSession, user, source})
 }catch(error){
   console.error(error)
 }
@@ -13,6 +14,7 @@ try{
 
 module.exports.postAddAddress = async (req, res)=>{
 try{
+  const source = req.query.source;
   const {name, addressType, city, landMark, state, pincode, phone, altPhone} = req.body;
   const userSession = req.session.user;
   const user = await userCollection.findOne({email: userSession.email});
@@ -26,6 +28,9 @@ try{
       address:[{name, addressType, city, landMark, state, pincode, phone, altPhone}]
     });
     // res.status(200).json({message: "Address added"});
+  }
+  if(source=='profile'){
+    return res.redirect('/profile')
   }
   res.redirect('/checkout')
 

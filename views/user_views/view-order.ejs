@@ -5,7 +5,7 @@
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-frontend/page-account.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 15 Jul 2023 10:11:15 GMT -->
 <head>
     <meta charset="utf-8">
-    <title>Add New Address</title>
+    <title>View Orders</title>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -401,127 +401,59 @@
         <section class="pt-50 pb-100">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-10 m-auto">
-                        <div class="row">
-                            <div class="col-md-8">
-                                <div class="tab-content dashboard-content">
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <h5>Add New Address</h5>
-                                            </div>
-                                            <div class="card-body">
-                                              <form method="post" action="/post-add-address?source=<%= source %>" id="myForm">
-                                                <div class="ship_detail">
-                                                    <div id="collapseAddress" class="different_address">
-                                                        <div class="form-group">
-                                                            <input type="text" required  name="name" id="username" placeholder="Name *">
-                                                            <div id="usernameError" class="error"></div>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <input type="text" required name="addressType" id="address" placeholder="Address *">
-                                                            <div id="addressError" class="error"></div>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <input  type="text" required name="city" id="city" placeholder="City *">
-                                                            <div id="cityError" class="error"></div>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <input  type="text" required name="landMark" id="landmark" placeholder="Landmark *">
-                                                            <div id="landmarkError" class="error"></div>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <input  type="text" required name="state" id="state" placeholder="State *">
-                                                            <div id="stateError" class="error"></div>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <input  type="number" required name="pincode" id="postcode" placeholder="Postcode  *">
-                                                            <div id="postcodeError" class="error"></div>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <input  type="number" required name="phone" id="phoneNumber" placeholder="Phone Number  *">
-                                                            <div id="phoneNumberError" class="error"></div>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <input  type="number" required name="altPhone" id="altphone" placeholder="Alternative Phone Number  *">
-                                                            <div id="altphoneError" class="error"></div>
-                                                        </div>
-                                                        <div>
-                                                            <button type="submit" id="submitButton">Submit</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                            </div>
-
-                                            <!-- <script>
-
-                                                document.addEventListener("DOMContentLoaded", ()=>{
-                                                    const submitButton = document.getElementById('submitButton');
-                                                    submitButton.addEventListener("click", (e)=>{
-                                                        if(!validateForm()){
-                                                            console.log('prevention');
-                                                            console.log(isValid);
-                                                            e.preventDefault();
-                                                        }
-                                                    });
-
-                                                    const validateForm = ()=>{
-                                                    resetErrorMessages();
-
-                                                    const inputFields = [
-                                                    { id: 'username', name: 'Username' },
-                                                    { id: 'address', name: 'Address' },
-                                                    { id: 'city', name: 'City' },
-                                                    { id: 'landmark', name: 'Landmark' },
-                                                    { id: 'state', name: 'State' },
-                                                    { id: 'postcode', name: 'Postcode' },
-                                                    { id: 'phoneNumber', name: 'Phone Number' },
-                                                    { id: 'altphone', name: 'Alternative Phone Number' }
-                                                ];
-
-                                                    let isValid = true;
-
-                                                    inputFields.forEach(field=>{
-                                                        const value = document.getElementById(`${field.id}`).value;
-                                                        const trimmedValue = value.trim();
-
-                                                        //check for whitespaces and empty fields
-                                                        if(value !== trimmedValue){
-                                                            showError(`${field.id}Error`, `${field.name} cannot have whitespaces`);
-                                                            isValid = false;
-                                                        }
-
-                                                        if(trimmedValue == ""){
-                                                            showError(`${field.id}Error`, `${field.name} cannot be empty`);
-                                                            isValid = false;    
-                                                        }
-                                                        
-                                                        return isValid;
-                                                        
-                                                    });
-                                                }
-
-                                                function showError(elementId, message){
-                                                    const errorElement = document.getElementById(elementId);
-                                                    errorElement.textContent = message;
-                                                }
-
-                                                function resetErrorMessages() { 
-                                                    const errorElements = document.querySelectorAll('.error');
-                                                    errorElements.forEach((element) => {
-                                                        element.textContent = '';
-                                                    });
-                                                }
-
-                                                });
-
-                                            </script> -->
-
-                                        </div>
-                                </div>
+                    <div class="card-body">
+                      <div class="table-responsive">
+                          <table class="table">
+                              <thead>
+                                  <tr>
+                                      <th>Product</th>
+                                      <th>Date</th>
+                                      <th>OrderStatus</th>
+                                      <th>PaymentStatus</th>
+                                      <th>PaymentMethod</th>
+                                      <th>Total</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  <% if (!orderDetails || orderDetails.length === 0) { %>
+                                      <h6>No orders</h6>
+                                  <% } else { %>
+                                      <% orderDetails.products.forEach((item) => { %>
+                                        
+                                  <tr>
+                                      <td><%= item.productId.productName %></td>
+                                      <td><%= orderDetails.createdAt.toLocaleDateString() %></td>
+                                      <td><%= orderDetails.orderStatus %></td>
+                                      <td><%= orderDetails.paymentStatus %></td>
+                                      <td><%= orderDetails.paymentMethod %></td>
+                                      <td>₹<%= item.price * item.quantity %> for <%= item.quantity%> item</td>
+                                  </tr>
+                                  
+                                  <% }); %>
+                              <% } %>
+                              </tbody>
+                          </table>
+                          <h5 class="d-flex justify-content-end">Total Amount: ₹ <%= orderDetails.totalAmount %></h5>
+                          <div class="d-flex justify-content-center">
+                            <div class="d-flex justify-content-between col-3">
+                              
+                                <% if(orderDetails.orderStatus === "Order Placed" || orderDetails.orderStatus === "Shipped") {%> 
+                                  <a href="#" order-id="<%= orderDetails._id %>" id="cancelButton" class="btn btn-sm" style="background-color: rgb(180, 36, 36);">Cancel Order</a>
+                                  <%} else if(orderDetails.orderStatus === "Delivered") {%> 
+                                    <a href="#" order-id="<%= orderDetails._id %>" id="returnButton" class="btn btn-sm" style="background-color: rgb(180, 36, 36);">Return</a>
+                                    <%} else if(orderDetails.orderStatus === "Cancelled") {%> 
+                                      <h5 style="color: rgb(177, 29, 29);">The order is Cancelled</h5>
+                                      <%} else if (orderDetails.orderStatus === "Returned") {%> 
+                                          <h5 style="color: rgb(177, 29, 29);">The order is returned</h5>
+                                          <%}%>
+                                          <a href="/" class="btn btn-sm">Continue Shopping</a> 
                             </div>
-                        </div>
-                    </div>
+                        </div>  
+                        
+
+
+                      </div>
+                  </div>
                 </div>
             </div>
         </section>

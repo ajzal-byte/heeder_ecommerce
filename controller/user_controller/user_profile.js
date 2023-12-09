@@ -8,8 +8,8 @@ module.exports.getProfile = async (req, res)=>{
   const userSession = req.session.user;
   const userDetails = await userCollection.findOne({email: userSession.email});
   const userAddress = await addressCollection.findOne({userId: userDetails._id});
-  const userOrders = await orderCollection.findOne({userId: userDetails._id});
-  res.render('user_account', {userDetails, userSession, userAddress, user});
+  const userOrders = await orderCollection.find({userId: userDetails._id});
+  res.render('user_account', {userDetails, userSession, userAddress, userOrders});
 }
 
 module.exports.editProfile = async (req, res)=>{
@@ -62,4 +62,14 @@ if(!passwordMatch){
 }catch(error){
   console.error(error);
 }
+}
+
+
+module.exports.viewOrders = async (req, res)=>{
+  const orderId = req.query.orderId;
+  const userSession = req.session.user;
+  // const userDetails = await userCollection.findOne({email: userSession.email});
+  const orderDetails = await orderCollection.findOne({_id: orderId}).populate({path: 'products.productId', model: 'Product'});
+  console.log(orderDetails.products);
+  res.render('view-order', {userSession, orderDetails});
 }

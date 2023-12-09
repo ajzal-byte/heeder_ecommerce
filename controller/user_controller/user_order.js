@@ -58,9 +58,14 @@ userCart.products.forEach(product=>{
         );
     }
     await cartCollection.deleteOne({userId: user._id});
-    res.render('order-placed');
+    res.render('order-placed', {userSession});
   
 }catch(error){
   console.error(error)
 }
+}
+
+
+module.exports.cancelOrder = async (req, res)=>{
+  
 }
