@@ -5,6 +5,7 @@ const category = require('../controller/admin_controller/admin_category');
 const brands = require('../controller/admin_controller/admin_brands');
 const products = require('../controller/admin_controller/admin_products');
 const users= require('../controller/admin_controller/admin_users');
+const orders = require('../controller/admin_controller/admin_orders')
 const upload = require('../middleware/multer');
 const path = require('path')
 
@@ -124,6 +125,10 @@ admin_router
 
 admin_router
 .route('/unblockUsers/:user_id')
+.get(users.unblockUser);
+
+admin_router
+.route('/orders')
 .get(users.unblockUser);
 
 module.exports = admin_router
