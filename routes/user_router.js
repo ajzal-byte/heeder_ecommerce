@@ -82,5 +82,6 @@ user_router.get('/delete-address', userAuth.userSession, user_address.deleteAddr
 user_router.post('/edit-profile', userAuth.userSession, user_profile.editProfile);
 user_router.post('/change-password', userAuth.userSession, user_profile.changePassword);
 user_router.get('/view-order', userAuth.userSession, user_profile.viewOrders);
+user_router.get('/cancel-order/:orderId', userAuth.userSession, user_order.cancelOrder);
 
 module.exports = user_router

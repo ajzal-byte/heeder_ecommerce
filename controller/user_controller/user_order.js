@@ -67,5 +67,11 @@ userCart.products.forEach(product=>{
 
 
 module.exports.cancelOrder = async (req, res)=>{
-  
+  try{
+    const orderId = req.params.orderId;
+    await orderCollection.findByIdAndUpdate(orderId, {orderStatus: 'Cancelled'});
+    res.redirect(`/view-order/?orderId=${orderId}`);
+  }catch (error) {
+    console.error(error);
+  }
 }

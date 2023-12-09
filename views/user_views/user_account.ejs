@@ -466,7 +466,7 @@
                                                         <tbody>
                                                             <% userOrders.forEach(order => { %>
                                                                 <tr>
-                                                                    <td><%= order.orderDate.toLocaleDateString() %></td> 
+                                                                    <td><%= order.orderDate.toLocaleDateString()     %></td> 
                                                                     <td><%= order.orderStatus %></td>
                                                                     <td> ₹<%= order.totalAmount%> for <%= order.products.length %> item[s]</td>
                                                                     <td><a href="/view-order?orderId=<%= order._id %>" class="btn-small d-block">View</a></td>
