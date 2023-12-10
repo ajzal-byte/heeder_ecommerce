@@ -129,6 +129,6 @@ admin_router
 
 admin_router
 .route('/orders')
-.get(users.unblockUser);
+.get(orders.getOrders);
 
 module.exports = admin_router

@@ -5,7 +5,7 @@
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-categories.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:21 GMT -->
 <head>
     <meta charset="utf-8">
-    <title>Admin Categories</title>
+    <title>Admin Orders</title>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -46,17 +46,12 @@
                         <a href="/admin/addProduct">Add Product</a>
                     </div>
                 </li>
-                <li class="menu-item has-submenu">
-                    <a class="menu-link" href="page-orders-1.html"> <i class="icon material-icons md-shopping_cart"></i>
+                <li class="menu-item active">
+                    <a class="menu-link" href="/admin/orders"> <i class="icon material-icons md-shopping_cart"></i>
                         <span class="text">Orders</span>
                     </a>
-                    <div class="submenu">
-                        <a href="page-orders-1.html">Order list 1</a>
-                        <a href="page-orders-2.html">Order list 2</a>
-                        <a href="page-orders-detail.html">Order detail</a>
-                    </div>
                 </li>
-                <li class="menu-item active">
+                <li class="menu-item">
                     <a class="menu-link" href="/admin/categories"> <i class="icon material-icons md-local_offer"></i>
                         <span class="text">Categories</span>
                     </a>
@@ -179,37 +174,19 @@
         <section class="content-main">
             <div class="content-header">
                 <div>
-                    <h2 class="content-title card-title">Categories </h2>
+                    <h2 class="content-title card-title">Orders List</h2>
                 </div>
             </div>
             <div class="card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-3">
-                            <form action="/admin/addCategories" method="post">
-                                <div class="mb-4">
-                                    <label for="product_name" class="form-label">Name</label>
-                                    <input type="text" placeholder="Type here" class="form-control" id="categoryName" name="cat_name" />
-                                    <div id="categoryNameError" class="error-message"></div>
-                                </div>
-                                <div class="mb-4">
-                                    <label class="form-label">Status</label>
-                                    <select class="form-select" name="cat_status">
-                                        <option>Active</option>
-                                        <option>Inactive</option>
-                                    </select>
-                                </div>
-                                <div class="d-grid">
-                                    <button type="submit" class="btn btn-primary" id="createCategory" >Create category</button>
-                                </div>
-                            </form> 
-                        </div>
-                        <div class="col-md-9">
+                        <div class="col-md-12">
                             <div class="table-responsive">
-                                <table class="table table-hover" id="category">
+                                <table class="table table-hover" id="orders">
                                     <thead>
                                         <tr>
                                             <th>ID</th>
+                                            
                                             <th>Username</th>
                                             <th>Total Amount</th>
                                             <th>Status</th>
@@ -220,10 +197,12 @@
                                     <tbody>
                                         <% orders.reverse().forEach(order => { %>
                                         <tr> 
-                                            <td><%= order._id %></td>
-                                            <td><%= order.categoryName %></td>
-                                            <td><%= order.isListed %></td>
-                                            <td>  <a href="/admin/editCategories/<%= category._id %>" class="btn btn-dark"> Edit </a> 
+                                            <td>orderId_<%= order._id.toString().slice(0, 6) %></td>
+                                            <td><%= order.userId.username %></td>
+                                            <td>₹<%= order.totalAmount %></td>
+                                            <td><%= order.orderStatus %></td>
+                                            <td><%= order.orderDate.toLocaleDateString() %></td>
+                                            <td>  <a href="/admin/viewOrder/<%= order._id %>" class="btn btn-dark"> Edit </a> 
                                             </td>
                                         </tr>
                                         <% }) %>
@@ -298,7 +277,7 @@
        <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
        <script>
           $(document).ready(function () {
-              new DataTable('#category', {
+              new DataTable('#orders', {
                   order: [[0, 'desc']] 
               });
           });

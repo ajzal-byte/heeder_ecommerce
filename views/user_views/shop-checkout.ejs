@@ -727,8 +727,11 @@
                 </div> -->
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="mb-25">
+                        <div class="mb-20">
                             <h4>Billing Details</h4>
+                        </div>
+                        <div class="mb-20" >
+                            <a href="/add-address">Ship to a new address?</a>
                         </div>
                         <% if (userAddress?.address.length > 0) { %>
                             <% userAddress.address.forEach(address => { %>
@@ -751,9 +754,7 @@
                        
                        
                         
-                        <div>
-                            <a href="/add-address">Ship to a new address?</a>
-                        </div>
+                        
                     </div>
                     <div class="col-md-6">
                         <div class="order_review">
