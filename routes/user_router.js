@@ -19,9 +19,9 @@ user_router
   let cartLength;
   if(userSession){
     const user = await userCollection.findOne({email: userSession.email})
-    cartLength = await cartCollection.findOne({userId: user._id}).length;
+    cartLength = await cartCollection.findOne({userId: user._id});
+    cartLength = cartLength.products.length;
   }
-  console.log(cartLength);
   res.render('user_index', {products, userSession, cartLength});
 });
 

@@ -8,10 +8,16 @@ const userCollection = require('../../models/user_schema');
 module.exports.getCart = async (req, res)=>{
   try{
       const userSession = req.session.user;
+      let cartLength;
+      if(userSession){
+        const user = await userCollection.findOne({email: userSession.email})
+        cartLength = await cartCollection.findOne({userId: user._id});
+        cartLength = cartLength.products.length;
+      }
       const user = await userCollection.findOne({email: userSession.email})
       const userCart = await cartCollection
       .findOne({userId: user._id}).populate({path:'products.productId', model:'Product', populate: {path:'brand', model: 'brandCollection'}})
-      res.render('shop_cart', {userSession, userCart});
+      res.render('shop_cart', {userSession, userCart, cartLength});
 
   }catch(error){
     console.error(error);
@@ -117,6 +123,12 @@ module.exports.checkout = async (req, res)=>{
 try{
   let grandTotal = 0;
   const userSession = req.session.user;
+  let cartLength;
+  if(userSession){
+    const user = await userCollection.findOne({email: userSession.email})
+    cartLength = await cartCollection.findOne({userId: user._id});
+    cartLength = cartLength.products.length;
+  }
   const user = await userCollection.findOne({email: userSession.email});
   const userAddress = await addressCollection.findOne({userId: user._id});
   const userCart = await cartCollection.findOne(
@@ -132,7 +144,7 @@ try{
       }else{
         return res.redirect('/cart')
       }
-      res.render('shop-checkout', {userSession, userCart, userAddress, grandTotal});
+      res.render('shop-checkout', {userSession, userCart, userAddress, grandTotal, cartLength});
 }catch(error){
   console.error(error);
 }

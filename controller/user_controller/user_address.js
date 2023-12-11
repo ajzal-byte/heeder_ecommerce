@@ -1,12 +1,19 @@
 const userCollection = require("../../models/user_schema");
 const addressCollection = require('../../models/address_schema')
+const cartCollection = require('../../models/cart_schema');
 
 module.exports.getAddAddress = async (req, res)=>{
 try{
   const source = req.query.source;
   const userSession = req.session.user;
+  let cartLength;
+  if(userSession){
+    const user = await userCollection.findOne({email: userSession.email})
+    cartLength = await cartCollection.findOne({userId: user._id});
+    cartLength = cartLength.products.length;
+  }
   const user = userCollection.findOne({email: userSession.email});
-  res.render('add-address', {userSession, user, source})
+  res.render('add-address', {userSession, user, source, cartLength})
 }catch(error){
   console.error(error)
 }
@@ -42,12 +49,18 @@ try{
 module.exports.getEditAddress = async (req, res)=>{
 try{
   const userSession = req.session.user;
+  let cartLength;
+  if(userSession){
+    const user = await userCollection.findOne({email: userSession.email})
+    cartLength = await cartCollection.findOne({userId: user._id});
+    cartLength = cartLength.products.length;
+  }
   const user = await userCollection.findOne({email: userSession.email});
   const addressId = req.query.addressId;
   const objectId = req.query.objectId;
   const userAddress = await addressCollection.findOne({userId: user._id, "address._id": addressId}, { "address.$": 1 });
   if (userAddress && userAddress.address){
-    res.render('edit-address', {userSession, userAddress})
+    res.render('edit-address', {userSession, userAddress, cartLength})
   }else {
     console.log('Address not found');
   }

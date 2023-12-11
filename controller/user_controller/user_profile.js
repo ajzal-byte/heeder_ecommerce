@@ -1,15 +1,22 @@
 const addressCollection = require("../../models/address_schema");
 const orderCollection = require("../../models/orders_schema");
 const userCollection = require("../../models/user_schema");
+const cartCollection = require('../../models/cart_schema');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 module.exports.getProfile = async (req, res)=>{
   const userSession = req.session.user;
+  let cartLength;
+  if(userSession){
+    const user = await userCollection.findOne({email: userSession.email})
+    cartLength = await cartCollection.findOne({userId: user._id});
+    cartLength = cartLength.products.length;
+  }
   const userDetails = await userCollection.findOne({email: userSession.email});
   const userAddress = await addressCollection.findOne({userId: userDetails._id});
   const userOrders = await orderCollection.find({userId: userDetails._id});
-  res.render('user_account', {userDetails, userSession, userAddress, userOrders});
+  res.render('user_account', {userDetails, userSession, userAddress, userOrders, cartLength});
 }
 
 module.exports.editProfile = async (req, res)=>{
@@ -68,8 +75,14 @@ if(!passwordMatch){
 module.exports.viewOrders = async (req, res)=>{
   const orderId = req.query.orderId;
   const userSession = req.session.user;
+  let cartLength;
+  if(userSession){
+    const user = await userCollection.findOne({email: userSession.email})
+    cartLength = await cartCollection.findOne({userId: user._id});
+    cartLength = cartLength.products.length;
+  }
   // const userDetails = await userCollection.findOne({email: userSession.email});
   const orderDetails = await orderCollection.findOne({_id: orderId})
   .populate({path: 'products.productId', model: 'Product'});
-  res.render('view-order', {userSession, orderDetails});
+  res.render('view-order', {userSession, orderDetails, cartLength});
 }
