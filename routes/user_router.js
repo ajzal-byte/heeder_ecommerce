@@ -10,12 +10,19 @@ const user_order = require('../controller/user_controller/user_order');
 const productCollection = require('../models/products_schema')
 const category = require('../models/category_schema')
 const userCollection = require('../models/user_schema');
+const cartCollection = require('../models/cart_schema');
 
 user_router
 .get('/', async (req,res)=>{
   const products = await productCollection.find().populate({path:'category', model:'Categories'})
   const userSession = req.session.user;
-  res.render('user_index', {products, userSession});
+  let cartLength;
+  if(userSession){
+    const user = await userCollection.findOne({email: userSession.email})
+    cartLength = await cartCollection.findOne({userId: user._id}).length;
+  }
+  console.log(cartLength);
+  res.render('user_index', {products, userSession, cartLength});
 });
 
 user_router

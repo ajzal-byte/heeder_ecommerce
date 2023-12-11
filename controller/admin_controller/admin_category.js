@@ -56,8 +56,7 @@ module.exports.updateCategories = async (req, res)=>{
     const ifExist = await category.findOne({categoryName, _id : {$ne:categoryID}});
     console.log(ifExist)
     if(ifExist){
-      // const category_edit = await category.findById(categoryID);
-      // res.render('edit_category', {category_edit, message: "Category already exists"})    
+ 
       res.status(200).json({error: "Category already exists"})
     }else{
       await category.findByIdAndUpdate(categoryID, {
@@ -66,7 +65,6 @@ module.exports.updateCategories = async (req, res)=>{
         });
     res.status(200).json({ success: true });
     }
-    // res.redirect('/admin/categories');
   }catch (error) {
     console.error(error);
   }

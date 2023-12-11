@@ -69,7 +69,7 @@ module.exports.viewOrders = async (req, res)=>{
   const orderId = req.query.orderId;
   const userSession = req.session.user;
   // const userDetails = await userCollection.findOne({email: userSession.email});
-  const orderDetails = await orderCollection.findOne({_id: orderId}).populate({path: 'products.productId', model: 'Product'});
-  console.log(orderDetails.products);
+  const orderDetails = await orderCollection.findOne({_id: orderId})
+  .populate({path: 'products.productId', model: 'Product'});
   res.render('view-order', {userSession, orderDetails});
 }

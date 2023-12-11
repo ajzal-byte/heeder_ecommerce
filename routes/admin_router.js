@@ -127,8 +127,11 @@ admin_router
 .route('/unblockUsers/:user_id')
 .get(users.unblockUser);
 
-admin_router
-.route('/orders')
-.get(orders.getOrders);
+admin_router.get('/orders', orders.getOrders);
+admin_router.get('/view-order/:orderId', orders.viewOrder);
+admin_router.get('/dispatch-order/:orderId', orders.dispatchOrder);
+admin_router.get('/cancel-order/:orderId', orders.cancelOrder);
+admin_router.get('/deliver-order/:orderId', orders.deliverOrder);
+
 
 module.exports = admin_router
