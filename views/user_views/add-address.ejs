@@ -471,9 +471,8 @@
                                                 document.addEventListener("DOMContentLoaded", ()=>{
                                                     const submitButton = document.getElementById('submitButton');
                                                     submitButton.addEventListener("click", (e)=>{
+                                                        console.log(validateForm());
                                                         if(!validateForm()){
-                                                            console.log('prevention');
-                                                            console.log(isValid);
                                                             e.preventDefault();
                                                         }
                                                     });
@@ -492,7 +491,7 @@
                                                     { id: 'altphone', name: 'Alternative Phone Number' }
                                                 ];
 
-                                                    let isValid = true;
+                                                        isValid = true;
 
                                                     inputFields.forEach(field=>{
                                                         const value = document.getElementById(`${field.id}`).value;
@@ -501,17 +500,32 @@
                                                         //check for whitespaces and empty fields
                                                         if(value !== trimmedValue){
                                                             showError(`${field.id}Error`, `${field.name} cannot have whitespaces`);
-                                                            isValid = false;
+                                                           isValid =  false;
                                                         }
 
                                                         if(trimmedValue == ""){
                                                             showError(`${field.id}Error`, `${field.name} cannot be empty`);
-                                                            isValid = false;    
+                                                           isValid = false;   
                                                         }
-                                                        
-                                                        return isValid;
+
                                                         
                                                     });
+
+                                                    const phoneNumber = document.getElementById('phoneNumber').value;
+                                                    const altphone = document.getElementById('altphone').value;
+
+                                                    if (isNaN(phoneNumber) || phoneNumber.length !== 10 || phoneNumber[0] === '0') {
+                                                        showError('phoneNumberError', 'Phone number must be a number with exactly 10 digits and should not start with 0');
+                                                        isValid = false;
+                                                    }
+
+                                                    if (isNaN(altphone) || altphone.length !== 10 || altphone[0] === '0') {
+                                                        showError('altphoneError', 'Phone number must be a number with exactly 10 digits and should not start with 0');
+                                                        isValid = false;
+                                                    }
+
+                                                    return isValid;
+
                                                 }
 
                                                 function showError(elementId, message){
