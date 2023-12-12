@@ -166,7 +166,7 @@ module.exports.updateProduct = async (req, res)=>{
       }
 
       if (!productImages || productImages.length === 0) {
-        return res.status(200).json({ message: 'Product must have at least one image' });
+        return res.status(200).json('Product must have at least one image');
       }
 
       const productCategory = await category.findOne({ categoryName: product_cat });
