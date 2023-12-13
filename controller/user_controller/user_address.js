@@ -37,7 +37,7 @@ try{
     });
     // res.status(200).json({message: "Address added"});
   }
-  if(source=='profile'){
+  if(source){
     return res.redirect('/profile')
   }
   res.redirect('/checkout')
