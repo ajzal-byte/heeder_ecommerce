@@ -45,7 +45,7 @@ module.exports.postAdminRoute = async (req, res) => {
 
 module.exports.getAdminLogout = async(req, res)=>{
   try{
-    req.session.destroy()
+    req.session.admin = null;
   res.render('admin_signin', {logout : true});
   }catch (error) {
     console.error(error);

@@ -23,11 +23,6 @@ try{
 
   const productArray = [];
   userCart.products.forEach(product => {
-    console.log({
-      productId: product.productId._id,
-      price: product.productId.salePrice,
-      quantity: product.quantity
-    });
       productArray.push({
         productId: product.productId._id,
         price: product.productId.salePrice,

@@ -1,29 +1,19 @@
 const express = require('express');
 const user_router = express.Router();
 user_router.use(express.json());
-const userAuth = require('../middleware/userAuth')
+const userAuth = require('../middleware/userAuth');
+const userBlock = require('../middleware/userBlock');
 const user_controller = require('../controller/user_controller/user_login');
 const user_cart = require('../controller/user_controller/user_cart');
 const user_profile = require('../controller/user_controller/user_profile');
 const user_address = require('../controller/user_controller/user_address');
 const user_order = require('../controller/user_controller/user_order');
-const productCollection = require('../models/products_schema')
-const category = require('../models/category_schema')
+const productCollection = require('../models/products_schema');
 const userCollection = require('../models/user_schema');
 const cartCollection = require('../models/cart_schema');
 
 user_router
-.get('/', async (req,res)=>{
-  const products = await productCollection.find().populate({path:'category', model:'Categories'})
-  const userSession = req.session.user;
-  let cartLength;
-  if(userSession){
-    const user = await userCollection.findOne({email: userSession.email})
-    cartLength = await cartCollection.findOne({userId: user._id});
-    cartLength = cartLength.products.length;
-  }
-  res.render('user_index', {products, userSession, cartLength});
-});
+.get('/', userBlock.ifBlocked, user_controller.getHomePage)
 
 user_router
 .route("/login")
@@ -54,8 +44,7 @@ user_router
 .post(user_controller.verifyOTP)
 
 user_router
-.route('/productDetails/:product_id')
-.get(user_controller.getProductDetails)
+.get('/productDetails/:product_id', userBlock.ifBlocked,  user_controller.getProductDetails)
 
 user_router
 .route("/forgotPassword")
@@ -74,21 +63,24 @@ user_router
 .post(user_controller.forgotChangePassword)
 
 //cart
-user_router.get('/cart', userAuth.userSession, user_cart.getCart)
+user_router.get('/cart', userAuth.userSession, userBlock.ifBlocked, user_cart.getCart)
 user_router.post('/addtoCart', user_cart.addtoCart)
-user_router.post('/updateCart', userAuth.userSession, user_cart.updateCart)
-user_router.post('/removeFromCart', userAuth.userSession, user_cart.removeCart)
-user_router.get('/checkout', userAuth.userSession, user_cart.checkout)
-user_router.get('/profile', userAuth.userSession, user_profile.getProfile);
-user_router.get('/add-address', userAuth.userSession, user_address.getAddAddress);
-user_router.post('/post-add-address', userAuth.userSession, user_address.postAddAddress);
-user_router.get('/order-placed/cod', user_order.getOrderPlacedCod);
-user_router.get('/edit-address', userAuth.userSession, user_address.getEditAddress);
-user_router.post('/post-edit-address', userAuth.userSession, user_address.postEditAddress);
-user_router.get('/delete-address', userAuth.userSession, user_address.deleteAddress);
-user_router.post('/edit-profile', userAuth.userSession, user_profile.editProfile);
-user_router.post('/change-password', userAuth.userSession, user_profile.changePassword);
-user_router.get('/view-order', userAuth.userSession, user_profile.viewOrders);
-user_router.get('/cancel-order/:orderId', userAuth.userSession, user_order.cancelOrder);
+user_router.post('/updateCart', userAuth.userSession, userBlock.ifBlocked, user_cart.updateCart)
+user_router.post('/removeFromCart', userAuth.userSession, userBlock.ifBlocked, user_cart.removeCart)
+user_router.get('/checkout', userAuth.userSession, userBlock.ifBlocked, user_cart.checkout)
+user_router.get('/profile', userAuth.userSession, userBlock.ifBlocked, user_profile.getProfile);
+user_router.get('/add-address', userAuth.userSession, userBlock.ifBlocked, user_address.getAddAddress);
+user_router.post('/post-add-address', userAuth.userSession, userBlock.ifBlocked, user_address.postAddAddress);
+user_router.get('/order-placed/cod', userAuth.userSession, userBlock.ifBlocked, user_order.getOrderPlacedCod);
+user_router.get('/edit-address', userAuth.userSession, userBlock.ifBlocked, user_address.getEditAddress);
+user_router.post('/post-edit-address', userAuth.userSession, userBlock.ifBlocked, user_address.postEditAddress);
+user_router.get('/delete-address', userAuth.userSession, userBlock.ifBlocked, user_address.deleteAddress);
+user_router.post('/edit-profile', userAuth.userSession, userBlock.ifBlocked, user_profile.editProfile);
+user_router.post('/change-password', userAuth.userSession, userBlock.ifBlocked, user_profile.changePassword);
+user_router.get('/view-order', userAuth.userSession, userBlock.ifBlocked, user_profile.viewOrders);
+user_router.get('/cancel-order/:orderId', userAuth.userSession, userBlock.ifBlocked, user_order.cancelOrder);
+
+
+
 
 module.exports = user_router

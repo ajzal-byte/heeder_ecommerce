@@ -1,10 +1,23 @@
 const userCollection = require('../../models/user_schema');
 const productCollection = require('../../models/products_schema')
+const cartCollection = require('../../models/cart_schema')
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
 const saltRounds = 10; // The number of salt rounds determines the computational cost (higher is slower but more secure)
 // const { v4: uuidv4 } = require('uuid');
 // const transporter = require('../emailConfig');
+
+module.exports.getHomePage = async(req, res)=>{
+  const products = await productCollection.find().populate({path:'category', model:'Categories'})
+  const userSession = req.session.user;
+  let cartLength;
+  if(userSession){
+      const user = await userCollection.findOne({email: userSession.email})
+      cartLength = await cartCollection.findOne({userId: user._id});
+      cartLength = cartLength.products.length;
+  }
+  res.render('user_index', {products, userSession, cartLength});
+}
 
 
 module.exports.getUserLogin = async (req, res)=>{
@@ -12,7 +25,7 @@ module.exports.getUserLogin = async (req, res)=>{
     const userSession = req.session.user;
     const products = await productCollection.find()
     if(userSession){
-      res.render('user_index', {userSession, products})
+      res.redirect('/')
     }else{
       res.render('user_login', {userSession});
     }
@@ -52,7 +65,7 @@ module.exports.postUserLogin = async (req, res)=>{
 
 module.exports.getUserLogout = async (req, res)=>{
   try{
-    req.session.destroy()
+    req.session.user = null;
   res.redirect('/login')
   }catch (error) {
     console.error(error);
