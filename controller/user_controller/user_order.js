@@ -6,7 +6,7 @@ const productCollection = require("../../models/products_schema");
 
 
 
-module.exports.getOrderPlacedCod = async (req, res)=>{
+module.exports.getOrderPlacedCod = async (req, res, next)=>{
 try{
   let totalAmount = 0;
   const userSession = req.session.user;
@@ -56,17 +56,17 @@ userCart.products.forEach(product=>{
     res.render('order-placed', {userSession});
   
 }catch(error){
-  console.error(error)
+  next(error);
 }
 }
 
 
-module.exports.cancelOrder = async (req, res)=>{
+module.exports.cancelOrder = async (req, res, next)=>{
   try{
     const orderId = req.params.orderId;
     await orderCollection.findByIdAndUpdate(orderId, {orderStatus: 'Cancelled'});
     res.redirect(`/view-order/?orderId=${orderId}`);
   }catch (error) {
-    console.error(error);
+    next(error);
   }
 }

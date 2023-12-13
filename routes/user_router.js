@@ -1,6 +1,7 @@
 const express = require('express');
 const user_router = express.Router();
 user_router.use(express.json());
+const userError = require('../middleware/userError');
 const userAuth = require('../middleware/userAuth');
 const userBlock = require('../middleware/userBlock');
 const user_controller = require('../controller/user_controller/user_login');
@@ -8,16 +9,13 @@ const user_cart = require('../controller/user_controller/user_cart');
 const user_profile = require('../controller/user_controller/user_profile');
 const user_address = require('../controller/user_controller/user_address');
 const user_order = require('../controller/user_controller/user_order');
-const productCollection = require('../models/products_schema');
-const userCollection = require('../models/user_schema');
-const cartCollection = require('../models/cart_schema');
 
 user_router
 .get('/', userBlock.ifBlocked, user_controller.getHomePage)
 
 user_router
 .route("/login")
-.get(user_controller.getUserLogin)
+.get(user_controller.getUserLogin, userError.errorHandler)
 
 user_router
 .route("/postLogin")
@@ -69,18 +67,18 @@ user_router.post('/updateCart', userAuth.userSession, userBlock.ifBlocked, user_
 user_router.post('/removeFromCart', userAuth.userSession, userBlock.ifBlocked, user_cart.removeCart)
 user_router.get('/checkout', userAuth.userSession, userBlock.ifBlocked, user_cart.checkout)
 user_router.get('/profile', userAuth.userSession, userBlock.ifBlocked, user_profile.getProfile);
-user_router.get('/add-address', userAuth.userSession, userBlock.ifBlocked, user_address.getAddAddress);
-user_router.post('/post-add-address', userAuth.userSession, userBlock.ifBlocked, user_address.postAddAddress);
-user_router.get('/order-placed/cod', userAuth.userSession, userBlock.ifBlocked, user_order.getOrderPlacedCod);
-user_router.get('/edit-address', userAuth.userSession, userBlock.ifBlocked, user_address.getEditAddress);
-user_router.post('/post-edit-address', userAuth.userSession, userBlock.ifBlocked, user_address.postEditAddress);
-user_router.get('/delete-address', userAuth.userSession, userBlock.ifBlocked, user_address.deleteAddress);
 user_router.post('/edit-profile', userAuth.userSession, userBlock.ifBlocked, user_profile.editProfile);
 user_router.post('/change-password', userAuth.userSession, userBlock.ifBlocked, user_profile.changePassword);
 user_router.get('/view-order', userAuth.userSession, userBlock.ifBlocked, user_profile.viewOrders);
+user_router.get('/add-address', userAuth.userSession, userBlock.ifBlocked, user_address.getAddAddress);
+user_router.post('/post-add-address', userAuth.userSession, userBlock.ifBlocked, user_address.postAddAddress);
+user_router.get('/edit-address', userAuth.userSession, userBlock.ifBlocked, user_address.getEditAddress);
+user_router.post('/post-edit-address', userAuth.userSession, userBlock.ifBlocked, user_address.postEditAddress);
+user_router.get('/delete-address', userAuth.userSession, userBlock.ifBlocked, user_address.deleteAddress);
+user_router.get('/order-placed/cod', userAuth.userSession, userBlock.ifBlocked, user_order.getOrderPlacedCod);
 user_router.get('/cancel-order/:orderId', userAuth.userSession, userBlock.ifBlocked, user_order.cancelOrder);
 
 
-
+user_router.use(userError.errorHandler);
 
 module.exports = user_router

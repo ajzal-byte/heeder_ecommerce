@@ -5,7 +5,8 @@ const cartCollection = require('../../models/cart_schema');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
-module.exports.getProfile = async (req, res)=>{
+module.exports.getProfile = async (req, res, next)=>{
+try{
   const userSession = req.session.user;
   let cartLength;
   if(userSession){
@@ -17,9 +18,12 @@ module.exports.getProfile = async (req, res)=>{
   const userAddress = await addressCollection.findOne({userId: userDetails._id});
   const userOrders = await orderCollection.find({userId: userDetails._id});
   res.render('user_account', {userDetails, userSession, userAddress, userOrders, cartLength});
+}catch(error){
+  next(error);
+}
 }
 
-module.exports.editProfile = async (req, res)=>{
+module.exports.editProfile = async (req, res, next)=>{
 try{
   const userSession = req.session.user;
   const username = req.body.username;
@@ -34,11 +38,11 @@ try{
     });
     res.redirect('/profile')
 }catch(error){
-  console.error(error);
+  next(error);
 }
 }
 
-module.exports.changePassword = async (req, res)=>{
+module.exports.changePassword = async (req, res, next)=>{
 try{
 const userSession = req.session.user;
 const user = await userCollection.findOne({email: userSession.email});
@@ -67,12 +71,13 @@ if(!passwordMatch){
   }
 }
 }catch(error){
-  console.error(error);
+  next(error);
 }
 }
 
 
-module.exports.viewOrders = async (req, res)=>{
+module.exports.viewOrders = async (req, res, next)=>{
+try{
   const orderId = req.query.orderId;
   const userSession = req.session.user;
   let cartLength;
@@ -85,4 +90,7 @@ module.exports.viewOrders = async (req, res)=>{
   const orderDetails = await orderCollection.findOne({_id: orderId})
   .populate({path: 'products.productId', model: 'Product'});
   res.render('view-order', {userSession, orderDetails, cartLength});
+}catch(error){
+  next(error);
+}
 }

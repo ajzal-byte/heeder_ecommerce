@@ -2,7 +2,7 @@ const userCollection = require("../../models/user_schema");
 const addressCollection = require('../../models/address_schema')
 const cartCollection = require('../../models/cart_schema');
 
-module.exports.getAddAddress = async (req, res)=>{
+module.exports.getAddAddress = async (req, res, next)=>{
 try{
   const source = req.query.source;
   const userSession = req.session.user;
@@ -15,11 +15,11 @@ try{
   const user = userCollection.findOne({email: userSession.email});
   res.render('add-address', {userSession, user, source, cartLength})
 }catch(error){
-  console.error(error)
+  next(error);
 }
 }
 
-module.exports.postAddAddress = async (req, res)=>{
+module.exports.postAddAddress = async (req, res, next)=>{
 try{
   const source = req.query.source;
   const {name, addressType, city, landMark, state, pincode, phone, altPhone} = req.body;
@@ -43,11 +43,11 @@ try{
   res.redirect('/checkout')
 
 }catch(error){
-  console.error(error);
+  next(error);
 }
 }
 
-module.exports.getEditAddress = async (req, res)=>{
+module.exports.getEditAddress = async (req, res, next)=>{
 try{
   const userSession = req.session.user;
   let cartLength;
@@ -66,12 +66,12 @@ try{
     console.log('Address not found');
   }
 }catch(error){
-  console.error(error)
+  next(error);
 }
 }
 
 
-module.exports.postEditAddress = async (req, res)=>{
+module.exports.postEditAddress = async (req, res, next)=>{
   try{
     const {name, addressType, city, landMark, state, pincode, phone, altPhone} = req.body;
     console.log(req.body);
@@ -97,11 +97,11 @@ module.exports.postEditAddress = async (req, res)=>{
     res.redirect('/profile')
   
   }catch(error){
-    console.error(error);
+    next(error);
   }
 }
 
-module.exports.deleteAddress = async (req, res)=>{
+module.exports.deleteAddress = async (req, res, next)=>{
 try{
   const userSession = req.session.user;
   const addressId = req.query.addressId;
@@ -113,6 +113,6 @@ try{
   }});
   res.redirect('/profile');
 }catch(error){
-  console.error(error)
+  next(error);
 }
 }

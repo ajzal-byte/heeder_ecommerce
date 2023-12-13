@@ -7,7 +7,8 @@ const saltRounds = 10; // The number of salt rounds determines the computational
 // const { v4: uuidv4 } = require('uuid');
 // const transporter = require('../emailConfig');
 
-module.exports.getHomePage = async(req, res)=>{
+module.exports.getHomePage = async(req, res, next)=>{
+try{
   const products = await productCollection.find().populate({path:'category', model:'Categories'})
   const userSession = req.session.user;
   let cartLength;
@@ -17,10 +18,13 @@ module.exports.getHomePage = async(req, res)=>{
       cartLength = cartLength.products.length;
   }
   res.render('user_index', {products, userSession, cartLength});
+}catch(error){
+  next(error);
 }
+};
 
 
-module.exports.getUserLogin = async (req, res)=>{
+module.exports.getUserLogin = async (req, res, next)=>{
   try{
     const userSession = req.session.user;
     const products = await productCollection.find()
@@ -30,12 +34,12 @@ module.exports.getUserLogin = async (req, res)=>{
       res.render('user_login', {userSession});
     }
   }catch (error) {
-    console.error(error);
+    next(error);
   }
 };
 
 
-module.exports.postUserLogin = async (req, res)=>{
+module.exports.postUserLogin = async (req, res, next)=>{
   try{
     const email = req.query.email;
     const password = req.query.password;
@@ -57,32 +61,32 @@ module.exports.postUserLogin = async (req, res)=>{
       }
     }
   }catch(error){
-    console.error(error);
-  }
-}
-
-
-
-module.exports.getUserLogout = async (req, res)=>{
-  try{
-    req.session.user = null;
-  res.redirect('/login')
-  }catch (error) {
-    console.error(error);
+    next(error);
   }
 };
 
 
-module.exports.getUserSignup = async (req, res)=>{
+
+module.exports.getUserLogout = async (req, res, next)=>{
+  try{
+    req.session.user = null;
+  res.redirect('/login')
+  }catch (error) {
+    next(error);
+  }
+};
+
+
+module.exports.getUserSignup = async (req, res, next)=>{
   try{
     res.render('user_signup')
   }catch (error) {
-    console.error(error);
+    next(error)
   }
-}                                                                                                                                                              
+};
 
 
-module.exports.postUserSignup = async (req, res)=>{
+module.exports.postUserSignup = async (req, res, next)=>{
   try{
     const {username, email, password, phoneNumber} = req.body;
     bcrypt.hash(password, saltRounds, async(err, hash)=>{
@@ -104,7 +108,7 @@ module.exports.postUserSignup = async (req, res)=>{
     });
     
   }catch(error){  
-    console.error(error);
+    next(error);
   }
 };
 
@@ -116,7 +120,7 @@ const generateOTP = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
 };
 
-module.exports.getSendOtp = async (req, res)=>{
+module.exports.getSendOtp = async (req, res, next)=>{
   try{
     const ifExist = await userCollection.findOne({
       $or: [
@@ -164,13 +168,13 @@ module.exports.getSendOtp = async (req, res)=>{
         res.status(200).json({message : "OTP send to email successfully"})
     }
   }catch (error) {
-    console.error(error);
+    next(error);
   }
-}
+};
 
 //verify OTP
 
-module.exports.verifyOTP = async (req, res)=>{
+module.exports.verifyOTP = async (req, res, next)=>{
   try{
     let userEnteredOTP = req.query.otpInput;
     if(userEnteredOTP === generatedOTP){
@@ -179,14 +183,13 @@ module.exports.verifyOTP = async (req, res)=>{
       res.status(400).json({error: "Incorrect OTP"});
     }
   }catch(error){
-    console.error(error)
+    next(error);
   }
 };
 
 
 //single product page
-
-module.exports.getProductDetails = async (req, res)=>{
+module.exports.getProductDetails = async (req, res, next)=>{
   try{
     const userSession = req.session.user;
     const product_id = req.params.product_id;
@@ -194,22 +197,22 @@ module.exports.getProductDetails = async (req, res)=>{
     // console.log(product_details);
     res.render('product_view', {product_details, userSession});
   }catch(error){
-    console.error(error);
+    next(error);
   }
-}
+};
 
 // view forgot password page
-module.exports.getforgotPassword = async (req, res)=>{
+module.exports.getforgotPassword = async (req, res, next)=>{
   try{
     res.render('forgot_password');
   }catch(error){
-    console.log('error')
+    next(error);
   }
-}
+};
 
 
 // send otp for forgot password
-module.exports.getforgotSendOtp = async (req, res)=>{
+module.exports.getforgotSendOtp = async (req, res, next)=>{
   try{
     const ifExist = await userCollection.findOne({email: req.query.email});
     if(!ifExist){
@@ -254,12 +257,12 @@ module.exports.getforgotSendOtp = async (req, res)=>{
     
 
   }catch(error){
-    console.error(error);
+    next(error);
   }
-}
+};
 
 // verify otp for forgot password
-module.exports.forgotVerifyOtp = async (req, res)=>{
+module.exports.forgotVerifyOtp = async (req, res, next)=>{
   try{
     let userEnteredOTP = req.query.otpInput;
     if(Number(userEnteredOTP) == Number(generatedOTP)){
@@ -268,12 +271,12 @@ module.exports.forgotVerifyOtp = async (req, res)=>{
       return res.status(400).json({message: "Incorrect OTP"});
     }
   }catch(error){
-    console.log(error);
+    next(error);
   }
-}
+};
 
 // changing the forgotten password
-module.exports.forgotChangePassword = async (req, res)=>{
+module.exports.forgotChangePassword = async (req, res, next)=>{
   try{
       const email = req.query.email;
       const newPassword = req.query.password;
@@ -296,6 +299,6 @@ module.exports.forgotChangePassword = async (req, res)=>{
       });
     }
   }catch(error){
-    console.error(error)
+    next(error);
   }
-}
+};
