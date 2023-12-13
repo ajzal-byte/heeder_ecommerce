@@ -355,7 +355,7 @@
           <div class="container">
             <div class="row">
               <div class="col-12">
-                <%if(userCart?.products){%>
+                <%if(cartLength > 0){%>
                   <div class="table-responsive">
                     <table class="table shopping-summery text-center clean">
                       <thead>
@@ -525,11 +525,16 @@
                     noTotal.style.display = 'none'
                 }
 
-                if(quantity > productStock || quantity == productStock){
-                    quantityUpButton.closest('.detail-qty').querySelector('.qty-up').style.pointerEvents = 'none';
+                if(quantity > productStock){
+                    // quantityUpButton.closest('.detail-qty').querySelector('.qty-up').style.pointerEvents = 'none';
+                    Swal.fire({
+                        position: 'top-center',
+                        icon: 'error',
+                        title: "Insufficient Stock",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
                     
-                }else{
-                    quantityUpButton.closest('.detail-qty').querySelector('.qty-up').style.pointerEvents = 'auto';
                 }
             });
         }

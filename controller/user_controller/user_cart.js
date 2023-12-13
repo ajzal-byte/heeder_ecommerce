@@ -10,9 +10,12 @@ module.exports.getCart = async (req, res, next)=>{
       const userSession = req.session.user;
       let cartLength;
       if(userSession){
-        const user = await userCollection.findOne({email: userSession.email})
+        const user = await userCollection.findOne({email: userSession.email});
         cartLength = await cartCollection.findOne({userId: user._id});
-        cartLength = cartLength.products.length;
+        if (cartLength && cartLength.products) {
+          // Check if the cart and its products for the user exists
+          cartLength = cartLength.products.length;
+        }
       }
       const user = await userCollection.findOne({email: userSession.email})
       const userCart = await cartCollection
@@ -127,7 +130,10 @@ try{
   if(userSession){
     const user = await userCollection.findOne({email: userSession.email})
     cartLength = await cartCollection.findOne({userId: user._id});
-    cartLength = cartLength.products.length;
+    if (cartLength && cartLength.products) {
+      // Check if the cart and its products for the user exists
+      cartLength = cartLength.products.length;
+    }
   }
   const user = await userCollection.findOne({email: userSession.email});
   const userAddress = await addressCollection.findOne({userId: user._id});

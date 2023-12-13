@@ -15,7 +15,10 @@ try{
   if(userSession){
       const user = await userCollection.findOne({email: userSession.email})
       cartLength = await cartCollection.findOne({userId: user._id});
-      cartLength = cartLength.products.length;
+      if (cartLength && cartLength.products) {
+        // Check if the cart and its products for the user exists
+        cartLength = cartLength.products.length;
+      }
   }
   res.render('user_index', {products, userSession, cartLength});
 }catch(error){

@@ -12,7 +12,10 @@ try{
   if(userSession){
     const user = await userCollection.findOne({email: userSession.email})
     cartLength = await cartCollection.findOne({userId: user._id});
-    cartLength = cartLength.products.length;
+    if (cartLength && cartLength.products) {
+      // Check if the cart and its products for the user exists
+      cartLength = cartLength.products.length;
+    }
   }
   const userDetails = await userCollection.findOne({email: userSession.email});
   const userAddress = await addressCollection.findOne({userId: userDetails._id});
@@ -84,7 +87,10 @@ try{
   if(userSession){
     const user = await userCollection.findOne({email: userSession.email})
     cartLength = await cartCollection.findOne({userId: user._id});
-    cartLength = cartLength.products.length;
+    if (cartLength && cartLength.products) {
+      // Check if the cart and its products for the user exists
+      cartLength = cartLength.products.length;
+    }
   }
   // const userDetails = await userCollection.findOne({email: userSession.email});
   const orderDetails = await orderCollection.findOne({_id: orderId})
