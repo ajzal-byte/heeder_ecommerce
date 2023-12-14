@@ -53,6 +53,9 @@
                                             <div id="timer" class="mb-3" style="display: none; color: rgb(0, 0, 0);"></div>
                                         </div>
                                         <div class="form-group">
+                                            <div id="expiry-timer" class="mb-3" style="display: none; color: rgb(0, 0, 0);"></div>
+                                        </div>
+                                        <div class="form-group">
                                             <input type="text" required="" name="otpInput" placeholder="Enter OTP" id="otpInput">
                                         </div>  
                                         <div class="form-group">
@@ -100,6 +103,7 @@
         const resendOTPButton = document.getElementById("resendOTPButton");
         const submitButton = document.getElementById("submitButton");
         const verifyOTPButton = document.getElementById("verifyOTPButton");
+        const expiryTimerElement = document.getElementById('expiry-timer');
 
 
         submitButton.disabled = true;
@@ -143,6 +147,7 @@
                     });
                     verifyOTPButton.disabled = false;
                     startResendTimer();
+                    startExpiryTimer();
                     }
                     })
                     .catch((error) => {
@@ -189,6 +194,7 @@
                         timer: 1500
                     });
                     startResendTimer();
+                    startExpiryTimer();
                     }
                     })
                     .catch((error) => {
@@ -281,6 +287,22 @@
             }, 1000);
 
         }
+
+        function startExpiryTimer(){
+            let expiryTime = 30;
+            expiryTimerElement.style.display = 'block';
+
+            countdown = setInterval(()=>{
+                expiryTimerElement.textContent = `Your OTP will expire in ${expiryTime} seconds`;
+                expiryTime--;
+
+                if(expiryTime<0){
+                expiryTimerElement.style.display = 'none';
+            }
+
+            }, 1000);
+
+        }
         
 
 
@@ -303,31 +325,35 @@ verifyOTPButton.addEventListener("click", (e) => {
         return Response.json();
     })
     .then((data) => {
-        console.log("Response from server", data)
-        Swal.fire({
+        if(data.message){
+            Swal.fire({
             position: 'top-center',
             icon: 'success',
-            title: 'OTP verified successfully',
+            title: data.message,
             showConfirmButton: false,
             timer: 1500
-        });
+        })
 
-       // Disable all form fields
-        Array.from(form.elements).forEach(element => {
+               // Disable all form fields
+            Array.from(form.elements).forEach(element => {
             element.readOnly = true; // Set readonly instead of disabled
-        });
+            });
 
-        submitButton.disabled = false;
-    })
-    .catch((error) => {
-        console.error("Invalid OTP", error);
-        Swal.fire({
+            submitButton.disabled = false;
+            resendOTPButton.disabled = true;
+
+        }else if(data.error){
+            Swal.fire({
             position: 'top-center',
             icon: 'error',
-            title: "Invalid OTP",
+            title: data.error,
             showConfirmButton: false,
             timer: 1500
         });
+        }
+    })
+    .catch((error) => {
+        console.error("Error: ", error);
     })
 });
 

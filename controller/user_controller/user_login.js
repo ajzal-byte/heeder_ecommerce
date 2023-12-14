@@ -123,6 +123,7 @@ const generateOTP = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
 };
 
+
 module.exports.getSendOtp = async (req, res, next)=>{
   try{
     const ifExist = await userCollection.findOne({
@@ -136,6 +137,9 @@ module.exports.getSendOtp = async (req, res, next)=>{
     }else{
       const email = req.query.email;
       generatedOTP = generateOTP();
+      setTimeout(() => {
+        generatedOTP = null; 
+      }, 30000);
 
       // Create a transporter
       const transporter = nodemailer.createTransport({
@@ -182,8 +186,10 @@ module.exports.verifyOTP = async (req, res, next)=>{
     let userEnteredOTP = req.query.otpInput;
     if(userEnteredOTP === generatedOTP){
       res.status(200).json({message: "OTP Verification Successfull"});
+    }else if(generatedOTP == null) {
+      res.status(200).json({error: "OTP Expired"});
     }else{
-      res.status(400).json({error: "Incorrect OTP"});
+      res.status(200).json({error: "Incorrect OTP"});
     }
   }catch(error){
     next(error);
