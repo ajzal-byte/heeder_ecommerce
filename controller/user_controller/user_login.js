@@ -203,8 +203,16 @@ module.exports.getProductDetails = async (req, res, next)=>{
     const userSession = req.session.user;
     const product_id = req.params.product_id;
     const product_details = await productCollection.findOne({_id : product_id}).populate({path:'category', model:'Categories'}).populate({path:'brand', model: 'brandCollection'})
-    // console.log(product_details);
-    res.render('product_view', {product_details, userSession});
+    let cartLength;
+    if(userSession){
+      const user = await userCollection.findOne({email: userSession.email})
+      cartLength = await cartCollection.findOne({userId: user._id});
+      if (cartLength && cartLength.products) {
+        // Check if the cart and its products for the user exists
+        cartLength = cartLength.products.length;
+      }
+    }
+    res.render('product_view', {product_details, userSession, cartLength});
   }catch(error){
     next(error);
   }
