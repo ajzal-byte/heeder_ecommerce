@@ -239,10 +239,44 @@
                                     });
                             
                                 </script>
-                            
-
 
                             </div>
+
+                            <% if(orders.length > 0){ %>
+                                <nav aria-label="Dashboard Pagination">
+                                <ul class="pagination justify-content-center mt-5">
+                                
+                                <% if(current ==1){ %>
+                                    <li class="page-item disabled"><a href="#" class="page-link">First</a></li>
+                                <% }else{ %>
+                                    <li class="page-item"><a href="/admin/orders/?page=1" class="page-link">First</a></li>
+                                <% } %>
+
+                                <% var i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
+                                <% if (i !== 1) { %>
+                                    <li class="page-item disabled"><a href="#" class="page-link">...</a></li> 
+                                <% } %>
+
+                                <% for(; i<= (Number(current) + 4) && i < pages; i++){ %>
+                                    <% if (i == current) { %>
+                                    <li class="page-item disabled"><a href="#" class="page-link"><%= i %></a></li> 
+                                    <% }else{ %>
+                                    <li class="page-item"><a href="/admin/orders/?page=<%= i %>" class="page-link"><%= i %></a></li>
+                                    <% } %>
+                                    <% if (i == Number(current) + 4 && i < pages) { %>
+                                    <li class="page-item disabled"><a href="#" class="page-link">...</a></li>
+                                    <% } %>
+                                <% } %>
+
+                                <% if (current == pages) { %>
+                                    <li class="page-item disabled"><a href="#" class="page-link">Last</a></li> 
+                                <% }else{ %>
+                                    <li class="page-item"><a href="/admin/orders/?page=<%= pages %>" class="page-link">Last</a></li>
+                                <% } %>
+                                    </ul>
+                                </nav>
+                            <% } %>
+
                         </div> <!-- .col// -->
                     </div> <!-- .row // -->
                 </div> <!-- card body .// -->
@@ -273,7 +307,7 @@
     <script src="/admin_assets/js/vendors/jquery.fullscreen.min.js"></script>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <!-- <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
        <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
        <script>
           $(document).ready(function () {
@@ -281,7 +315,7 @@
                   order: [[0, 'desc']] 
               });
           });
-          </script>
+          </script> -->
 
     <!-- Main Script -->
     <script src="/admin_assets/js/main.js" type="text/javascript"></script>

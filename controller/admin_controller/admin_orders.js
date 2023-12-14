@@ -3,12 +3,23 @@ const orderCollection  = require('../../models/orders_schema');
 
 module.exports.getOrders = async (req, res)=>{
 try{
+  let perPage = 5;
+  let page = req.query.page || 1;
     if(req.session.admin){
       const orders = await orderCollection
       .find()
       .populate({path:'userId', model:'userCollection'})
-      .populate({path:'products.productId', model:'Product'});
-      res.render('orders-page', {orders});
+      .skip(perPage * page - perPage)
+      .limit(perPage)
+      .exec()
+
+      const count = await orderCollection.countDocuments({});
+
+      res.render('orders-page', {
+        orders,
+        current: page,
+        pages: Math.ceil(count / perPage),
+      });
     }else{
       res.redirect('/admin')
     }
