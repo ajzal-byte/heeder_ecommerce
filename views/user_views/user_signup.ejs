@@ -294,6 +294,7 @@
 
             countdown = setInterval(()=>{
                 expiryTimerElement.textContent = `Your OTP will expire in ${expiryTime} seconds`;
+                expiryTimerElement.style.color = 'red';
                 expiryTime--;
 
                 if(expiryTime<0){
