@@ -12,4 +12,18 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-module.exports = upload;
+
+const userProfile = multer.diskStorage({
+  destination: (req, file, cb)=>{
+    cb(null, path.join(__dirname, '../public/user_profile'));
+  },
+  filename: (req, file, cb)=>{
+    cb(null,Date.now() + path.extname(file.originalname));
+  }
+});
+
+const userProfileUpload = multer({storage: userProfile})
+
+
+module.exports = {upload, userProfileUpload};
+

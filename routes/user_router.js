@@ -9,6 +9,10 @@ const user_cart = require('../controller/user_controller/user_cart');
 const user_profile = require('../controller/user_controller/user_profile');
 const user_address = require('../controller/user_controller/user_address');
 const user_order = require('../controller/user_controller/user_order');
+const userProfileUpload = require('../middleware/multer');
+
+user_router.use('/', express.static('public'));
+
 
 user_router
 .get('/', userBlock.ifBlocked, user_controller.getHomePage)

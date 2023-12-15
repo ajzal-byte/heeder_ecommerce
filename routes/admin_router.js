@@ -6,12 +6,11 @@ const brands = require('../controller/admin_controller/admin_brands');
 const products = require('../controller/admin_controller/admin_products');
 const users= require('../controller/admin_controller/admin_users');
 const orders = require('../controller/admin_controller/admin_orders')
-const upload = require('../middleware/multer');
+const {upload} = require('../middleware/multer');
 const path = require('path')
 
-
 // admin_router.use('/uploads', express.static('uploads'));
-admin_router.use('/public', express.static('public'));
+// admin_router.use('/public', express.static('public'));
 // admin_router.use('/admin/public', express.static('public'));
 // admin_router.use('/uploads', express.static('uploads'))
 // admin_router.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
@@ -115,17 +114,11 @@ admin_router
 .route('/delete_image')
 .get(products.deleteImage);
 
-admin_router
-.route('/users')
-.get(users.getUsers);
+admin_router.get('/users', users.getUsers);
 
-admin_router
-.route('/blockUsers/:user_id')
-.get(users.blockUser);
+admin_router.get('/blockUsers/:user_id', users.blockUser);
 
-admin_router
-.route('/unblockUsers/:user_id')
-.get(users.unblockUser);
+admin_router.get('/unblockUsers/:user_id', users.unblockUser);
 
 admin_router.get('/orders', orders.getOrders);
 admin_router.get('/view-order/:orderId', orders.viewOrder);

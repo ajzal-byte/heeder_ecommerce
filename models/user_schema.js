@@ -21,6 +21,12 @@ const userSchema  = new mongoose.Schema({
   status: {
     type: String,
   },
+
+  userProfile: {
+        type: String,
+        default: 'user_profile/user-profile.png'
+      
+  }
 });
 
 const userCollection = mongoose.model("userCollection",userSchema);
