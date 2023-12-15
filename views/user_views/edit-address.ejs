@@ -32,6 +32,17 @@
                             </ul>
                         </div>
                     </div>
+                    <div class="col-xl-6 col-lg-4">
+                        <div class="text-center">
+                            <div id="news-flash" class="d-inline-block">
+                                <ul>
+                                    <li>Get great devices up to 50% off <a href="shop-grid-right.html">View details</a></li>
+                                    <li>Supper Value Deals - Save more with coupons</li>
+                                    <li>Trendy 25silver jewelry, save up 35% off today <a href="shop-grid-right.html">Shop now</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-xl-3 col-lg-4">
                         <div class="header-info header-info-right">
                             <ul>
@@ -46,8 +57,15 @@
                                 <% if(!userSession){ %> 
                                     <li><i class="fi-rs-user"></i><a href="/login">Log In / Sign Up</a></li>
                                 <% }else{ %>
-                                            <li><i class="fi-rs-user"></i><a  href="/logout">Logout</a></li>
-                                            <li><i class="fi-rs-user"></i><a  href="/profile"><%= userSession.username %></a></li>
+                                    <div class="user-details d-flex align-items-center justify-content-evenly">
+                                        <li><i class="fi-rs-user"></i><a class="mr-10" href="/logout">Logout</a></li>
+                                    <li><i class="fi-rs-user"></i><a class="mr-10" href="/profile"><%= userSession.username %></a></li>
+                                    <a class="profile-link" href="/profile">
+                                        <div class="profile-pic mr-10" style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden;">
+                                            <img src="<%= user.userProfile %>" alt="User Profile Picture" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                                        </div>
+                                    </a> 
+                                    </div>
                                 <% } %>
                             </ul>
                         </div>

@@ -31,12 +31,16 @@ try{
   const userSession = req.session.user;
   const username = req.body.username;
   const phoneNumber = req.body.phoneNumber;
-  console.log(username);
-  console.log(phoneNumber);
+  const userData = await userCollection.findOne({email: userSession.email});
+  let userProfile = userData.userProfile;
+  if(req.file){
+    userProfile = `user_profile/${req.file.filename}`;
+  }
   await userCollection.updateOne({email: userSession.email},
     {$set:{
       username,
-      phoneNumber
+      phoneNumber,
+      userProfile
     }
     });
     res.redirect('/profile')
@@ -84,8 +88,9 @@ try{
   const orderId = req.query.orderId;
   const userSession = req.session.user;
   let cartLength;
+  let user;
   if(userSession){
-    const user = await userCollection.findOne({email: userSession.email})
+    user = await userCollection.findOne({email: userSession.email})
     cartLength = await cartCollection.findOne({userId: user._id});
     if (cartLength && cartLength.products) {
       // Check if the cart and its products for the user exists
@@ -95,7 +100,7 @@ try{
   // const userDetails = await userCollection.findOne({email: userSession.email});
   const orderDetails = await orderCollection.findOne({_id: orderId})
   .populate({path: 'products.productId', model: 'Product'});
-  res.render('view-order', {userSession, orderDetails, cartLength});
+  res.render('view-order', {userSession, orderDetails, cartLength, user});
 }catch(error){
   next(error);
 }

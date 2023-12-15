@@ -20,7 +20,7 @@ module.exports.getCart = async (req, res, next)=>{
       const user = await userCollection.findOne({email: userSession.email})
       const userCart = await cartCollection
       .findOne({userId: user._id}).populate({path:'products.productId', model:'Product', populate: {path:'brand', model: 'brandCollection'}})
-      res.render('shop_cart', {userSession, userCart, cartLength});
+      res.render('shop_cart', {userSession, userCart, cartLength, user});
 
   }catch(error){
     next(error);
@@ -150,7 +150,7 @@ try{
       }else{
         return res.redirect('/cart')
       }
-      res.render('shop-checkout', {userSession, userCart, userAddress, grandTotal, cartLength});
+      res.render('shop-checkout', {userSession, userCart, userAddress, grandTotal, cartLength, user});
 }catch(error){
   next(error);
 }

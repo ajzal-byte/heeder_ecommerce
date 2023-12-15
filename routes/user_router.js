@@ -9,7 +9,7 @@ const user_cart = require('../controller/user_controller/user_cart');
 const user_profile = require('../controller/user_controller/user_profile');
 const user_address = require('../controller/user_controller/user_address');
 const user_order = require('../controller/user_controller/user_order');
-const userProfileUpload = require('../middleware/multer');
+const {userProfileUpload} = require('../middleware/multer');
 
 user_router.use('/', express.static('public'));
 
@@ -71,7 +71,7 @@ user_router.post('/updateCart', userAuth.userSession, userBlock.ifBlocked, user_
 user_router.post('/removeFromCart', userAuth.userSession, userBlock.ifBlocked, user_cart.removeCart)
 user_router.get('/checkout', userAuth.userSession, userBlock.ifBlocked, user_cart.checkout)
 user_router.get('/profile', userAuth.userSession, userBlock.ifBlocked, user_profile.getProfile);
-user_router.post('/edit-profile', userAuth.userSession, userBlock.ifBlocked, user_profile.editProfile);
+user_router.post('/edit-profile', userProfileUpload.single('profileImage'), userAuth.userSession, userBlock.ifBlocked, user_profile.editProfile);
 user_router.post('/change-password', userAuth.userSession, userBlock.ifBlocked, user_profile.changePassword);
 user_router.get('/view-order', userAuth.userSession, userBlock.ifBlocked, user_profile.viewOrders);
 user_router.get('/add-address', userAuth.userSession, userBlock.ifBlocked, user_address.getAddAddress);

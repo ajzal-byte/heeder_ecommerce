@@ -12,15 +12,16 @@ try{
   const products = await productCollection.find().populate({path:'category', model:'Categories'})
   const userSession = req.session.user;
   let cartLength;
+  let user;
   if(userSession){
-      const user = await userCollection.findOne({email: userSession.email})
+      user = await userCollection.findOne({email: userSession.email})
       cartLength = await cartCollection.findOne({userId: user._id});
       if (cartLength && cartLength.products) {
         // Check if the cart and its products for the user exists
         cartLength = cartLength.products.length;
       }
   }
-  res.render('user_index', {products, userSession, cartLength});
+  res.render('user_index', {products, userSession, cartLength, user});
 }catch(error){
   next(error);
 }

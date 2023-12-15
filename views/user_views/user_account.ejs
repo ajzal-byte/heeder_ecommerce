@@ -57,8 +57,15 @@
                                 <% if(!userSession){ %> 
                                     <li><i class="fi-rs-user"></i><a href="/login">Log In / Sign Up</a></li>
                                 <% }else{ %>
-                                            <li><i class="fi-rs-user"></i><a  href="/logout">Logout</a></li>
-                                            <li><i class="fi-rs-user"></i><a  href="/profile"><%= userSession.username %></a></li>
+                                    <div class="user-details d-flex align-items-center justify-content-evenly">
+                                        <li><i class="fi-rs-user"></i><a class="mr-10" href="/logout">Logout</a></li>
+                                    <li><i class="fi-rs-user"></i><a class="mr-10" href="/profile"><%= userSession.username %></a></li>
+                                    <a class="profile-link" href="/profile">
+                                        <div class="profile-pic mr-10" style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden;">
+                                            <img src="<%= userDetails.userProfile %>" alt="User Profile Picture" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                                        </div>
+                                    </a> 
+                                    </div>
                                 <% } %>
                             </ul>
                         </div>
@@ -439,13 +446,15 @@
                             <div class="col-md-8">
                                 <div class="tab-content dashboard-content">
                                     <div class="tab-pane fade active show" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
-                                        <div class="profile-pic" style="width: 100px; height: 100px;">
-                                            <img src="<%= userDetails.userProfile %>" alt="User Profile Picture" style="width: 100%; height: 100%; object-fit: cover;">
-                                        </div>                                                                               
+                                                                                                                    
                                         <div class="card">
-                                            <div class="card-header">
+                                            <div class="card-header d-flex align-items-center">
+                                                <div class="profile-pic mr-10" style="width: 50px; height: 50px;  border-radius: 50%; overflow: hidden;">
+                                                    <img src="<%= userDetails.userProfile %>" alt="User Profile Picture" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                                                </div>   
                                                 <h5 class="mb-0">Hello <%= userDetails.username %> ! </h5>
                                             </div>
+                                            
                                             <div class="card-body">
                                                 <h3 class="mb-0">Welcome to the dashboard </h3>
                                                 <p>From your account dashboard. you can easily check &amp; view your recent orders, manage your shipping and billing addresses and edit your password and account details.</p>
@@ -526,14 +535,23 @@
                                                 <h5>Edit Your Account Details</h5>
                                             </div>
                                             <div class="card-body">
-                                                <form method="post" name="enq" id="user-form" action="/edit-profile" >
+                                                <form method="post" name="enq" id="user-form" action="/edit-profile" enctype="multipart/form-data">
                                                     <div class="row">
                                                         <div class="form-group col-md-6">
                                                             <label>Username <span class="required">*</span></label>
                                                             <input value="<%= userDetails.username %>" required class="form-control square" name="username" id="username" type="text">
                                                             <div id="usernameError" class="error-message"></div>
                                                         </div>
-                                                        <div class="form-group col-md-12">
+                                                        <div class="form-group col-md-6">
+                                                            <label>Profile Image</label>
+                                                            <!-- Display current profile image -->
+                                                            <div class="profile-pic">
+                                                                <img src="<%= userDetails.userProfile %>" alt="User Profile Picture" style="width: 50px; height: 50px; object-fit: cover;">
+                                                            </div>
+                                                            <!-- Input for uploading a new profile image -->
+                                                            <input required class="form-control" type="file" name="profileImage" id="profileImage">
+                                                        </div>
+                                                        <div class="form-group col-md-12 input-upload">
                                                             <label>Phone Number <span class="required">*</span></label>
                                                             <input value="<%= userDetails.phoneNumber %>" required class="form-control square" name="phoneNumber" id="phoneNumber" type="phoneNumber">
                                                             <div id="phoneNumberError" class="error-message"></div>

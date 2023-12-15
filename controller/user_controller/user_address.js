@@ -7,15 +7,15 @@ try{
   const source = req.query.source;
   const userSession = req.session.user;
   let cartLength;
+  let user;
   if(userSession){
-    const user = await userCollection.findOne({email: userSession.email})
+    user = await userCollection.findOne({email: userSession.email})
     cartLength = await cartCollection.findOne({userId: user._id});
     if (cartLength && cartLength.products) {
       // Check if the cart and its products for the user exists
       cartLength = cartLength.products.length;
     }
   }
-  const user = userCollection.findOne({email: userSession.email});
   res.render('add-address', {userSession, user, source, cartLength})
 }catch(error){
   next(error);
@@ -26,7 +26,6 @@ module.exports.postAddAddress = async (req, res, next)=>{
 try{
   const source = req.query.source;
   const {name, addressType, city, landMark, state, pincode, phone, altPhone} = req.body;
-  console.log(req.body);
   const userSession = req.session.user;
   const user = await userCollection.findOne({email: userSession.email});
   const userAddress= await addressCollection.findOne({userId: user._id});
@@ -57,14 +56,17 @@ try{
   if(userSession){
     const user = await userCollection.findOne({email: userSession.email})
     cartLength = await cartCollection.findOne({userId: user._id});
-    cartLength = cartLength.products.length;
+    if (cartLength && cartLength.products) {
+      // Check if the cart and its products for the user exists
+      cartLength = cartLength.products.length;
+    }
   }
   const user = await userCollection.findOne({email: userSession.email});
   const addressId = req.query.addressId;
   const objectId = req.query.objectId;
   const userAddress = await addressCollection.findOne({userId: user._id, "address._id": addressId}, { "address.$": 1 });
   if (userAddress && userAddress.address){
-    res.render('edit-address', {userSession, userAddress, cartLength})
+    res.render('edit-address', {userSession, userAddress, cartLength, user})
   }else {
     console.log('Address not found');
   }
@@ -77,7 +79,6 @@ try{
 module.exports.postEditAddress = async (req, res, next)=>{
   try{
     const {name, addressType, city, landMark, state, pincode, phone, altPhone} = req.body;
-    console.log(req.body);
     const userSession = req.session.user;
     const addressId = req.query.addressId;
     const user = await userCollection.findOne({email: userSession.email});
