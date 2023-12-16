@@ -56,7 +56,7 @@ try{
 module.exports.cancelOrder = async (req, res)=>{
 try{
   const orderId = req.params.orderId;
-  await orderCollection.findByIdAndUpdate(orderId, {orderStatus: 'Cancelled'});
+  await orderCollection.findByIdAndUpdate(orderId, {orderStatus: 'Cancelled', paymentStatus: 'Failed'});
   res.redirect(`/admin/view-order/${orderId}`)
 }catch(error){
   console.error(error);
@@ -66,7 +66,7 @@ try{
 module.exports.deliverOrder = async (req, res)=>{
 try{
   const orderId = req.params.orderId;
-  await orderCollection.findByIdAndUpdate(orderId, {orderStatus: 'Delivered'});
+  await orderCollection.findByIdAndUpdate(orderId, {orderStatus: 'Delivered', paymentStatus: 'Success'});
   res.redirect(`/admin/view-order/${orderId}`)
 }catch(error){
   console.error(error);

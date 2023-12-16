@@ -139,7 +139,7 @@ try{
   const userAddress = await addressCollection.findOne({userId: user._id});
   const userCart = await cartCollection.findOne(
     {userId: user._id}).populate({path: 'products.productId', model:'Product', populate: {path: 'brand', model: 'brandCollection'}});
-      if(userCart){
+      if(userCart && userCart.products.length > 0){
         for(let i = 0; i < userCart.products.length; i++){
           if(userCart.products[i].quantity > userCart.products[i].productId.stock || userCart.products[i].productId.stock == 0){
             return res.redirect('/cart')
