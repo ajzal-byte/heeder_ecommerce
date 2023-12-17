@@ -77,7 +77,7 @@ user_router.get('/checkout', userAuth.userSession, userBlock.ifBlocked, user_car
 user_router.get('/profile', userAuth.userSession, userBlock.ifBlocked, user_profile.getProfile);
 user_router.post('/edit-profile', userProfileUpload.single('profileImage'), userAuth.userSession, userBlock.ifBlocked, user_profile.editProfile);
 user_router.post('/change-password', userAuth.userSession, userBlock.ifBlocked, user_profile.changePassword);
-user_router.get('/view-order', userAuth.userSession, userBlock.ifBlocked, user_profile.viewOrders);
+user_router.get('/view-order', userAuth.userSession, userBlock.ifBlocked, user_order.viewOrders);
 user_router.get('/add-address', userAuth.userSession, userBlock.ifBlocked, user_address.getAddAddress);
 user_router.post('/post-add-address', userAuth.userSession, userBlock.ifBlocked, user_address.postAddAddress);
 user_router.get('/edit-address', userAuth.userSession, userBlock.ifBlocked, user_address.getEditAddress);

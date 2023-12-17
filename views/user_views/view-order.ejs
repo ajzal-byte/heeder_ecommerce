@@ -460,7 +460,10 @@
                                 <% if(orderDetails.orderStatus === "Order Placed" || orderDetails.orderStatus === "Shipped") {%> 
                                   <a href="#" id="cancel-button" class="btn btn-sm" data-action="/cancel-order/<%= orderDetails._id %>" style="background-color: rgb(180, 36, 36);">Cancel Order</a>
                                   <%} else if(orderDetails.orderStatus === "Delivered") {%> 
-                                    <a href="#" order-id="<%= orderDetails._id %>" id="returnButton" class="btn btn-sm" style="background-color: rgb(180, 36, 36);">Return</a>
+                                    <% if (expiryDate.getTime()  > Date.now()) { %>
+                                        <a href="#" order-id="<%= orderDetails._id %>" id="returnButton" class="btn btn-sm" style="background-color: rgb(180, 36, 36);">Return Order</a>
+                                    <% }else{
+                                    } %>
                                     <%} else if(orderDetails.orderStatus === "Cancelled") {%> 
                                       <h5 style="color: rgb(177, 29, 29);">The order is Cancelled</h5>
                                       <%} else if (orderDetails.orderStatus === "Returned") {%> 

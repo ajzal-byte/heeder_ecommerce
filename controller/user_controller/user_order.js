@@ -6,6 +6,32 @@ const productCollection = require("../../models/products_schema");
 
 
 
+module.exports.viewOrders = async (req, res, next)=>{
+  try{
+    const orderId = req.query.orderId;
+    const userSession = req.session.user;
+    let cartLength;
+    let user;
+    
+    if(userSession){
+      user = await userCollection.findOne({email: userSession.email})
+      cartLength = await cartCollection.findOne({userId: user._id});
+      if (cartLength && cartLength.products) {
+        // Check if the cart and its products for the user exists
+        cartLength = cartLength.products.length;
+      }
+    }
+    // const userDetails = await userCollection.findOne({email: userSession.email});
+    const orderDetails = await orderCollection.findOne({_id: orderId})
+    .populate({path: 'products.productId', model: 'Product'});
+    let expiryDate = orderDetails.orderDate;
+    expiryDate.setDate(expiryDate.getDate() + 1);
+    res.render('view-order', {userSession, orderDetails, cartLength, user, expiryDate});
+  }catch(error){
+    next(error);
+  }
+  }
+
 module.exports.getOrderPlacedCod = async (req, res, next)=>{
 try{
   let totalAmount = 0;
