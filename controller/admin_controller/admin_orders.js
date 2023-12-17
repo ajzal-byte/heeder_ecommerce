@@ -9,6 +9,7 @@ try{
       const orders = await orderCollection
       .find()
       .populate({path:'userId', model:'userCollection'})
+      .sort({createdAt: -1})
       .skip(perPage * page - perPage)
       .limit(perPage)
       .exec()

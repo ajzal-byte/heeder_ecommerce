@@ -12,7 +12,7 @@ const fs = require('fs');
 module.exports.getProducts = async (req, res)=>{
   try{
     if(req.session.admin){
-      const products = await productCollection.find()
+      const products = await productCollection.find().sort({updatedAt: -1})
       res.render('products_grid', {products});
     }else{
       res.redirect('/admin');

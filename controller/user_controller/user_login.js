@@ -10,6 +10,7 @@ const saltRounds = 10; // The number of salt rounds determines the computational
 module.exports.getHomePage = async(req, res, next)=>{
 try{
   const products = await productCollection.find().populate({path:'category', model:'Categories'})
+  .sort({updatedAt: -1}).limit(6);
   const userSession = req.session.user;
   let cartLength;
   let user;
