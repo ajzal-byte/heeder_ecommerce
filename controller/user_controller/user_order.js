@@ -96,3 +96,13 @@ module.exports.cancelOrder = async (req, res, next)=>{
     next(error);
   }
 }
+
+module.exports.returnOrder = async (req, res, next)=>{
+  try{
+    const orderId = req.params.orderId;
+    await orderCollection.findByIdAndUpdate(orderId, {orderStatus: 'Returned', paymentStatus: 'Failed'});
+    res.redirect(`/view-order/?orderId=${orderId}`);
+  }catch (error) {
+    next(error);
+  }
+}

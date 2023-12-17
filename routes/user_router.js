@@ -74,17 +74,25 @@ user_router.post('/addtoCart', user_cart.addtoCart)
 user_router.post('/updateCart', userAuth.userSession, userBlock.ifBlocked, user_cart.updateCart)
 user_router.post('/removeFromCart', userAuth.userSession, userBlock.ifBlocked, user_cart.removeCart)
 user_router.get('/checkout', userAuth.userSession, userBlock.ifBlocked, user_cart.checkout)
+
+//profile
 user_router.get('/profile', userAuth.userSession, userBlock.ifBlocked, user_profile.getProfile);
 user_router.post('/edit-profile', userProfileUpload.single('profileImage'), userAuth.userSession, userBlock.ifBlocked, user_profile.editProfile);
 user_router.post('/change-password', userAuth.userSession, userBlock.ifBlocked, user_profile.changePassword);
 user_router.get('/view-order', userAuth.userSession, userBlock.ifBlocked, user_order.viewOrders);
+
+//address
 user_router.get('/add-address', userAuth.userSession, userBlock.ifBlocked, user_address.getAddAddress);
 user_router.post('/post-add-address', userAuth.userSession, userBlock.ifBlocked, user_address.postAddAddress);
 user_router.get('/edit-address', userAuth.userSession, userBlock.ifBlocked, user_address.getEditAddress);
 user_router.post('/post-edit-address', userAuth.userSession, userBlock.ifBlocked, user_address.postEditAddress);
 user_router.get('/delete-address', userAuth.userSession, userBlock.ifBlocked, user_address.deleteAddress);
+
+//orders
 user_router.get('/order-placed/cod', userAuth.userSession, userBlock.ifBlocked, user_order.getOrderPlacedCod);
 user_router.get('/cancel-order/:orderId', userAuth.userSession, userBlock.ifBlocked, user_order.cancelOrder);
+user_router.get('/return-order/:orderId', userAuth.userSession, userBlock.ifBlocked, user_order.returnOrder);
+
 
 
 user_router.use(userError.errorHandler);
