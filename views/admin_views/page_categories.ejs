@@ -222,7 +222,7 @@
                                         <% categories.reverse().forEach(category => { %>
                                         <tr> 
                                             <td>cat_<%= category._id.toString().slice(0, 8) %></td>
-                                            <td><%= category.categoryName %></td>
+                                            <td class="text-capitalize"><%= category.categoryName %></td>
                                             <td><%= category.isListed %></td>
                                             <td>  <a href="/admin/editCategories/<%= category._id %>" class="btn btn-dark"> Edit </a> 
                                                 <% if(category.isListed === "Active") { %>

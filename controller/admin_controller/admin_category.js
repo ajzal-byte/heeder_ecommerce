@@ -18,7 +18,7 @@ module.exports.getCategories = async (req, res)=>{
 // add category
 module.exports.addCategories = async (req, res)=>{
   try{
-    const categoryName = req.query.categoryName;
+    const categoryName = req.query.categoryName.toLowerCase();
     // console.log(categoryName);
     const ifExist = await category.findOne({categoryName});
   if(ifExist){
@@ -52,7 +52,7 @@ module.exports.editCategories = async (req, res)=>{
 module.exports.updateCategories = async (req, res)=>{
   try{
     const categoryID = req.query.categoryID;
-    const categoryName = req.query.categoryName
+    const categoryName = req.query.categoryName.toLowerCase();
     const ifExist = await category.findOne({categoryName, _id : {$ne:categoryID}});
     console.log(ifExist)
     if(ifExist){

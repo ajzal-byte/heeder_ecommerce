@@ -902,7 +902,7 @@
                                             </div>
                                         </div>
                                         <ul class="product-meta font-xs color-grey mt-50">
-                                            <li class="mb-5">Category: <a href="#"><%= product_details.category?.categoryName%></a></li>
+                                            <li class="mb-5">Category: <a class="text-capitalize" href="#"><%= product_details.category?.categoryName%></a></li>
                                             <li class="mb-5">Form Factor: <a href="#"><%= product_details.formfactor%></a></li>
                                             <% if(product_details.stock>0){ %>
                                             <li>Availability:<span class="in-stock text-success ml-5"><%= product_details.stock%> Items In Stock</span></li>
