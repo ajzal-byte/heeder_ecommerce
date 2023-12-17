@@ -1,39 +1,14 @@
 const userCollection = require('../../models/user_schema');
-const productCollection = require('../../models/products_schema')
-const cartCollection = require('../../models/cart_schema')
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
 const saltRounds = 10; // The number of salt rounds determines the computational cost (higher is slower but more secure)
 // const { v4: uuidv4 } = require('uuid');
 // const transporter = require('../emailConfig');
 
-module.exports.getHomePage = async(req, res, next)=>{
-try{
-  const products = await productCollection.find().populate({path:'category', model:'Categories'})
-  .sort({updatedAt: -1}).limit(6);
-  const userSession = req.session.user;
-  let cartLength;
-  let user;
-  if(userSession){
-      user = await userCollection.findOne({email: userSession.email})
-      cartLength = await cartCollection.findOne({userId: user._id});
-      if (cartLength && cartLength.products) {
-        // Check if the cart and its products for the user exists
-        cartLength = cartLength.products.length;
-      }
-  }
-  console.log(user);
-  res.render('user_index', {products, userSession, cartLength, user});
-}catch(error){
-  next(error);
-}
-};
-
 
 module.exports.getUserLogin = async (req, res, next)=>{
   try{
     const userSession = req.session.user;
-    const products = await productCollection.find()
     if(userSession){
       res.redirect('/')
     }else{
@@ -200,27 +175,6 @@ module.exports.verifyOTP = async (req, res, next)=>{
 };
 
 
-//single product page
-module.exports.getProductDetails = async (req, res, next)=>{
-  try{
-    const userSession = req.session.user;
-    const product_id = req.params.product_id;
-    const product_details = await productCollection.findOne({_id : product_id}).populate({path:'category', model:'Categories'}).populate({path:'brand', model: 'brandCollection'})
-    let cartLength;
-    let user;
-    if(userSession){
-      user = await userCollection.findOne({email: userSession.email})
-      cartLength = await cartCollection.findOne({userId: user._id});
-      if (cartLength && cartLength.products) {
-        // Check if the cart and its products for the user exists
-        cartLength = cartLength.products.length;
-      }
-    }
-    res.render('product_view', {product_details, userSession, cartLength, user});
-  }catch(error){
-    next(error);
-  }
-};
 
 // view forgot password page
 module.exports.getforgotPassword = async (req, res, next)=>{

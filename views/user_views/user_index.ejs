@@ -1,67 +1,6 @@
 ﻿<%- include('../partials/user_header') -%>
 
 
-    <!-- Quick view -->
-    <div class="modal fade custom-modal" id="quickViewModal" tabindex="-1" aria-labelledby="quickViewModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-        <div class="modal-content">              
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>       
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6 col-sm-12 col-xs-12">
-                            <div class="detail-gallery">
-                                <span class="zoom-icon"><i class="fi-rs-search"></i></span>
-                                <!-- MAIN SLIDES -->
-                                <div class="product-image-slider">
-                                    <figure class="border-radius-10">
-                                        <img src="/user_assets/imgs/shop/product-16-2.jpg" alt="product image">
-                                    </figure>
-                                    <figure class="border-radius-10">
-                                        <img src="/user_assets/imgs/shop/product-16-1.jpg" alt="product image">
-                                    </figure>
-                                    <figure class="border-radius-10">
-                                        <img src="/user_assets/imgs/shop/product-16-3.jpg" alt="product image">
-                                    </figure>
-                                    <figure class="border-radius-10">
-                                        <img src="/user_assets/imgs/shop/product-16-4.jpg" alt="product image">
-                                    </figure>
-                                    <figure class="border-radius-10">
-                                        <img src="/user_assets/imgs/shop/product-16-5.jpg" alt="product image">
-                                    </figure>
-                                    <figure class="border-radius-10">
-                                        <img src="/user_assets/imgs/shop/product-16-6.jpg" alt="product image">
-                                    </figure>
-                                    <figure class="border-radius-10">
-                                        <img src="/user_assets/imgs/shop/product-16-7.jpg" alt="product image">
-                                    </figure>
-                                </div>
-                                <!-- THUMBNAILS -->
-                                <div class="slider-nav-thumbnails pl-15 pr-15">
-                                    <div><img src="/user_assets/imgs/shop/thumbnail-3.jpg" alt="product image"></div>
-                                    <div><img src="/user_assets/imgs/shop/thumbnail-4.jpg" alt="product image"></div>
-                                    <div><img src="/user_assets/imgs/shop/thumbnail-5.jpg" alt="product image"></div>
-                                    <div><img src="/user_assets/imgs/shop/thumbnail-6.jpg" alt="product image"></div>
-                                    <div><img src="/user_assets/imgs/shop/thumbnail-7.jpg" alt="product image"></div>
-                                    <div><img src="/user_assets/imgs/shop/thumbnail-8.jpg" alt="product image"></div>
-                                    <div><img src="/user_assets/imgs/shop/thumbnail-9.jpg" alt="product image"></div>
-                                </div>
-                            </div>
-                            <!-- End Gallery -->
-                            <div class="social-icons single-share">
-                                <ul class="text-grey-5 d-inline-block">
-                                    <li><strong class="mr-10">Share this:</strong></li>
-                                    <li class="social-facebook"><a href="#"><img src="/user_assets/imgs/theme/icons/icon-facebook.svg" alt=""></a></li>
-                                    <li class="social-twitter"> <a href="#"><img src="/user_assets/imgs/theme/icons/icon-twitter.svg" alt=""></a></li>
-                                    <li class="social-instagram"><a href="#"><img src="/user_assets/imgs/theme/icons/icon-instagram.svg" alt=""></a></li>
-                                    <li class="social-linkedin"><a href="#"><img src="/user_assets/imgs/theme/icons/icon-pinterest.svg" alt=""></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>        
-        </div>
-        </div>
-    </div>
     <header class="header-area header-style-3 header-height-2">
         <div class="header-top header-top-ptb-1 d-none d-lg-block">
             <div class="container">
@@ -539,7 +478,7 @@
         <section class="product-tabs section-padding wow fadeIn animated">
             <div class="container">
                 <div class="tab-header">
-                    <!-- <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" id="nav-tab-one" data-bs-toggle="tab" data-bs-target="#tab-one" type="button" role="tab" aria-controls="tab-one" aria-selected="true">Featured</button>
                         </li>
@@ -549,8 +488,8 @@
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="nav-tab-three" data-bs-toggle="tab" data-bs-target="#tab-three" type="button" role="tab" aria-controls="tab-three" aria-selected="false">New added</button>
                         </li>
-                    </ul> -->
-                    <!-- <a href="#" class="view-more d-none d-md-flex">View More<i class="fi-rs-angle-double-small-right"></i></a> -->
+                    </ul>
+                    <a href="#" class="view-more d-none d-md-flex">View More<i class="fi-rs-angle-double-small-right"></i></a>
                 </div>
                 <!--End nav-tabs-->
                 <div class="tab-content wow fadeIn animated" id="myTabContent">
@@ -572,9 +511,7 @@
                                             </a>
                                         </div>
                                         <div class="product-action-1">
-                                            <!-- <a aria-label="Quick view" class="action-btn hover-up" data-bs-toggle="modal" data-bs-target="#quickViewModal"><i class="fi-rs-eye"></i></a> -->
                                             <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
-                                            <!-- <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a> -->
                                         </div>
                                         <div class="product-badges product-badges-position product-badges-mrg">
                                             <span class="hot">New</span>
@@ -601,11 +538,10 @@
                                     </div>
                                 </div>
                             </div>
-                            
                         <% } %>
                         <% }) %>
                         <div class="tab-header">
-                            <a href="#" class="view-more d-none d-md-flex">View More<i class="fi-rs-angle-double-small-right"></i></a>
+                            <a href="/products" class="view-more d-none d-md-flex">View More<i class="fi-rs-angle-double-small-right"></i></a>
                         </div>
                         <script>
                             document.addEventListener("DOMContentLoaded", ()=>{

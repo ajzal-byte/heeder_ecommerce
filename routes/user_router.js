@@ -4,7 +4,8 @@ user_router.use(express.json());
 const userError = require('../middleware/userError');
 const userAuth = require('../middleware/userAuth');
 const userBlock = require('../middleware/userBlock');
-const user_controller = require('../controller/user_controller/user_login');
+const user_home = require('../controller/user_controller/user_home');
+const user_login = require('../controller/user_controller/user_login');
 const user_cart = require('../controller/user_controller/user_cart');
 const user_profile = require('../controller/user_controller/user_profile');
 const user_address = require('../controller/user_controller/user_address');
@@ -16,57 +17,31 @@ user_router.use('/productDetails', express.static('public'));
 user_router.use('/view-order', express.static('public'));
 
 
+//home
+user_router.get('/', userBlock.ifBlocked, user_home.getHomePage)
 
+//login
+user_router.get('/login', user_login.getUserLogin)
+user_router.post('/postLogin', user_login.postUserLogin)
+user_router.get('/logout', user_login.getUserLogout)
 
-user_router
-.get('/', userBlock.ifBlocked, user_controller.getHomePage)
+//signup
+user_router.get('/signup', user_login.getUserSignup)
+user_router.post('/postSignup', user_login.postUserSignup)
 
-user_router
-.route("/login")
-.get(user_controller.getUserLogin, userError.errorHandler)
+//otp
+user_router.get('/sendOtp', user_login.getSendOtp)
+user_router.post('/verifyOtp', user_login.verifyOTP)
 
-user_router
-.route("/postLogin")
-.post(user_controller.postUserLogin)
+//forgotPassword
+user_router.get('/forgotPassword', user_login.getforgotPassword)
+user_router.get('/forgotSendOtp', user_login.getforgotSendOtp)
+user_router.post('/forgotVerifyOtp', user_login.forgotVerifyOtp)
+user_router.post('/forgotChangePassword', user_login.forgotChangePassword)
 
-user_router
-.route("/logout")
-.get(user_controller.getUserLogout)
-
-user_router
-.route("/signup")
-.get(user_controller.getUserSignup)
-
-user_router
-.route('/postSignup')
-.post(user_controller.postUserSignup)
-
-user_router
-.route("/sendOtp")
-.get(user_controller.getSendOtp)
-
-user_router
-.route("/verifyOtp")
-.post(user_controller.verifyOTP)
-
-user_router
-.get('/productDetails/:product_id', userBlock.ifBlocked,  user_controller.getProductDetails)
-
-user_router
-.route("/forgotPassword")
-.get(user_controller.getforgotPassword)
-
-user_router
-.route('/forgotSendOtp')
-.get(user_controller.getforgotSendOtp)
-
-user_router
-.route('/forgotVerifyOtp')
-.post(user_controller.forgotVerifyOtp)
-
-user_router
-.route('/forgotChangePassword')
-.post(user_controller.forgotChangePassword)
+//products
+user_router.get('/products', userBlock.ifBlocked, user_home.getProducts)
+user_router.get('/productDetails/:product_id', userBlock.ifBlocked,  user_home.getProductDetails)
 
 //cart
 user_router.get('/cart', userAuth.userSession, userBlock.ifBlocked, user_cart.getCart)
