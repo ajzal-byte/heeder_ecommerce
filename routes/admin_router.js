@@ -1,5 +1,6 @@
 const express = require('express');
 const admin_router = express.Router();
+const adminAuth = require('../middleware/adminAuth');
 const admin_controller = require('../controller/admin_controller/admin_login');
 const category = require('../controller/admin_controller/admin_category');
 const brands = require('../controller/admin_controller/admin_brands');
@@ -19,112 +20,51 @@ const path = require('path')
 admin_router.use('/', express.static('public'));
 
 
+//login and homepage
+admin_router.get(['/', '/login'], admin_controller.getAdminRoute);
+admin_router.post('/post-login', admin_controller.postAdminRoute);
+admin_router.get('/logout', admin_controller.getAdminLogout)
+admin_router.get('/dashboard',adminAuth.adminSession, admin_controller.getAdminDashboard)
 
+//category management
 admin_router
-.route("/")
-.get(admin_controller.getAdminRoute)
-.post(admin_controller.postAdminRoute);
+.get('/categories', adminAuth.adminSession, category.getCategories);
+admin_router.post('/addCategories', adminAuth.adminSession, category.addCategories);
+admin_router.get('/editCategories/:category_id', adminAuth.adminSession, category.editCategories)
+admin_router.post('/updateCategories', adminAuth.adminSession, category.updateCategories);
+admin_router.get('/blockCategories/:category_id', adminAuth.adminSession, category.blockCategories);
+admin_router.get('/unblockCategories/:category_id', adminAuth.adminSession, category.unblockCategories);
 
-admin_router
-.route('/adminLogout')
-.get(admin_controller.getAdminLogout)
+//brands management
+admin_router.get('/brands', adminAuth.adminSession, brands.getBrands);
+admin_router.post('/addBrands', adminAuth.adminSession, brands.addBrands);
+admin_router.get('/editBrands/:brand_id', adminAuth.adminSession, brands.editBrands);
+admin_router.post('/updateBrands', adminAuth.adminSession, brands.updateBrands);
+admin_router.get('/blockBrands/:brand_id', adminAuth.adminSession, brands.blockBrands);
+admin_router.get('/unblockBrands/:brand_id', adminAuth.adminSession, brands.unblockBrands);
 
-admin_router
-.route('/dashboard')
-.get(admin_controller.getAdminDashboard)
-
-admin_router
-.route("/categories")
-.get(category.getCategories);
-
-admin_router
-.route("/addCategories")
-.post(category.addCategories);
-
-admin_router
-.route('/editCategories/:category_id')
-.get(category.editCategories)
-
-admin_router
-.route('/updateCategories')
-.post(category.updateCategories);
-
-admin_router
-.route('/blockCategories/:category_id')
-.get(category.blockCategories);
-
-admin_router
-.route('/unblockCategories/:category_id')
-.get(category.unblockCategories);
-
-admin_router
-.route("/brands")
-.get(brands.getBrands);
-
-admin_router
-.route("/addBrands")
-.post(brands.addBrands);
-
-admin_router
-.route('/editBrands/:brand_id')
-.get(brands.editBrands);
-
-admin_router
-.route('/updateBrands')
-.post(brands.updateBrands);
-
-admin_router
-.route('/blockBrands/:brand_id')
-.get(brands.blockBrands);
-
-admin_router
-.route('/unblockBrands/:brand_id')
-.get(brands.unblockBrands);
+//products management
+admin_router.get('/products', adminAuth.adminSession, products.getProducts);
+admin_router.get('/addProduct', adminAuth.adminSession, products.getAddProduct);
+admin_router.post('/postAddProduct', upload.array('productImages'),products.postAddProduct);
+admin_router.get('/blockProduct/:product_id', adminAuth.adminSession, products.blockProduct);
+admin_router.get('/unblockProduct/:product_id', adminAuth.adminSession, products.unblockProduct);
+admin_router.get('/editProduct/:product_id', adminAuth.adminSession,products.editProduct);
+admin_router.post('/updateProduct/:product_id', upload.array('productImages'),products.updateProduct);
+admin_router.get('/delete_image', adminAuth.adminSession, products.deleteImage);
 
 
-admin_router
-.route('/products')
-.get(products.getProducts);
+//users management
+admin_router.get('/users', adminAuth.adminSession,  users.getUsers);
+admin_router.get('/blockUsers/:user_id', adminAuth.adminSession, users.blockUser);
+admin_router.get('/unblockUsers/:user_id', adminAuth.adminSession, users.unblockUser);
 
-admin_router
-.route('/addProduct')
-.get(products.getAddProduct);
-
-admin_router
-.route('/postAddProduct')
-.post(upload.array('productImages'),products.postAddProduct);
-
-admin_router
-.route('/blockProduct/:product_id')
-.get(products.blockProduct);
-
-admin_router
-.route('/unblockProduct/:product_id')
-.get(products.unblockProduct);
-
-admin_router
-.route('/editProduct/:product_id')
-.get(products.editProduct);
-
-admin_router
-.route('/updateProduct/:product_id')
-.post(upload.array('productImages'),products.updateProduct);
-
-admin_router
-.route('/delete_image')
-.get(products.deleteImage);
-
-admin_router.get('/users', users.getUsers);
-
-admin_router.get('/blockUsers/:user_id', users.blockUser);
-
-admin_router.get('/unblockUsers/:user_id', users.unblockUser);
-
-admin_router.get('/orders', orders.getOrders);
-admin_router.get('/view-order/:orderId', orders.viewOrder);
-admin_router.get('/dispatch-order/:orderId', orders.dispatchOrder);
-admin_router.get('/cancel-order/:orderId', orders.cancelOrder);
-admin_router.get('/deliver-order/:orderId', orders.deliverOrder);
+//order management
+admin_router.get('/orders', adminAuth.adminSession, orders.getOrders);
+admin_router.get('/view-order/:orderId', adminAuth.adminSession, orders.viewOrder);
+admin_router.get('/dispatch-order/:orderId', adminAuth.adminSession, orders.dispatchOrder);
+admin_router.get('/cancel-order/:orderId', adminAuth.adminSession, orders.cancelOrder);
+admin_router.get('/deliver-order/:orderId', adminAuth.adminSession, orders.deliverOrder);
 
 
 module.exports = admin_router

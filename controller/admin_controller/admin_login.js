@@ -4,7 +4,7 @@ const adminCollection = require("../../models/admin_schema")
 module.exports.getAdminRoute = async(req, res)=>{
   try{
     if(req.session.admin){
-      res.render('admin_index')
+      return res.redirect('/admin/dashboard');
     }else{
       res.render('admin_signin');
     }
@@ -18,7 +18,6 @@ module.exports.getAdminRoute = async(req, res)=>{
 module.exports.postAdminRoute = async (req, res) => {
   try{
     const data = await adminCollection.findOne({ email: req.body.email });
-    // const users = await userCollection.find({});
     if(!data) {
       res.render('admin_signin', {email: true});
     }
@@ -33,8 +32,7 @@ module.exports.postAdminRoute = async (req, res) => {
           req.body.password === data.password
         ) {
           req.session.admin = req.body.email;
-          // console.log(req.session.admin);
-          res.render("admin_index");
+          res.redirect('/admin/dashboard')
         }
       
     } 
@@ -45,8 +43,8 @@ module.exports.postAdminRoute = async (req, res) => {
 
 module.exports.getAdminLogout = async(req, res)=>{
   try{
-    req.session.admin = null;
-  res.render('admin_signin', {logout : true});
+  req.session.admin = null;
+  res.redirect('/admin/login');
   }catch (error) {
     console.error(error);
   }
@@ -54,12 +52,7 @@ module.exports.getAdminLogout = async(req, res)=>{
 
 module.exports.getAdminDashboard = async(req, res)=>{
   try{
-     // res.render('admin_index')
-  if(req.session.admin){
     res.render('admin_index');
-  }else{
-    res.redirect('/admin')
-  }
   }catch (error) {
     console.error(error);
   }

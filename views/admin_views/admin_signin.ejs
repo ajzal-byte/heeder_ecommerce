@@ -67,15 +67,12 @@
             <div class="card mx-auto card-login">
                 <div class="card-body">
                     <h4 class="card-title mb-4">Sign in</h4>
-                    <form action="/admin" method="POST">
+                    <form action="/admin/post-login" method="POST">
                         <% if(locals.email){ %>
                             <div class="alert alert-danger">Incorrect email</div>
                         <% } %> 
                         <% if(locals.password){ %>
                             <div class="alert alert-danger">Incorrect password</div>
-                        <% } %> 
-                        <% if(locals.logout){ %>
-                            <div class="alert alert-success">Logged Out Successfully!</div>
                         <% } %> 
                         <div class="mb-3">
                             <input class="form-control" placeholder="Email" type="email" name="email" required>

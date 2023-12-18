@@ -4,12 +4,8 @@ const category = require('../../models/category_schema');
 // view category
 module.exports.getCategories = async (req, res)=>{
   try{
-    if(req.session.admin){
       const categories = await category.find();
       res.render('page_categories', { categories});
-    }else{
-      res.redirect('/admin')
-    }
   }catch (error) {
     console.error(error);
   }
@@ -19,17 +15,14 @@ module.exports.getCategories = async (req, res)=>{
 module.exports.addCategories = async (req, res)=>{
   try{
     const categoryName = req.query.categoryName.toLowerCase();
-    // console.log(categoryName);
     const ifExist = await category.findOne({categoryName});
   if(ifExist){
     res.status(200).json({error: "Category already exists"})
   }else{
-    
     await category.create({
       categoryName,
       isListed : "Active"
     });
-    // res.redirect('/admin/categories');
     res.status(200).json({ success: true });
   }
   }catch (error) {
