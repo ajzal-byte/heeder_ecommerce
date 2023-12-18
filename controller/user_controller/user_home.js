@@ -26,8 +26,14 @@ module.exports.getHomePage = async(req, res, next)=>{
 
 module.exports.getProducts = async (req, res)=>{
 try{
+  let perPage = 12;
+  let page = req.query.page || 1;
   const products = await productCollection.find().populate({path:'category', model:'Categories'})
   .sort({updatedAt: -1})
+  .skip(perPage * page - perPage)
+  .limit(perPage)
+  .exec()
+  const totalProducts = await productCollection.countDocuments();
   const userSession = req.session.user;
   let cartLength;
   let user;
@@ -39,8 +45,13 @@ try{
         cartLength = cartLength.products.length;
       }
   }
-  console.log(user);
-  res.render('products-page', {products, userSession, cartLength, user});
+  res.render('products-page', {
+    products, 
+    userSession, 
+    cartLength, 
+    user, 
+    current: page,
+    totalPages: Math.ceil(totalProducts / perPage)});
 }catch(error){
   next(error);
 }
