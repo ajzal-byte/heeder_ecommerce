@@ -7,6 +7,7 @@ const brands = require('../controller/admin_controller/admin_brands');
 const products = require('../controller/admin_controller/admin_products');
 const users= require('../controller/admin_controller/admin_users');
 const orders = require('../controller/admin_controller/admin_orders')
+const coupons = require('../controller/admin_controller/admin_coupon')
 const {upload} = require('../middleware/multer');
 const path = require('path')
 
@@ -65,6 +66,11 @@ admin_router.get('/view-order/:orderId', adminAuth.adminSession, orders.viewOrde
 admin_router.get('/dispatch-order/:orderId', adminAuth.adminSession, orders.dispatchOrder);
 admin_router.get('/cancel-order/:orderId', adminAuth.adminSession, orders.cancelOrder);
 admin_router.get('/deliver-order/:orderId', adminAuth.adminSession, orders.deliverOrder);
+
+//coupons
+admin_router.get('/coupons', adminAuth.adminSession, coupons.getCoupons);
+admin_router.get('/add-coupon', adminAuth.adminSession, coupons.getAddCoupon );
+admin_router.post('/post-add-coupon', adminAuth.adminSession, coupons.postAddCoupon );
 
 
 module.exports = admin_router

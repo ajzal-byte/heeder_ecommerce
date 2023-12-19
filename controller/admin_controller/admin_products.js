@@ -57,7 +57,6 @@ module.exports.postAddProduct = async (req, res)=>{
 
     const productCategory = await category.findOne({ categoryName: product_cat });
     const productBrand = await brandCollection.findOne({brandName: product_brand});
-    console.log(productCategory);
      
     await productCollection.create({
       productName : product_name,
