@@ -73,6 +73,9 @@ admin_router.get('/add-coupon', adminAuth.adminSession, coupons.getAddCoupon );
 admin_router.post('/post-add-coupon', adminAuth.adminSession, coupons.postAddCoupon );
 admin_router.get('/edit-coupon/:coupon_id', adminAuth.adminSession, coupons.getEditCoupon );
 admin_router.post('/post-edit-coupon/:coupon_id', adminAuth.adminSession, coupons.postEditCoupon );
+admin_router.get('/block-coupon/:coupon_id', adminAuth.adminSession, coupons.blockCoupon );
+admin_router.get('/unblock-coupon/:coupon_id', adminAuth.adminSession, coupons.unblockCoupon );
+
 
 
 

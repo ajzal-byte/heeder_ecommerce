@@ -50,3 +50,23 @@ module.exports.postEditCoupon = async (req, res)=>{
     console.error(error);
   }
 }
+
+module.exports.blockCoupon = async(req, res)=>{
+  try{
+    const coupon_id = req.params.coupon_id;
+    await couponCollection.findByIdAndUpdate(coupon_id, {status: 'Inactive'});
+    res.redirect('/admin/coupons');
+  }catch(error){
+    console.error(error);
+  }
+}
+
+module.exports.unblockCoupon = async(req, res)=>{
+  try{
+    const coupon_id = req.params.coupon_id;
+    await couponCollection.findByIdAndUpdate(coupon_id, {status: 'Active'});
+    res.redirect('/admin/coupons');
+  }catch(error){
+    console.error(error);
+  }
+}
