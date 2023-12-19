@@ -47,7 +47,6 @@ module.exports.updateCategories = async (req, res)=>{
     const categoryID = req.query.categoryID;
     const categoryName = req.query.categoryName.toLowerCase();
     const ifExist = await category.findOne({categoryName, _id : {$ne:categoryID}});
-    console.log(ifExist)
     if(ifExist){
  
       res.status(200).json({error: "Category already exists"})

@@ -45,7 +45,7 @@ user_router.get('/productDetails/:product_id', userBlock.ifBlocked,  user_home.g
 
 //cart
 user_router.get('/cart', userAuth.userSession, userBlock.ifBlocked, user_cart.getCart)
-user_router.post('/addtoCart', user_cart.addtoCart)
+user_router.post('/addtoCart', userAuth.userSession, userBlock.ifBlocked, user_cart.addtoCart)
 user_router.post('/updateCart', userAuth.userSession, userBlock.ifBlocked, user_cart.updateCart)
 user_router.post('/removeFromCart', userAuth.userSession, userBlock.ifBlocked, user_cart.removeCart)
 user_router.get('/checkout', userAuth.userSession, userBlock.ifBlocked, user_cart.checkout)

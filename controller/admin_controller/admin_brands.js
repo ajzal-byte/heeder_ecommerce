@@ -4,12 +4,8 @@ const brandCollection = require('../../models/brand_schema');
 // view category
 module.exports.getBrands = async (req, res)=>{
   try{
-    if(req.session.admin){
       const brands = await brandCollection.find();
       res.render('brand_page', {brands});
-    }else{
-      res.redirect('/admin')
-    }
   }catch (error) {
     console.error(error);
   }

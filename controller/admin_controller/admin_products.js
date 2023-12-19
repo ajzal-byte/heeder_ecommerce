@@ -11,12 +11,8 @@ const fs = require('fs');
 //get product page
 module.exports.getProducts = async (req, res)=>{
   try{
-    if(req.session.admin){
       const products = await productCollection.find().sort({updatedAt: -1})
       res.render('products_grid', {products});
-    }else{
-      res.redirect('/admin');
-    }
   }catch (error) {
     console.error(error);
   }
@@ -26,13 +22,9 @@ module.exports.getProducts = async (req, res)=>{
 //get add product page
 module.exports.getAddProduct = async (req, res)=>{
   try{
-    if(req.session.admin){
     const categories = await category.find();
     const brands = await brandCollection.find();
       res.render('product_add', {categories, brands});
-    }else{
-      res.redirect('/admin')
-    }
   }catch (error) {
     console.error(error);
   }

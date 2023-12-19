@@ -5,7 +5,6 @@ module.exports.getOrders = async (req, res)=>{
 try{
   let perPage = 5;
   let page = req.query.page || 1;
-    if(req.session.admin){
       const orders = await orderCollection
       .find()
       .populate({path:'userId', model:'userCollection'})
@@ -21,9 +20,6 @@ try{
         current: page,
         pages: Math.ceil(count / perPage),
       });
-    }else{
-      res.redirect('/admin')
-    }
 }catch(error){
   console.error(error);
 }

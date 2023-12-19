@@ -679,14 +679,23 @@
                                                         }else if(data.success){
                                                             window.location.href = '/profile'
                                                         }
+                                                    }).catch(error=>{
+                                                        window.location.href = '/login'
+                                                        console.error(error);
                                                     })
                                                 }
 
                                                 function validateForm(){
                                                 resetErrorMessages() 
+                                                const currentPassword = document.getElementById('current-password').value;
                                                 const newPassword = document.getElementById('new-password').value;
                                                 const confirmPassword = document.getElementById('confirm-password').value;
                                                     // Validate password length and no whitespaces at the beginning
+                                                    if (currentPassword.trim().length < 6 || currentPassword !== currentPassword.trim()) {
+                                                    showError('passwordError', 'Password must be at least 6 characters and should not start with whitespaces');
+                                                    return false;
+                                                }
+
                                                 if (newPassword.trim().length < 6 || newPassword !== newPassword.trim()) {
                                                     showError('npasswordError', 'Password must be at least 6 characters and should not start with whitespaces');
                                                     return false;
