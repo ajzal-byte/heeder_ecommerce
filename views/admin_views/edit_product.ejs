@@ -71,7 +71,7 @@
                     </a>
                     <div class="submenu">
                         <a href="/admin/coupons" class="active">Coupon View</a>
-                        <a href="/admin/addCoupons">Add Coupon</a>
+                        <a href="/admin/add-coupon">Add Coupon</a>
                     </div>
                 </li>
                 <li class="menu-item has-submenu">
@@ -182,11 +182,6 @@
                     <div class="card mb-4">
                         <div class="card-header">
                             <h4>Basic</h4>
-                            <% if (locals.message) { %>
-                                <div class="alert alert-success" role="alert">
-                                  <%= message %>
-                                </div>
-                              <% } %>
                         </div>
                         <div class="card-body">
                             <form action="/admin/updateProduct/<%= product_edit._id %>" method="post" enctype="multipart/form-data">

@@ -71,6 +71,9 @@ admin_router.get('/deliver-order/:orderId', adminAuth.adminSession, orders.deliv
 admin_router.get('/coupons', adminAuth.adminSession, coupons.getCoupons);
 admin_router.get('/add-coupon', adminAuth.adminSession, coupons.getAddCoupon );
 admin_router.post('/post-add-coupon', adminAuth.adminSession, coupons.postAddCoupon );
+admin_router.get('/edit-coupon/:coupon_id', adminAuth.adminSession, coupons.getEditCoupon );
+admin_router.post('/post-edit-coupon/:coupon_id', adminAuth.adminSession, coupons.postEditCoupon );
+
 
 
 module.exports = admin_router

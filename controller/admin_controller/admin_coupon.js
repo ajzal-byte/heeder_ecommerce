@@ -27,3 +27,26 @@ module.exports.postAddCoupon = async (req, res)=>{
     console.error(error);
   }
 }
+
+module.exports.getEditCoupon = async (req, res)=>{
+  try{
+    const coupon_id = req.params.coupon_id;
+    const coupon_edit = await couponCollection.findOne({_id: coupon_id});
+    res.render('coupon-edit', {coupon_edit});
+  }catch(error){
+    console.error(error);
+  }
+}
+
+module.exports.postEditCoupon = async (req, res)=>{
+  try{
+    const coupon_id = req.params.coupon_id;
+    const {couponCode, description, discountAmount, minimumPurchase, status, expiryDate} = req.body;
+    await couponCollection.findByIdAndUpdate(coupon_id, {
+      couponCode, description, discountAmount, minimumPurchase, status, expiryDate
+    })
+    res.redirect('/admin/coupons')
+  }catch(error){
+    console.error(error);
+  }
+}
