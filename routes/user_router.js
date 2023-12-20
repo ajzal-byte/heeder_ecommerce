@@ -4,12 +4,14 @@ user_router.use(express.json());
 const userError = require('../middleware/userError');
 const userAuth = require('../middleware/userAuth');
 const userBlock = require('../middleware/userBlock');
+
 const user_home = require('../controller/user_controller/user_home');
 const user_login = require('../controller/user_controller/user_login');
 const user_cart = require('../controller/user_controller/user_cart');
 const user_profile = require('../controller/user_controller/user_profile');
 const user_address = require('../controller/user_controller/user_address');
 const user_order = require('../controller/user_controller/user_order');
+const user_checkout = require('../controller/user_controller/user_checkout')
 const {userProfileUpload} = require('../middleware/multer');
 
 user_router.use('/', express.static('public'));
@@ -48,7 +50,6 @@ user_router.get('/cart', userAuth.userSession, userBlock.ifBlocked, user_cart.ge
 user_router.post('/addtoCart', userAuth.userSession, userBlock.ifBlocked, user_cart.addtoCart)
 user_router.post('/updateCart', userAuth.userSession, userBlock.ifBlocked, user_cart.updateCart)
 user_router.post('/removeFromCart', userAuth.userSession, userBlock.ifBlocked, user_cart.removeCart)
-user_router.get('/checkout', userAuth.userSession, userBlock.ifBlocked, user_cart.checkout)
 
 //profile
 user_router.get('/profile', userAuth.userSession, userBlock.ifBlocked, user_profile.getProfile);
@@ -68,6 +69,8 @@ user_router.get('/order-placed/cod', userAuth.userSession, userBlock.ifBlocked, 
 user_router.get('/cancel-order/:orderId', userAuth.userSession, userBlock.ifBlocked, user_order.cancelOrder);
 user_router.get('/return-order/:orderId', userAuth.userSession, userBlock.ifBlocked, user_order.returnOrder);
 
+//checkout coupon apply
+user_router.get('/checkout', userAuth.userSession, userBlock.ifBlocked, user_checkout.checkout)
 
 
 user_router.use(userError.errorHandler);
