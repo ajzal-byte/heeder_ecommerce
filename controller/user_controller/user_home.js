@@ -5,8 +5,8 @@ const cartCollection = require('../../models/cart_schema')
 //home page
 module.exports.getHomePage = async(req, res, next)=>{
   try{
-    const products = await productCollection.find().populate({path:'category', model:'Categories'})
-    .sort({updatedAt: -1}).limit(6);
+    const products = await productCollection.find({ status: { $ne: 'Inactive' } }).populate({ path: 'category', model: 'Categories' })
+    .sort({ updatedAt: -1 }).limit(6);
     const userSession = req.session.user;
     let cartLength;
     let user;
@@ -28,7 +28,7 @@ module.exports.getProducts = async (req, res)=>{
 try{
   let perPage = 12;
   let page = req.query.page || 1;
-  const products = await productCollection.find().populate({path:'category', model:'Categories'})
+  const products = await productCollection.find({ status: { $ne: 'Inactive' } }).populate({path:'category', model:'Categories'})
   .sort({updatedAt: -1})
   .skip(perPage * page - perPage)
   .limit(perPage)

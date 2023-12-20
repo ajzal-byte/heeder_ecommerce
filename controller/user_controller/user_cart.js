@@ -2,6 +2,7 @@ const addressCollection = require('../../models/address_schema');
 const cartCollection = require('../../models/cart_schema');
 const productCollection = require('../../models/products_schema');
 const userCollection = require('../../models/user_schema');
+const couponCollection = require('../../models/coupon_schema');
 
 
 
@@ -150,7 +151,8 @@ try{
       }else{
         return res.redirect('/cart')
       }
-      res.render('shop-checkout', {userSession, userCart, userAddress, grandTotal, cartLength, user});
+      const coupons = await couponCollection.find({ status: { $ne: 'Inactive' } });
+      res.render('shop-checkout', {userSession, userCart, userAddress, grandTotal, cartLength, user, coupons});
 }catch(error){
   next(error);
 }

@@ -23,6 +23,7 @@ module.exports.postAddCoupon = async (req, res)=>{
     await couponCollection.create({
       couponCode, description, discountAmount, minimumPurchase, status, expiryDate
     });
+    res.redirect('/admin/coupons')
   }catch(error){
     console.error(error);
   }

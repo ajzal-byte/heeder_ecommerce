@@ -174,11 +174,11 @@
         <section class="content-main">
             <div class="content-header">
                 <div>
-                    <h2 class="content-title card-title">Products View</h2>
-                    <p>Add, edit or block a product</p>
+                    <h2 class="content-title card-title">Coupons View</h2>
+                    <p>Add, edit or block a coupon</p>
                 </div>
                 <div>
-                    <a href="/admin/addCoupon" class="btn btn-primary btn-sm rounded">Create new</a>
+                    <a href="/admin/add-coupon" class="btn btn-primary btn-sm rounded">Create new</a>
                 </div>
             </div>
             <div class="card mb-4">
@@ -207,7 +207,7 @@
                 <div class="card-body">
                     <div class="row gx-3 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 row-cols-xxl-5">
                      <% coupons.forEach(coupon => { %>
-                        <div class="col">
+                        <div class="col" style="margin-bottom: 20px;">
                             <div class="coupon-card">
 
 
@@ -219,7 +219,7 @@
                                     
                                     <div class="d-flex flex-column ml-1">
                     
-                                        <h1 class="mb-0 percent"> ₹<%= coupon.discountAmount %> </h1>
+                                        <h1 class="mb-0 amount"> ₹<%= coupon.discountAmount %> </h1>
                                         <span class="discount">OFFER</span>
                                         
                                     </div>
@@ -229,9 +229,11 @@
 
                                 <hr class="line">
 
-                                <h4 class="mb-0"> <%= coupon.couponCode %> </h4>
-                                
-                                <span class="text"> <%= coupon.description %> </span>
+                                <div class="info-wrap">
+                                    <h4 class="mb-0"> <%= coupon.couponCode %> </h4>
+                                    <p class="text-truncate"> <%= coupon.description %></p>
+                                </div>
+
                     
                                 <div class="d-flex justify-content-between align-items-center mt-4">
 
@@ -337,7 +339,7 @@ background-color: #f0f0f0;
 color: #000000;
 }
 
-.percent{
+.amount{
 
 font-size: 2rem;
 color: #000000;
@@ -355,26 +357,11 @@ color: #000000;
 color: #000000;
 }
 
-
-.form-check-input:checked {
-background-color: #F44336;
-border-color: #F44336;
+.info-wrap{
+    /* overflow: hidden; */
+    text-overflow: ellipsis;
 }
 
-
-.form-check-input:focus {
-border-color: #d50000;
-outline: 0;
-box-shadow: none;
-}
-
-
-.form-check {
-display: block;
-min-height: 1.5rem;
-padding-left: 1.75em;
-margin-bottom: -5px;
-} 
     </style>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>

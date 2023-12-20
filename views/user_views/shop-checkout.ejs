@@ -904,6 +904,127 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                                <div class="mt-30">
+                                    <h5 class="mb-10">Apply coupon: <a data-bs-toggle="modal" data-bs-target="#couponModal" class="pl-10 font-sm">Click here</a></h5>
+                                    <input style="height: 40px; width: 200px;" type="text" id="coupon-input" name="coupon-input">
+                                    <button class="btn btn-sm" id="apply-button">Apply</button>
+                                    <button class="btn btn-sm d-none" id="CouponRemoveBtn">Remove</button>
+                                    <div id="couponError" class="error"></div>
+                                </div>
+
+                                <!-- Modal -->
+                        <div class="modal fade" id="couponModal" tabindex="-1" aria-labelledby="couponModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h5 class="modal-title" id="couponModalLabel">Coupons for you</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <% if (coupons.length > 0) { %>
+                                        <% coupons.forEach(coupon => { %>
+                                        <div class="col">
+                                            <div class="coupon-card">
+                
+                
+                                                <div class="text-center">
+                                    
+                                                    <div class="d-flex flex-row text-center">
+                                    
+                                                    <img src="https://icon-library.com/images/coupon-icon-png/coupon-icon-png-21.jpg" width="70">
+                                                    
+                                                    <div class="d-flex justify-content-center align-items-center flex-column ml-1">
+                                    
+                                                        <h1 class="mb-0 amount"> ₹<%= coupon.discountAmount %> </h1>
+                                                        <span class="discount">OFFER</span>
+
+                                                        <p>on minimum purchase of ₹<%= coupon.minimumPurchase %></p>
+                                                        
+                                                    </div>
+                                                </div>
+                                                    
+                                                </div>
+                
+                                                <hr class="line">
+                
+                                                <h4 class="mb-0"> <%= coupon.couponCode %> </h4>
+                                                
+                                                <span class="text"> <%= coupon.description %> </span>
+                                    
+                                                <div class="mt-4 text-end">
+                                                    <a class="btn btn-sm font-sm rounded btn-dark copy-button" onclick="copyToClipboard('<%= coupon.couponCode %>')">
+                                                        Copy
+                                                    </a>
+                                                </div>
+                                                    
+                                                    
+                                                </div>
+                                            </div>
+                                        <% }) %>
+                                    <% }else{ %>
+                                        <h3>Oops! No coupons available now</h3>
+                                        <% } %>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+
+    <script>
+            //function to copy code to clipboard
+        function copyToClipboard(code) {
+            navigator.clipboard.writeText(code).then(()=> {
+                Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: "Coupon Code copied to Clipboard",
+                showConfirmButton: false,
+                timer: 1500
+                });
+            }).catch(err=>{
+                console.error('Unable to copy to clipboard', error);
+            });
+        }
+        
+        document.addEventListener("DOMContentLoaded", ()=>{
+        const applyButton = document.getElementById('apply-button');
+        const couponInput = document.getElementById('coupon-input');
+        
+        applyButton.addEventListener("click", function (e) {
+            e.preventDefault();
+            if(validateCode()){
+                fetch(``)
+            }
+        });
+
+        function validateCode() {
+            let couponCode = couponInput.value; // Get the current value and trim whitespaces
+            let isValid = true;
+            const errorElement = document.getElementById('couponError');
+            errorElement.textContent = ''; // Clear previous error messages
+            errorElement.style.color = '';
+
+            if (/\s/.test(couponCode)) {
+                errorElement.textContent = 'Coupon cannot have whitespaces';
+                errorElement.style.color = 'red';
+                isValid = false;
+            }
+
+            if (couponCode === '') {
+                errorElement.textContent = 'Coupon cannot be empty';
+                errorElement.style.color = 'red';
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+
+        });
+
+
+        </script>
+                        
+
                             </div>
                             <div class="bt-1 border-color-1 mt-30 mb-30"></div>
                             <div class="payment_method">
@@ -980,7 +1101,7 @@
                     <div class="col-lg-4 col-md-6">
                         <div class="widget-about font-md mb-md-5 mb-lg-0">
                             <div class="logo logo-width-1 wow fadeIn animated">
-                                <a href="index.html"><img src="/user_assets/imgs/theme/logo.svg" alt="logo"></a>
+                                <a href="/"><img src="/user_assets/imgs/theme/logo.png" alt="logo"></a>
                             </div>
                             <h5 class="mt-20 mb-10 fw-600 text-grey-4 wow fadeIn animated">Contact</h5>
                             <p class="wow fadeIn animated">
@@ -1056,6 +1177,61 @@
             </div>
         </div>
     </footer>
+
+    <style>
+
+    .coupon-card{
+
+    width: 100%;
+    border:none;
+    height: 100%;
+    border-radius: 15px;
+    padding: 20px;
+    background-color: #f0f0f0;
+    color: #000000;
+    margin-bottom: 1rem;
+    }
+
+    .amount{
+
+    font-size: 2rem;
+    color: #000000;
+    }
+
+    .discount{
+
+    font-size: 1.5rem;
+    color: #000000;
+    }
+
+
+    .line{
+    color: #000000;
+    }
+
+
+    .form-check-input:checked {
+    background-color: #F44336;
+    border-color: #F44336;
+    }
+
+
+    .form-check-input:focus {
+    border-color: #d50000;
+    outline: 0;
+    box-shadow: none;
+    }
+
+
+    .form-check {
+    display: block;
+    min-height: 1.5rem;
+    padding-left: 1.75em;
+    margin-bottom: -5px;
+    } 
+    </style>
+
+
     <!-- Vendor JS-->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="/user_assets/js/vendor/modernizr-3.6.0.min.js"></script>

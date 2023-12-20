@@ -32,7 +32,7 @@ const couponSchema = mongoose.Schema({
     },
     redeemedUsers : [{
         type : mongoose.Schema.Types.ObjectId,
-        ref : "customer"
+        ref : "userCollection"
     }]
 })
 
