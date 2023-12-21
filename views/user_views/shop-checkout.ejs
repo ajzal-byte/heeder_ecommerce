@@ -891,7 +891,7 @@
                                         <tr>
                                             <th>SubTotal</th>
                                             <td class="product-grandTotal-td" colspan="2">
-                                            <span>₹</span>  <span class="grand-total"> <%= grandTotal %> </span>
+                                            <span>₹</span>  <span class="sub-total"> <%= grandTotal %> </span>
                                             </td>
                                           </tr>
                                           <tr>
@@ -900,15 +900,15 @@
                                           </tr>
                                         <tr>
                                             <th>Total</th>
-                                            <td colspan="2" class="product-subtotal"> <span class = "font-xl text-brand fw-900">₹</spanfont-xl> <span class="font-xl text-brand fw-900"> <%= grandTotal %></span></td>
+                                            <td colspan="2" class="product-subtotal"> <span class = "font-xl text-brand fw-900">₹</spanfont-xl> <span class="font-xl text-brand fw-900 grand-total"> <%= grandTotal %></span></td>
                                         </tr>
                                     </tbody>
                                 </table>
                                 <div class="mt-30">
                                     <h5 class="mb-10">Apply coupon: <a data-bs-toggle="modal" data-bs-target="#couponModal" class="pl-10 font-sm">Click here</a></h5>
-                                    <input style="height: 40px; width: 200px;" type="text" id="coupon-input" name="coupon-input">
+                                    <input style="height: 40px; width: 200px;" placeholder="Enter Code" type="text" id="coupon-input" name="coupon-input">
                                     <button class="btn btn-sm" id="apply-button">Apply</button>
-                                    <button class="btn btn-sm d-none" id="CouponRemoveBtn">Remove</button>
+                                    <button class="btn btn-sm" id="remove-button">Remove</button>
                                     <div id="couponError" class="error"></div>
                                 </div>
 
@@ -988,28 +988,86 @@
         document.addEventListener("DOMContentLoaded", ()=>{
         const applyButton = document.getElementById('apply-button');
         const couponInput = document.getElementById('coupon-input');
+        const grandTotalValue = document.querySelector('.grand-total').textContent.trim();
+        const grandTotal = document.querySelector('.grand-total');
+        const subTotal = document.querySelector('.sub-total');
+        const removeButton = document.getElementById('remove-button');
+        let couponCode = null;
+        removeButton.style.display = 'none';
         
         applyButton.addEventListener("click", function (e) {
             e.preventDefault();
             if(validateCode()){
-                fetch(``)
+                fetch(`/apply-coupon?couponCode=${couponInput.value}&grandTotal=${grandTotalValue}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+                })
+                .then(response=>{
+                    if(!response.ok){
+                        throw new Error(`HTTP Error! status:${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data=>{
+                    if(data.error){
+                        Swal.fire({
+                        position: 'center',
+                        icon: 'error',
+                        title: data.error,
+                        showConfirmButton: false,
+                        timer: 1500
+                        });
+                    }else if(data.message){
+                        console.log('success');
+                        Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: data.message,
+                        showConfirmButton: false,
+                        timer: 1500
+                        });
+                        ordiginalGrandTotal = data.grandTotal;
+                        grandTotal.innerText = data.updatedTotal;
+                        subTotal.innerText = data.updatedTotal;
+                        applyButton.style.display = 'none';
+                        removeButton.style.display = 'inline';
+                        couponInput.readOnly = true;
+                        couponCode = couponInput.value;
+                    }
+                }).catch(error=>{
+                    window.location.href = '/login'
+                    console.error("Error:", error);
+                })
+            
             }
         });
+        removeButton.addEventListener("click", ()=>{
+            console.log(couponInput.value);
+            couponInput.value = "";
+            removeButton.style.display = 'none';
+            applyButton.style.display = 'inline';
+            couponInput.readOnly = false;
+            grandTotal.innerText = ordiginalGrandTotal;
+            subTotal.innerText = ordiginalGrandTotal;
+            couponCode = null;
+        })
 
         function validateCode() {
-            let couponCode = couponInput.value; // Get the current value and trim whitespaces
+            let inputCouponCode = couponInput.value; // Get the current value and trim whitespaces
             let isValid = true;
             const errorElement = document.getElementById('couponError');
             errorElement.textContent = ''; // Clear previous error messages
             errorElement.style.color = '';
 
-            if (/\s/.test(couponCode)) {
+            if (/\s/.test(inputCouponCode)) {
                 errorElement.textContent = 'Coupon cannot have whitespaces';
                 errorElement.style.color = 'red';
                 isValid = false;
             }
 
-            if (couponCode === '') {
+            if (inputCouponCode === '') {
                 errorElement.textContent = 'Coupon cannot be empty';
                 errorElement.style.color = 'red';
                 isValid = false;
@@ -1017,6 +1075,59 @@
 
             return isValid;
         }
+
+
+        const codOrderButton = document.getElementById('cod-orderButton');
+        codOrderButton.addEventListener("click", (e)=>{
+            e.preventDefault();
+            const radioButtons = document.querySelectorAll('.select-address');
+            let selectedAddressValue = null;
+            console.log(couponInput);
+            for (const radioButton of radioButtons) {
+                
+                if(radioButton.checked){
+                    selectedAddressValue = radioButton.value;
+                    console.log(couponCode);
+                    fetch(`place-order-cod/${selectedAddressValue}?couponCode=${couponCode || ''}`)
+                    .then(response=>{
+                        if(!response.ok){
+                            throw new Error(`HTTP Error! status:${response.status}`)
+                        }
+                        return response.json();
+                    })
+                    .then(data=>{
+                        if(data.backToCart){
+                            window.location.href = '/cart';
+                        }
+                        if(data.error){
+                            Swal.fire({
+                            position: 'center',
+                            icon: 'error',
+                            title: data.error,
+                            showConfirmButton: false,
+                            timer: 1500
+                            });
+                        }else if(data.orderId){
+                            window.location.href = `/order-placed/${data.orderId}`
+                        }
+                    }).catch(error=>{
+                        // window.location.href = '/login';
+                        console.error(error);
+                    })
+                    break;
+                }
+            }
+
+            if (selectedAddressValue !== null) {
+            console.log("Selected Address ID:", selectedAddressValue);
+            } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'No Address is Selected!',
+            })
+            }
+        })
 
 
         });
@@ -1039,35 +1150,7 @@
             </div>
         </section>
 
-        <script>
-            document.addEventListener("DOMContentLoaded", ()=>{
-                const codOrderButton = document.getElementById('cod-orderButton');
-                codOrderButton.addEventListener("click", (e)=>{
-                    e.preventDefault();
-                    const radioButtons = document.querySelectorAll('.select-address');
-                    let selectedAddressValue = null;
-                    for (const radioButton of radioButtons) {
-                        
-                        if(radioButton.checked){
-                            selectedAddressValue = radioButton.value;
-                            console.log(selectedAddressValue);
-                            window.location.href = `/order-placed/cod?addressId=${selectedAddressValue}`
-                            break;
-                        }
-                    }
 
-                    if (selectedAddressValue !== null) {
-                    console.log("Selected Address ID:", selectedAddressValue);
-                    } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'No Address is Selected!',
-                    })
-                    }
-                })
-            })
-        </script>
     </main>
     <footer class="main">
         <section class="newsletter p-30 text-white wow fadeIn animated">

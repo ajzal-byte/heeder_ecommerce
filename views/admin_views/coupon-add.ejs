@@ -302,7 +302,7 @@
                     isValid = false;
                 }
 
-                if (expiryDate <= Date.now()) {
+                if (expiryDate < new Date()) {
                 showError('expiryDateError', 'Expiry Date must be in the future');
                 isValid = false;
                 }
