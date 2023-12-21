@@ -949,7 +949,15 @@
                 
                                                 <h4 class="mb-0"> <%= coupon.couponCode %> </h4>
                                                 
-                                                <span class="text"> <%= coupon.description %> </span>
+                                                <span class="text" style="word-wrap: break-word;">
+                                                    <%= coupon.description %>
+                                                </span>
+                                                
+                                                
+
+                                                <br>
+
+                                                <span class="text">Expires on <%= moment(coupon.expiryDate).format("MMM Do YY")  %> </span>
                                     
                                                 <div class="mt-4 text-end">
                                                     <a class="btn btn-sm font-sm rounded btn-dark copy-button" onclick="copyToClipboard('<%= coupon.couponCode %>')">
