@@ -1,4 +1,6 @@
 const orderCollection  = require('../../models/orders_schema');
+const userCollection = require('../../models/user_schema');
+const productCollection = require('../../models/products_schema');
 
 
 module.exports.getOrders = async (req, res)=>{
@@ -60,6 +62,20 @@ try{
           { _id: product.productId },
           {$inc: {stock: product.quantity}}
         );
+      }
+    }
+    if(order.paymentMethod == "Online Payment"){
+      const user = await userCollection.findOne({_id: order.userId});
+      if(user){
+        if(user.wallet){
+          await userCollection.updateOne(
+          {_id: order.userId},
+          {$inc: { wallet: order.totalAmount }});
+        }else{
+          await userCollection.updateOne(
+          {_id: order.userId},
+          {$set: { wallet: order.totalAmount }});
+        }
       }
     }
   await orderCollection.findByIdAndUpdate(orderId, {orderStatus: 'Cancelled', paymentStatus: 'Failed'});

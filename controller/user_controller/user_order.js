@@ -286,6 +286,20 @@ module.exports.cancelOrder = async (req, res, next)=>{
         );
       }
     }
+    if(order.paymentMethod == "Online Payment"){
+      const user = await userCollection.findOne({_id: order.userId});
+      if(user){
+        if(user.wallet){
+          await userCollection.updateOne(
+          {_id: order.userId},
+          {$inc: { wallet: order.totalAmount }});
+        }else{
+          await userCollection.updateOne(
+          {_id: order.userId},
+          {$set: { wallet: order.totalAmount }});
+        }
+      }
+    }
     await orderCollection.findByIdAndUpdate(orderId, {orderStatus: 'Cancelled', paymentStatus: 'Failed'});
     res.redirect(`/view-order/?orderId=${orderId}`);
   }catch (error) {
