@@ -1168,17 +1168,19 @@
                             showConfirmButton: false,
                             timer: 1500
                             });
-                        }else if(data.order_id){
+                        }else if(data.razorOrderId){
                             console.log('response received');
-                            var orderId = data.order_id;
+                            console.log(razorOrderId);
+                            var razorOrderId = data.razorOrderId;
+                            var orderId = data.orderId
                             // Initialize the Razorpay payment with the order_id
                             var options = {
                             key: "rzp_test_gBU9v2ubdClFXs",
-                            order_id: orderId,
+                            order_id: razorOrderId,
                             handler: (response)=>{
                                 console.log(response);
                                 //payment successfull
-                                handlePaymentSuccess(orderId, response)
+                                handlePaymentSuccess(razorOrderId, response, orderId)
                             }
                             };
                             console.log(' new razorpay');
@@ -1187,7 +1189,7 @@
                             rzp1.open();
                             rzp1.on('payment.failed', response=>{
                                 console.log("Payment Failed");
-                                handlePaymentFailure(orderId, response);
+                                handlePaymentFailure(razorOrderId, response, orderId);
                             });
                         }
                     }).catch(error=>{
@@ -1211,19 +1213,20 @@
         });
 
         //function to handle payment success
-        function handlePaymentSuccess(orderId, response) {
+        function handlePaymentSuccess(razorOrderId, response, orderId) {
             console.log(orderId);
-            updatePaymentStatus("Success", orderId, response);
+            console.log(razorOrderId);
+            updatePaymentStatus("Success", razorOrderId, response, orderId);
         }
 
         //function to handle payment failure
-        function handlePaymentFailure(orderId, response) {
-            updatePaymentStatus("Failure", orderId, response)
+        function handlePaymentFailure(razorOrderId, response, orderId) {
+            updatePaymentStatus("Failure", razorOrderId, response, orderId)
         }
 
         // Function to update the payment status in the database
-        function updatePaymentStatus(paymentStatus, orderId, response) {
-            const url = `/update-payment-status?paymentStatus=${paymentStatus}&orderId=${orderId}`
+        function updatePaymentStatus(paymentStatus, razorOrderId, response, orderId) {
+            const url = `/update-payment-status?paymentStatus=${paymentStatus}&razorOrderId=${razorOrderId}&orderId=${orderId}`
 
             fetch(url, {
                 method: 'POST',
@@ -1234,6 +1237,14 @@
             .then(response=>{
                 if(!response.ok){
                     throw new Error('Failed to update payment status');
+                }
+                return response.json();
+            })
+            .then(data=>{
+                if(data.paymentStatus == "Success"){
+                    window.location.href = `/order-placed/${orderId}`
+                }else{
+                    window.location.href = '/profile'
                 }
             })
             .catch(error=>{

@@ -5,6 +5,7 @@ const orderCollection = require('../../models/orders_schema');
 const productCollection = require("../../models/products_schema");
 const couponCollection = require("../../models/coupon_schema");
 const razorpay = require('razorpay')
+const mongoose = require('mongoose');
 
 const { RAZOR_PAY_key_id, RAZOR_PAY_key_secret } = process.env;
 
@@ -192,6 +193,8 @@ module.exports.orderViaOnline = async (req, res, next)=>{
   
     const paymentMethod = "Online Payment"
 
+    console.log(totalAmount);
+
     var options = {
       amount: totalAmount * 100,
       currency: "INR",
@@ -201,14 +204,20 @@ module.exports.orderViaOnline = async (req, res, next)=>{
     const razorOrder = await instance.orders.create(options);
 
     //order creation
+    console.log(razorOrder.id);
     const createdOrder = await orderCollection.create({
       userId: user._id, 
-      razorOrderId: razorOrder.id,
+      orderId: razorOrder.id,
       products: productArray,
       totalAmount, 
       paymentMethod,
       address: userAddress,
     })
+
+
+    const createdOrderView = await orderCollection.findById(createdOrder.id)
+    console.log(createdOrderView);
+    console.log(createdOrderView.razorOrderId);
 
     //stock updation
     for (const product of userCart.products){
@@ -222,8 +231,10 @@ module.exports.orderViaOnline = async (req, res, next)=>{
       await cartCollection.deleteOne({userId: user._id});
       // ID of the created order
       const orderId = createdOrder._id;
+      console.log('created order id:  ' + orderId);
       console.log('json status send');
-      return res.status(200).json({order_id: razorOrder.id});
+      console.log(razorOrder.id);
+      return res.status(200).json({razorOrderId: razorOrder.id, orderId});
     
   }catch(error){
     next(error);
@@ -232,28 +243,28 @@ module.exports.orderViaOnline = async (req, res, next)=>{
 
 module.exports.updatePaymentStatus = async (req, res, next)=>{
 try{
-  const {paymentStatus, orderId} = req.query;
+  const paymentStatus = req.query.paymentStatus;
+  const orderId = req.query.orderId;
+  await orderCollection.findByIdAndUpdate(orderId, {
+    paymentStatus
+  })
+  console.log("changed payment status  " + paymentStatus);
   if(paymentStatus == "Success"){
-    console.log(orderId);
-    await orderCollection.updateOne(
-      { razorOrderId: orderId },
-      { $set: { paymentStatus: "Success" } }
-    );
-    res.redirect(`/order-placed/${orderId}`); 
+    console.log('redirecting to order placed page');
+    return res.status(200).json({paymentStatus: "Success"}); 
   }else{
-    await orderCollection.updateOne(
-      { razorOrderId: orderId },
-      { $set: { paymentStatus: "Failure" } }
-    );
-    const order = await orderCollection.findOne({_id: orderId});
-    if(order){
-      await productCollection.updateOne(
-        {_id : product.productId._id},
-        {$inc: {stock: product.quantity}}
+    const order = await orderCollection.findById(orderId);
+    if (order) {
+      for (const product of order.products) {
+        await productCollection.updateOne(
+          { _id: product.productId },
+          {$inc: {stock: product.quantity}}
         );
+      }
     }
-    res.redirect('/profile');
-  }
+    console.log('redirecting to profile');
+    return res.status(200).json({paymentStatus: "Failed"});
+}
 }catch(error){
   next(error);
 }
