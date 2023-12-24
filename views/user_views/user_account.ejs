@@ -458,6 +458,24 @@
                                             <div class="card-body">
                                                 <h3 class="mb-0">Welcome to the dashboard </h3>
                                                 <p>From your account dashboard. you can easily check &amp; view your recent orders, manage your shipping and billing addresses and edit your password and account details.</p>
+                                                <a  data-bs-toggle="modal" data-bs-target="#walletModal">View My Wallet Balance</a>
+                                            </div>
+                                        </div>
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="walletModal" tabindex="-1" aria-labelledby="walletModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                <h5 class="modal-title" id="walletModalLabel">Wallet Balance</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                <h4>You have ₹<%= userDetails.wallet %> in your wallet.</h4>
+                                                </div>
+                                                <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
                                             </div>
                                         </div>
                                     </div>

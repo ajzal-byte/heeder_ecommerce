@@ -79,7 +79,8 @@ module.exports.postUserSignup = async (req, res, next)=>{
         email,
         password: hash,
         phoneNumber,
-        status: 'Active'
+        status: 'Active',
+        wallet: 0,
     }).then((data)=>{
       if(data){
         res.redirect('/login');
