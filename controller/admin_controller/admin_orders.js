@@ -53,6 +53,15 @@ try{
 module.exports.cancelOrder = async (req, res)=>{
 try{
   const orderId = req.params.orderId;
+  const order = await orderCollection.findById(orderId);
+    if (order) {
+      for (const product of order.products) {
+        await productCollection.updateOne(
+          { _id: product.productId },
+          {$inc: {stock: product.quantity}}
+        );
+      }
+    }
   await orderCollection.findByIdAndUpdate(orderId, {orderStatus: 'Cancelled', paymentStatus: 'Failed'});
   res.redirect(`/admin/view-order/${orderId}`)
 }catch(error){

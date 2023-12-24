@@ -21,6 +21,9 @@ const userSchema  = new mongoose.Schema({
   status: {
     type: String,
   },
+  wallet:{
+    type: Number,
+  },
 
   userProfile: {
         type: String,
