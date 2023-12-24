@@ -66,6 +66,8 @@ user_router.get('/delete-address', userAuth.userSession, userBlock.ifBlocked, us
 
 //orders
 user_router.get('/place-order-cod/:addressId', userAuth.userSession, userBlock.ifBlocked, user_order.orderViaCod);
+user_router.post('/update-payment-status', userAuth.userSession, userBlock.ifBlocked, user_order.updatePaymentStatus);
+user_router.get('/place-order-razorpay/:addressId', userAuth.userSession, userBlock.ifBlocked, user_order.orderViaOnline);
 user_router.get('/order-placed/:orderId', userAuth.userSession, userBlock.ifBlocked, user_order.getOrderPlaced);
 user_router.get('/cancel-order/:orderId', userAuth.userSession, userBlock.ifBlocked, user_order.cancelOrder);
 user_router.get('/return-order/:orderId', userAuth.userSession, userBlock.ifBlocked, user_order.returnOrder);

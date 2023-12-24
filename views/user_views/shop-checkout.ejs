@@ -952,7 +952,7 @@
                                                 <span class="text" style="word-wrap: break-word;">
                                                     <%= coupon.description %>
                                                 </span>
-                                                
+
                                                 
 
                                                 <br>
@@ -976,7 +976,7 @@
                             </div>
                             </div>
                         </div>
-
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script>
             //function to copy code to clipboard
         function copyToClipboard(code) {
@@ -1119,7 +1119,7 @@
                             window.location.href = `/order-placed/${data.orderId}`
                         }
                     }).catch(error=>{
-                        // window.location.href = '/login';
+                        window.location.href = '/login';
                         console.error(error);
                     })
                     break;
@@ -1135,14 +1135,118 @@
                 text: 'No Address is Selected!',
             })
             }
-        })
+        });
+
+
+        const razorpayButton = document.getElementById('rzp-orderButton');
+        razorpayButton.addEventListener("click", (e)=>{
+            e.preventDefault();
+            const radioButtons = document.querySelectorAll('.select-address');
+            let selectedAddressValue = null;
+            console.log(couponInput);
+            for (const radioButton of radioButtons) {
+                
+                if(radioButton.checked){
+                    selectedAddressValue = radioButton.value;
+                    console.log(couponCode);
+                    fetch(`place-order-razorpay/${selectedAddressValue}?couponCode=${couponCode || ''}`)
+                    .then(response=>{
+                        if(!response.ok){
+                            throw new Error(`HTTP Error! status:${response.status}`)
+                        }
+                        return response.json();
+                    })
+                    .then(data=>{
+                        if(data.backToCart){
+                            window.location.href = '/cart';
+                        }
+                        if(data.error){
+                            Swal.fire({
+                            position: 'center',
+                            icon: 'error',
+                            title: data.error,
+                            showConfirmButton: false,
+                            timer: 1500
+                            });
+                        }else if(data.order_id){
+                            console.log('response received');
+                            var orderId = data.order_id;
+                            // Initialize the Razorpay payment with the order_id
+                            var options = {
+                            key: "rzp_test_gBU9v2ubdClFXs",
+                            order_id: orderId,
+                            handler: (response)=>{
+                                console.log(response);
+                                //payment successfull
+                                handlePaymentSuccess(orderId, response)
+                            }
+                            };
+                            console.log(' new razorpay');
+                            var rzp1 = new Razorpay(options);
+                            console.log('razorpay open()');
+                            rzp1.open();
+                            rzp1.on('payment.failed', response=>{
+                                console.log("Payment Failed");
+                                handlePaymentFailure(orderId, response);
+                            });
+                        }
+                    }).catch(error=>{
+                        console.error(error);
+                        console.log('some error');
+                        // window.location.href = '/login';
+                    })
+                    break;
+                }
+            }
+
+            if (selectedAddressValue !== null) {
+            console.log("Selected Address ID:", selectedAddressValue);
+            } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'No Address is Selected!',
+            })
+            }
+        });
+
+        //function to handle payment success
+        function handlePaymentSuccess(orderId, response) {
+            console.log(orderId);
+            updatePaymentStatus("Success", orderId, response);
+        }
+
+        //function to handle payment failure
+        function handlePaymentFailure(orderId, response) {
+            updatePaymentStatus("Failure", orderId, response)
+        }
+
+        // Function to update the payment status in the database
+        function updatePaymentStatus(paymentStatus, orderId, response) {
+            const url = `/update-payment-status?paymentStatus=${paymentStatus}&orderId=${orderId}`
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response=>{
+                if(!response.ok){
+                    throw new Error('Failed to update payment status');
+                }
+            })
+            .catch(error=>{
+                console.error('Failed to update payment status', error);
+                window.location.href = '/login';
+            })
+        }
 
 
         });
 
 
         </script>
-                        
 
                             </div>
                             <div class="bt-1 border-color-1 mt-30 mb-30"></div>
@@ -1151,7 +1255,8 @@
                                     <h5>Payment</h5>
                                 </div>
                             </div>
-                            <a href="#" class="btn btn-fill-out btn-block mt-10" id="cod-orderButton" >Cash on Delivery</a>
+                            <button class="btn btn-sm mr-10" id="cod-orderButton">Cash on Delivery</button>
+                            <button class="btn btn-sm mr-10" id="rzp-orderButton">Pay with Razorpay</button>
                         </div>
                     </div>
                 </div>

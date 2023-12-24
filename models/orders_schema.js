@@ -6,6 +6,9 @@ const orderSchema = new mongoose.Schema({
     ref: "userCollection",
     required: true,
   },
+  razorOrderId: {
+    type: String,
+  },
   products:[
     {
       productId: {

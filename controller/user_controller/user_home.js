@@ -26,7 +26,7 @@ module.exports.getHomePage = async(req, res, next)=>{
 
 module.exports.getProducts = async (req, res)=>{
 try{
-  let perPage = 12;
+  let perPage = 5;
   let page = req.query.page || 1;
   const products = await productCollection.find({ status: { $ne: 'Inactive' } }).populate({path:'category', model:'Categories'})
   .sort({updatedAt: -1})

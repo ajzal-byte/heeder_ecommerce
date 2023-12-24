@@ -269,7 +269,7 @@
         }
 
         function startResendTimer(){
-            let remainingTime = 5;
+            let remainingTime = 30;
             timerElement.style.display = 'block';
             resendOTPButton.style.display = 'none';
             sendOTPButton.style.display = 'none';
@@ -289,7 +289,7 @@
         }
 
         function startExpiryTimer(){
-            let expiryTime = 30;
+            let expiryTime = 60;
             expiryTimerElement.style.display = 'block';
 
             countdown = setInterval(()=>{

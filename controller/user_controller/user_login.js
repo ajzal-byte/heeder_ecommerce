@@ -3,7 +3,6 @@ const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
 const saltRounds = 10; // The number of salt rounds determines the computational cost (higher is slower but more secure)
 // const { v4: uuidv4 } = require('uuid');
-// const transporter = require('../emailConfig');
 
 
 module.exports.getUserLogin = async (req, res, next)=>{
@@ -117,7 +116,7 @@ module.exports.getSendOtp = async (req, res, next)=>{
       generatedOTP = generateOTP();
       setTimeout(() => {
         generatedOTP = null; 
-      }, 30000);
+      }, 60000);
 
       // Create a transporter
       const transporter = nodemailer.createTransport({
