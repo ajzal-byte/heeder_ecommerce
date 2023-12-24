@@ -255,6 +255,9 @@ try{
   }else{
     const order = await orderCollection.findById(orderId);
     if (order) {
+      await orderCollection.findByIdAndUpdate(orderId, {
+        orderStatus: "Order Failed"
+      })
       for (const product of order.products) {
         await productCollection.updateOne(
           { _id: product.productId },
