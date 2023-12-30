@@ -1,6 +1,7 @@
 const userCollection = require('../../models/user_schema');
-const productCollection = require('../../models/products_schema')
-const cartCollection = require('../../models/cart_schema')
+const productCollection = require('../../models/products_schema');
+const cartCollection = require('../../models/cart_schema');
+const categoryCollection = require('../../models/category_schema');
 
 //home page
 module.exports.getHomePage = async(req, res, next)=>{
@@ -26,7 +27,7 @@ module.exports.getHomePage = async(req, res, next)=>{
 
 module.exports.getProducts = async (req, res)=>{
 try{
-  let perPage = 5;
+  let perPage = 6;
   let page = req.query.page || 1;
   const products = await productCollection.find({ status: { $ne: 'Inactive' } }).populate({path:'category', model:'Categories'})
   .sort({updatedAt: -1})
@@ -79,4 +80,48 @@ module.exports.getProductDetails = async (req, res, next)=>{
   }
 };
 
+
+module.exports.searchProduct = async (req, res, next)=>{
+  try{
+  let perPage = 6;
+  let page = req.query.page || 1;
+  const searchInput = req.query.searchInput;
+  const regexPattern = new RegExp(searchInput, 'i');
+  const products = await productCollection.find({
+    $and: [
+      { productName: { $regex: regexPattern } },
+      { status: 'Active' }, 
+    ],
+  })
+  .sort({updatedAt: -1})
+  .skip(perPage * page - perPage)
+  .limit(perPage)
+  .exec() 
+  
+
+  const totalProducts = await products.length;
+  const userSession = req.session.user;
+  let cartLength;
+  let user;
+  if(userSession){
+      user = await userCollection.findOne({email: userSession.email})
+      cartLength = await cartCollection.findOne({userId: user._id});
+      if (cartLength && cartLength.products) {
+        // Check if the cart and its products for the user exists
+        cartLength = cartLength.products.length;
+      }
+  }
+  res.render('products-page', {
+    products, 
+    userSession, 
+    cartLength, 
+    user, 
+    current: page,
+    totalPages: Math.ceil(totalProducts / perPage)});
+
+ 
+  }catch(error){
+    next(error)
+  }
+}
   

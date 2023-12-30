@@ -62,12 +62,8 @@
                     </div>
                     <div class="header-right">
                         <div class="search-style-2">
-                            <form action="#">
-                                <select class="select-active">
-                                    <option>All Categories</option>
-                                    <option>Categories</option>
-                                </select>
-                                <input type="text" placeholder="Search for items...">
+                            <form action="/search-product" method="get">
+                                <input type="text" placeholder="Search for items..." name="searchInput" >
                             </form>
                         </div>
                         <div class="header-action-right">
@@ -372,14 +368,6 @@
     <main class="main">
         <section class="product-tabs section-padding wow fadeIn animated">
             <div class="container">
-                <div class="tab-header">
-                    <ul class="nav nav-tabs" id="myTab" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="nav-tab-one" data-bs-toggle="tab" data-bs-target="#tab-one" type="button" role="tab" aria-controls="tab-one" aria-selected="true">New</button>
-                        </li>
-                    </ul>
-                    <a href="/products" class="view-more d-none d-md-flex">View More<i class="fi-rs-angle-double-small-right"></i></a>
-                </div>
                 <!--End nav-tabs-->
                 <div class="tab-content wow fadeIn animated" id="myTabContent">
                     <div class="tab-pane fade show active" id="tab-one" role="tabpanel" aria-labelledby="tab-one">

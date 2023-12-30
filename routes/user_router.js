@@ -44,6 +44,7 @@ user_router.post('/forgotChangePassword', user_login.forgotChangePassword);
 //products
 user_router.get('/products', userBlock.ifBlocked, user_home.getProducts);
 user_router.get('/productDetails/:product_id', userBlock.ifBlocked,  user_home.getProductDetails);
+user_router.get('/search-product', user_home.searchProduct);
 
 //cart
 user_router.get('/cart', userAuth.userSession, userBlock.ifBlocked, user_cart.getCart);
