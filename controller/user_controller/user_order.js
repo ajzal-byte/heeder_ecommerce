@@ -4,7 +4,7 @@ const userCollection = require("../../models/user_schema");
 const orderCollection = require('../../models/orders_schema');
 const productCollection = require("../../models/products_schema");
 const couponCollection = require("../../models/coupon_schema");
-const razorpay = require('razorpay')
+const razorpay = require('razorpay');
 const mongoose = require('mongoose');
 
 const { RAZOR_PAY_key_id, RAZOR_PAY_key_secret } = process.env;
@@ -56,6 +56,7 @@ module.exports.getOrderPlaced = async (req, res, next)=>{
 module.exports.orderViaCod = async (req, res, next)=>{
 try{
   let totalAmount = 0;
+  let couponDiscount = 0;
   const userSession = req.session.user;
   const user = await userCollection.findOne({email: userSession.email});
   const userAddress = await addressCollection.findOne({"address._id": req.params.addressId}, { "address.$": 1 });
@@ -101,8 +102,7 @@ userCart.products.forEach(product=>{
     if (coupon.redeemedUsers.includes(user._id)) {
       return res.status(200).json({ error: "Coupon has already been redeemed" });
     }
-    totalAmount -= coupon.discountAmount;
-      console.log(totalAmount);
+      couponDiscount = coupon.discountAmount;
       coupon.redeemedUsers.push(user._id);
       await coupon.save();
   }
@@ -113,7 +113,8 @@ userCart.products.forEach(product=>{
   const createdOrder = await orderCollection.create({
     userId: user._id, 
     products: productArray,
-    totalAmount, 
+    totalAmount,
+    couponDiscount, 
     paymentMethod,
     address: userAddress,
   })
@@ -140,6 +141,7 @@ userCart.products.forEach(product=>{
 module.exports.orderViaOnline = async (req, res, next)=>{
   try{
     let totalAmount = 0;
+    let couponDiscount = 0;
     const userSession = req.session.user;
     const user = await userCollection.findOne({email: userSession.email});
     const userAddress = await addressCollection.findOne({"address._id": req.params.addressId}, { "address.$": 1 });
@@ -185,15 +187,13 @@ module.exports.orderViaOnline = async (req, res, next)=>{
       if (coupon.redeemedUsers.includes(user._id)) {
         return res.status(200).json({ error: "Coupon has already been redeemed" });
       }
-      totalAmount -= coupon.discountAmount;
-        console.log(totalAmount);
-        coupon.redeemedUsers.push(user._id);
-        await coupon.save();
+      couponDiscount = coupon.discountAmount;
+      coupon.redeemedUsers.push(user._id);
+      await coupon.save();
     }
   
     const paymentMethod = "Online Payment"
 
-    console.log(totalAmount);
 
     var options = {
       amount: totalAmount * 100,
@@ -209,15 +209,14 @@ module.exports.orderViaOnline = async (req, res, next)=>{
       userId: user._id, 
       orderId: razorOrder.id,
       products: productArray,
-      totalAmount, 
+      totalAmount,
+      couponDiscount,
       paymentMethod,
       address: userAddress,
-    })
+    });
 
 
-    const createdOrderView = await orderCollection.findById(createdOrder.id)
-    console.log(createdOrderView);
-    console.log(createdOrderView.razorOrderId);
+    const createdOrderView = await orderCollection.findById(createdOrder.id);
 
     //stock updation
     for (const product of userCart.products){
@@ -231,9 +230,6 @@ module.exports.orderViaOnline = async (req, res, next)=>{
       await cartCollection.deleteOne({userId: user._id});
       // ID of the created order
       const orderId = createdOrder._id;
-      console.log('created order id:  ' + orderId);
-      console.log('json status send');
-      console.log(razorOrder.id);
       return res.status(200).json({razorOrderId: razorOrder.id, orderId});
     
   }catch(error){

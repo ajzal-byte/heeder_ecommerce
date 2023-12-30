@@ -895,12 +895,12 @@
                                             </td>
                                           </tr>
                                           <tr>
-                                            <th>Shipping</th>
-                                            <td colspan="2"><em>Free Shipping</em></td>
+                                            <th>Coupon Discount</th>
+                                            <td colspan="2"> - <span>₹</span> <em class="coupon-discount" ><%= couponDiscount %></em></td>
                                           </tr>
                                         <tr>
                                             <th>Total</th>
-                                            <td colspan="2" class="product-subtotal"> <span class = "font-xl text-brand fw-900">₹</spanfont-xl> <span class="font-xl text-brand fw-900 grand-total"> <%= grandTotal %></span></td>
+                                            <td colspan="2" class="product-subtotal"> <span class = "font-xl text-brand fw-900">₹</span> <span class="font-xl text-brand fw-900 grand-total"> <%= grandTotal %></span></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -996,9 +996,9 @@
         document.addEventListener("DOMContentLoaded", ()=>{
         const applyButton = document.getElementById('apply-button');
         const couponInput = document.getElementById('coupon-input');
+        const couponDiscount = document.querySelector('.coupon-discount');
         const grandTotalValue = document.querySelector('.grand-total').textContent.trim();
         const grandTotal = document.querySelector('.grand-total');
-        const subTotal = document.querySelector('.sub-total');
         const removeButton = document.getElementById('remove-button');
         let couponCode = null;
         removeButton.style.display = 'none';
@@ -1036,9 +1036,9 @@
                         showConfirmButton: false,
                         timer: 1500
                         });
-                        ordiginalGrandTotal = data.grandTotal;
+                        originalGrandTotal = data.grandTotal;
                         grandTotal.innerText = data.updatedTotal;
-                        subTotal.innerText = data.updatedTotal;
+                        couponDiscount.innerText = data.couponDiscount;
                         applyButton.style.display = 'none';
                         removeButton.style.display = 'inline';
                         couponInput.readOnly = true;
@@ -1052,13 +1052,12 @@
             }
         });
         removeButton.addEventListener("click", ()=>{
-            console.log(couponInput.value);
             couponInput.value = "";
             removeButton.style.display = 'none';
             applyButton.style.display = 'inline';
             couponInput.readOnly = false;
-            grandTotal.innerText = ordiginalGrandTotal;
-            subTotal.innerText = ordiginalGrandTotal;
+            grandTotal.innerText = originalGrandTotal;
+            couponDiscount.innerText = 0;
             couponCode = null;
         })
 
@@ -1095,7 +1094,6 @@
                 
                 if(radioButton.checked){
                     selectedAddressValue = radioButton.value;
-                    console.log(couponCode);
                     fetch(`place-order-cod/${selectedAddressValue}?couponCode=${couponCode || ''}`)
                     .then(response=>{
                         if(!response.ok){
@@ -1148,7 +1146,6 @@
                 
                 if(radioButton.checked){
                     selectedAddressValue = radioButton.value;
-                    console.log(couponCode);
                     fetch(`place-order-razorpay/${selectedAddressValue}?couponCode=${couponCode || ''}`)
                     .then(response=>{
                         if(!response.ok){
@@ -1221,7 +1218,7 @@
 
         //function to handle payment failure
         function handlePaymentFailure(razorOrderId, response, orderId) {
-            updatePaymentStatus("Failure", razorOrderId, response, orderId)
+            updatePaymentStatus("Failed", razorOrderId, response, orderId)
         }
 
         // Function to update the payment status in the database

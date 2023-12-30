@@ -7,6 +7,7 @@ const couponCollection = require('../../models/coupon_schema');
 module.exports.checkout = async (req, res, next)=>{
   try{
     let grandTotal = 0;
+    let couponDiscount = 0;
     const userSession = req.session.user;
     let cartLength;
     if(userSession){
@@ -37,7 +38,7 @@ module.exports.checkout = async (req, res, next)=>{
           expiryDate: { $gte: new Date() }
         });
         
-        res.render('shop-checkout', {userSession, userCart, userAddress, grandTotal, cartLength, user, coupons});
+        res.render('shop-checkout', {userSession, userCart, userAddress, grandTotal, cartLength, user, coupons, couponDiscount});
   }catch(error){
     next(error);
   }
@@ -48,6 +49,7 @@ module.exports.applyCoupon = async (req, res, next)=>{
     const userSession = req.session.user;
     const user = await userCollection.findOne({email: userSession.email})
     let grandTotal = 0;
+    let couponDiscount = 0;
     const userCart = await cartCollection.findOne({userId: user._id}).populate({path: 'products.productId', model: 'Product'});
     if(userCart && userCart.products.length > 0){
       for(let i = 0; i < userCart.products.length; i++){
@@ -78,11 +80,9 @@ module.exports.applyCoupon = async (req, res, next)=>{
     }
     
     let updatedTotal = grandTotal - coupon.discountAmount;
-    console.log(updatedTotal);
-    return res.status(200).json({message: "Coupon has been applied", updatedTotal, couponCode, grandTotal});
+    couponDiscount = coupon.discountAmount;
+    return res.status(200).json({message: "Coupon has been applied", updatedTotal, couponCode, grandTotal, couponDiscount});
     
-
-
   }catch(error){
     next(error);
   }

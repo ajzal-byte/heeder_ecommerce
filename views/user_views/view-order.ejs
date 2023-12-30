@@ -453,7 +453,11 @@
                               <% } %>
                               </tbody>
                           </table>
-                          <h5 class="d-flex justify-content-end">Total Amount: ₹ <%= orderDetails.totalAmount %></h5>
+                          <h5 class="d-flex justify-content-end mb-10">Subtotal: ₹ <%= orderDetails.totalAmount %></h5>
+                          <% if (orderDetails.couponDiscount != 0) { %>
+                            <h5 class="d-flex justify-content-end mb-10">Coupon Discount: ₹ <%= orderDetails.couponDiscount %></h5>
+                          <% } %>
+                          <h5 class="d-flex justify-content-end">Total Amount: ₹ <%= orderDetails.totalAmount - orderDetails.couponDiscount %></h5>
                           <div class="d-flex justify-content-center">
                             <div class="d-flex justify-content-between col-3">
                               
