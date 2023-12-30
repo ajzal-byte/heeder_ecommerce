@@ -312,3 +312,8 @@ module.exports.returnOrder = async (req, res, next)=>{
     next(error);
   }
 }
+
+module.exports.getInvoice = async (req, res)=>{
+  const order = await orderCollection.findById(req.params.orderId).populate({path: 'products.productId', model:'Product', populate:{path: 'brand', model: 'brandCollection'}});
+  res.render('invoice', {order});
+}

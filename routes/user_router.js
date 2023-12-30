@@ -56,7 +56,6 @@ user_router.post('/removeFromCart', userAuth.userSession, userBlock.ifBlocked, u
 user_router.get('/profile', userAuth.userSession, userBlock.ifBlocked, user_profile.getProfile);
 user_router.post('/edit-profile', userProfileUpload.single('profileImage'), userAuth.userSession, userBlock.ifBlocked, user_profile.editProfile);
 user_router.post('/change-password', userAuth.userSession, userBlock.ifBlocked, user_profile.changePassword);
-user_router.get('/view-order', userAuth.userSession, userBlock.ifBlocked, user_order.viewOrders);
 
 //address
 user_router.get('/add-address', userAuth.userSession, userBlock.ifBlocked, user_address.getAddAddress);
@@ -69,9 +68,12 @@ user_router.get('/delete-address', userAuth.userSession, userBlock.ifBlocked, us
 user_router.get('/place-order-cod/:addressId', userAuth.userSession, userBlock.ifBlocked, user_order.orderViaCod);
 user_router.post('/update-payment-status', userAuth.userSession, userBlock.ifBlocked, user_order.updatePaymentStatus);
 user_router.get('/place-order-razorpay/:addressId', userAuth.userSession, userBlock.ifBlocked, user_order.orderViaOnline);
+user_router.get('/view-order', userAuth.userSession, userBlock.ifBlocked, user_order.viewOrders);
 user_router.get('/order-placed/:orderId', userAuth.userSession, userBlock.ifBlocked, user_order.getOrderPlaced);
 user_router.get('/cancel-order/:orderId', userAuth.userSession, userBlock.ifBlocked, user_order.cancelOrder);
 user_router.get('/return-order/:orderId', userAuth.userSession, userBlock.ifBlocked, user_order.returnOrder);
+user_router.get('/order-invoice/:orderId', userAuth.userSession, userBlock.ifBlocked, user_order.getInvoice);
+
 
 //checkout coupon apply
 user_router.get('/checkout', userAuth.userSession, userBlock.ifBlocked, user_checkout.checkout);

@@ -4,19 +4,10 @@
 
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-frontend/shop-grid-left.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 15 Jul 2023 10:10:46 GMT -->
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Invoice</title>
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta property="og:title" content="">
-    <meta property="og:type" content="">
-    <meta property="og:url" content="">
-    <meta property="og:image" content="">
-    <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="user_assets/imgs/theme/favicon.webp">
-    <!-- Template CSS -->
-    <link rel="stylesheet" href="user_assets/css/maind134.css?v=3.4">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
 </head>
 
 
@@ -27,7 +18,7 @@
                 <button id="printButton" class="btn btn-primary">
                     Print Invoice
                 </button>
-                <a href="/profile"><button class="btn btn-success">Go Back</button></a>
+                <a href="/profile"><button class="btn btn-success goBackButton">Go Back</button></a>
             </div>
         </div>
         <div class="row mt-5">
@@ -44,19 +35,23 @@
                 <p>Email: audiophile@gmail.com</p>
             </div>
             <div class="col-6">
-                <h5>To : </h5>
-                <p><%=order.address.name%></p>
-                <p><%=order.address.landMark%></p>
-                <p><%=order.address.city%>, <%=order.address.state%>, <%=order.address.pincode%></p>
-                <p><%=order.address.phone%></p>
-            </div>
+                <h5>To:</h5>
+                <% if (order && order.address && order.address.address && order.address.address.length > 0) { %>
+                  <% const address = order.address.address[0]; %>
+                  <p><%= address.name %></p>
+                  <p><%= address.landMark %></p>
+                  <p><%= `${address.addressType}, ${address.city}, ${address.state}, ${address.pincode}` %></p>
+                  <p><%= address.phone %></p>
+                <% } %>
+              </div>
+              
         </div>
         <div class="row mt-4">
             <div class="col-12">
-                <p>Order ID: <%=order.referenceId%> </p>
-                <p>Order Date: <%=order.createdOn%> </p>
+                <p>Order ID: order_<%=order._id.toString().slice(0, 8)%> </p>
+                <p>Order Date: <%= moment(order.orderDate).format("MMM Do YY") %> </p>
                 <p> Order Status : 
-                    <% if (order.orderStatus === "Delivered") { %>
+                    <% if (order.orderStatus === "Delivered" || "Order Placed") { %>
                         <span class="badge rounded-pill alert-success"><%=order.orderStatus%></span>
                         <%}else if(order.orderStatus === "Cancelled"){%>
                           <span class="badge rounded-pill alert-danger"><%=order.orderStatus%></span>
@@ -72,7 +67,6 @@
                     <thead>
                         <tr>
                             <th scope="col">Item</th>
-                            <th scope="col">Description</th>
                             <th scope="col">Quantity</th>
                             <th scope="col">Price</th>
                             <th scope="col">Total</th>
@@ -83,7 +77,6 @@
                             <%order.products.forEach((product)=>{%>
                                 <tr>
                                     <td><%=product.productId.productName%></td>
-                                    <td><%=product.productId.description%></td>
                                     <td><%=product.quantity%></td>
                                     <td><%=product.productId.salePrice%></td>
                                     <td><%= product.productId.salePrice * product.quantity %></td>
@@ -103,13 +96,15 @@
                 <h4>GROSS AMOUNT</h4>
                 <h4>₹ <%=order.totalAmount%></h4>
             </div>
+            <% if (order.couponDiscount != 0) { %>
+                <div class="col-3">
+                    <h4>COUPON DISCOUNT</h4>
+                    <h4>₹ <%= order.couponDiscount %></h4>
+                </div>
+            <% } %>
             <div class="col-3">
-                <h4>DISCOUNT</h4>
-                <h4>₹ Discount feature will be available</h4>
-            </div>
-            <div class="col-3">
-                <h4>TOTAL</h4>
-                <h4>₹ <%=order.totalAmount%></h4>
+                <h4>TOTAL PAID</h4>
+                <h4>₹ <%=order.totalAmount - order.couponDiscount%></h4>
             </div>
         </div>
     </div>
@@ -118,7 +113,11 @@
     document
         .getElementById("printButton")
         .addEventListener("click", function () {
+            document.getElementById('printButton').style.display = 'none';
+            document.querySelector('.goBackButton').style.display = 'none';
             window.print();
+            document.getElementById('printButton').style.display = 'inline';
+            document.querySelector('.goBackButton').style.display = 'inline';
         });
 </script>
 
