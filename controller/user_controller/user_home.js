@@ -63,7 +63,12 @@ module.exports.getProductDetails = async (req, res, next)=>{
   try{
     const userSession = req.session.user;
     const product_id = req.params.product_id;
-    const product_details = await productCollection.findOne({_id : product_id}).populate({path:'category', model:'Categories'}).populate({path:'brand', model: 'brandCollection'})
+    const product_details = await productCollection.findOne({_id : product_id})
+    .populate({path:'category', model:'Categories'}).populate({path:'brand', model: 'brandCollection'});
+    const relatedProducts = await productCollection.find({
+      'category': product_details.category, 
+      _id: { $ne: product_id }
+    }).populate({path:'brand', model: 'brandCollection'});
     let cartLength;
     let user;
     if(userSession){
@@ -74,7 +79,7 @@ module.exports.getProductDetails = async (req, res, next)=>{
         cartLength = cartLength.products.length;
       }
     }
-    res.render('product_view', {product_details, userSession, cartLength, user});
+    res.render('product_view', {product_details, userSession, cartLength, user, relatedProducts});
   }catch(error){
     next(error);
   }
