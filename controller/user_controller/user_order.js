@@ -34,7 +34,7 @@ module.exports.viewOrders = async (req, res, next)=>{
     const orderDetails = await orderCollection.findOne({_id: orderId})
     .populate({path: 'products.productId', model: 'Product'});
     let expiryDate = orderDetails.orderDate;
-    expiryDate.setDate(expiryDate.getDate() + 1);
+    expiryDate.setDate(expiryDate.getDate() + 10);
     res.render('view-order', {userSession, orderDetails, cartLength, user, expiryDate});
   }catch(error){
     next(error);
@@ -303,6 +303,31 @@ module.exports.cancelOrder = async (req, res, next)=>{
 module.exports.returnOrder = async (req, res, next)=>{
   try{
     const orderId = req.params.orderId;
+    const order = await orderCollection.findById(orderId);
+    if(req.query.returnReason != "defective"){
+      if (order) {
+        for (const product of order.products) {
+          await productCollection.updateOne(
+            { _id: product.productId },
+            {$inc: {stock: product.quantity}}
+          );
+        }
+      }
+    }
+    if(order.paymentMethod == "Online Payment"){
+      const user = await userCollection.findOne({_id: order.userId});
+      if(user){
+        if(user.wallet){
+          await userCollection.updateOne(
+          {_id: order.userId},
+          {$inc: { wallet: order.totalAmount }});
+        }else{
+          await userCollection.updateOne(
+          {_id: order.userId},
+          {$set: { wallet: order.totalAmount }});
+        }
+      }
+    }
     await orderCollection.findByIdAndUpdate(orderId, {orderStatus: 'Returned', paymentStatus: 'Failed'});
     res.redirect(`/view-order/?orderId=${orderId}`);
   }catch (error) {
