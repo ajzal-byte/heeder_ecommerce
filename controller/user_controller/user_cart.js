@@ -15,9 +15,9 @@ module.exports.getCart = async (req, res, next)=>{
           cartLength = cartLength.products.length;
         }
       }
-      const user = await userCollection.findOne({email: userSession.email})
+      const user = await userCollection.findOne({email: userSession.email});
       const userCart = await cartCollection
-      .findOne({userId: user._id}).populate({path:'products.productId', model:'Product', populate: {path:'brand', model: 'brandCollection'}})
+      .findOne({userId: user._id}).populate({path:'products.productId', model:'Product', populate: {path:'brand', model: 'brandCollection'}});
       res.render('shop_cart', {userSession, userCart, cartLength, user});
 
   }catch(error){
@@ -95,7 +95,6 @@ module.exports.updateCart = async (req, res, next)=>{
 module.exports.removeCart = async (req, res, next)=>{
   try{
     const userSession = req.session.user;
-    console.log(userSession);
     const user = await userCollection.findOne({email: userSession.email});
     console.log(user);
     const productId = req.query.productId;

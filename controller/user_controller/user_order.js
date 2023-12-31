@@ -244,9 +244,7 @@ try{
   await orderCollection.findByIdAndUpdate(orderId, {
     paymentStatus
   })
-  console.log("changed payment status  " + paymentStatus);
   if(paymentStatus == "Success"){
-    console.log('redirecting to order placed page');
     return res.status(200).json({paymentStatus: "Success"}); 
   }else{
     const order = await orderCollection.findById(orderId);
@@ -261,7 +259,6 @@ try{
         );
       }
     }
-    console.log('redirecting to profile');
     return res.status(200).json({paymentStatus: "Failed"});
 }
 }catch(error){

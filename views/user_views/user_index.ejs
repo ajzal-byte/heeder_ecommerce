@@ -69,9 +69,9 @@
                         <div class="header-action-right">
                             <div class="header-action-2">
                                 <div class="header-action-icon-2">
-                                    <a href="shop-wishlist.html">
+                                    <a href="/wishlist">
                                         <img class="svgInject" alt="Evara" src="/user_assets/imgs/theme/icons/icon-heart.svg">
-                                        <span class="pro-count blue">4</span>
+                                        <!-- <span class="pro-count blue">4</span> -->
                                     </a>
                                 </div>
                                 <div class="header-action-icon-2">
@@ -388,7 +388,7 @@
                                             </a>
                                         </div>
                                         <div class="product-action-1">
-                                            <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
+                                            <a aria-label="Add To Wishlist" id="add-to-wishlist" data-product-id="<%= product._id %>" class="action-btn hover-up" ><i class="fi-rs-heart"></i></a>
                                         </div>
                                         <div class="product-badges product-badges-position product-badges-mrg">
                                             <span class="hot">New</span>
@@ -435,7 +435,52 @@
 
         <script>
             document.addEventListener("DOMContentLoaded", ()=>{
+                const addtoWishlist = document.querySelectorAll('#add-to-wishlist');
                 const addtoCart = document.querySelectorAll('#addtoCart');
+
+
+                addtoWishlist.forEach(add => {
+                    add.addEventListener('click', (e)=>{
+                        e.preventDefault()
+                        const productId = add.getAttribute('data-product-id')
+                        console.log(productId);
+                        fetch(`/addtoWishlist?productId=${productId}`,{method:'POST'} )
+                        .then((response)=>{
+                            if(!response.ok){
+                              throw new Error(`HTTP error! status: ${Response.status}`)
+                            }
+                            return response.json();
+                        })
+
+                        .then((data)=>{
+                            console.log("Response from server", data);
+                            console.log('here')
+                            if(data.message){
+                            Swal.fire({
+                            position: 'top-center',
+                            icon: 'success',
+                            title: data.message,
+                            showConfirmButton: false,
+                            timer: 1500
+                            });
+                            }else if (data.error){
+                                Swal.fire({
+                                position: 'top-center',
+                                icon: 'error',
+                                title: data.error,
+                                showConfirmButton: false,
+                                timer: 1500
+                                });
+                                // window.location.href = '/login';
+                            }
+                        }).catch(error => {
+                            window.location.href = '/login'
+                            console.error("Error:", error);
+                        });
+
+                    })
+                    
+                });
 
                 addtoCart.forEach(add => {
                     add.addEventListener('click', (e)=>{
@@ -467,11 +512,13 @@
                         }).catch(error => {
                             window.location.href = '/login'
                             console.error("Error:", error);
-                        });         
+                        });
 
                     })
                     
                 });
+
+                
             });
         </script>
 

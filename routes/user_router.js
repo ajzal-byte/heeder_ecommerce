@@ -7,11 +7,12 @@ const userBlock = require('../middleware/userBlock');
 
 const user_home = require('../controller/user_controller/user_home');
 const user_login = require('../controller/user_controller/user_login');
+const user_wishlist = require('../controller/user_controller/user_whishlist');
 const user_cart = require('../controller/user_controller/user_cart');
 const user_profile = require('../controller/user_controller/user_profile');
 const user_address = require('../controller/user_controller/user_address');
 const user_order = require('../controller/user_controller/user_order');
-const user_checkout = require('../controller/user_controller/user_checkout')
+const user_checkout = require('../controller/user_controller/user_checkout');
 const {userProfileUpload} = require('../middleware/multer');
 
 user_router.use('/', express.static('public'));
@@ -45,6 +46,11 @@ user_router.post('/forgotChangePassword', user_login.forgotChangePassword);
 user_router.get('/products', userBlock.ifBlocked, user_home.getProducts);
 user_router.get('/productDetails/:product_id', userBlock.ifBlocked,  user_home.getProductDetails);
 user_router.get('/search-product', user_home.searchProduct);
+
+//wishlist
+user_router.get('/wishlist', userAuth.userSession, userBlock.ifBlocked, user_wishlist.getWishlist);
+user_router.post('/addtoWishlist', userAuth.userSession, userBlock.ifBlocked, user_wishlist.addToWishlist);
+user_router.post('/removeFromWishlist', userAuth.userSession, userBlock.ifBlocked, user_wishlist.removeFromWishlist);
 
 //cart
 user_router.get('/cart', userAuth.userSession, userBlock.ifBlocked, user_cart.getCart);

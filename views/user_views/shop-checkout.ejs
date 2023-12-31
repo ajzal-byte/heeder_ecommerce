@@ -1211,8 +1211,6 @@
 
         //function to handle payment success
         function handlePaymentSuccess(razorOrderId, response, orderId) {
-            console.log(orderId);
-            console.log(razorOrderId);
             updatePaymentStatus("Success", razorOrderId, response, orderId);
         }
 

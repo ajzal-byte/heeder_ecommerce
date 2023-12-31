@@ -78,7 +78,7 @@
             <div class="container">
                 <div class="header-wrap">
                     <div class="logo logo-width-1">
-                        <a href="index.html"><img src="user_assets/imgs/theme/logo.png" alt="   "></a>
+                        <a href="/"><img src="user_assets/imgs/theme/logo.png" alt="   "></a>
                     </div>
                     <div class="header-right">
                         <div class="search-style-2">
@@ -102,9 +102,9 @@
                         <div class="header-action-right">
                             <div class="header-action-2">
                                 <div class="header-action-icon-2">
-                                    <a href="shop-wishlist.html">
+                                    <a href="/wishlist">
                                         <img class="svgInject" alt="Evara" src="user_assets/imgs/theme/icons/icon-heart.svg">
-                                        <span class="pro-count blue">4</span>
+                                        <!-- <span class="pro-count blue">4</span> -->
                                     </a>
                                 </div>
                                 <div class="header-action-icon-2">
@@ -125,7 +125,7 @@
             <div class="container">
                 <div class="header-wrap header-space-between position-relative">
                     <div class="logo logo-width-1 d-block d-lg-none">
-                        <a href="index.html"><img src="user_assets/imgs/theme/logo.png" alt="logo"></a>
+                        <a href="/"><img src="user_assets/imgs/theme/logo.png" alt="logo"></a>
                     </div>
                     <div class="header-nav d-none d-lg-flex">
                         <div class="main-categori-wrap d-none d-lg-block">
@@ -507,7 +507,7 @@
         <div class="mobile-header-wrapper-inner">
             <div class="mobile-header-top">
                 <div class="mobile-header-logo">
-                    <a href="index.html"><img src="user_assets/imgs/theme/logo.png" alt="logo"></a>
+                    <a href="/"><img src="user_assets/imgs/theme/logo.png" alt="logo"></a>
                 </div>
                 <div class="mobile-menu-close close-style-wrap close-style-position-inherit">
                     <button class="close-style search-close">
@@ -732,10 +732,12 @@
                                         <div class="detail-extralink">
                                             
                                             <div class="product-extra-link2">
-                                                <% if(product_details.stock>0){%>
+                                                <% if( product_details.stock > 0 ){%>
                                                     <button type="submit" class="button button-add-to-cart" data-product-id="<%= product_details._id %>" id="addtoCart">Add to cart</button>
+                                                <% }else{ %>
+                                                <button style="opacity: 0.7;" class="button button-add-to-cart" >Out of Stock</button>
                                                 <% } %>
-                                                <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
+                                                <a id="add-to-wishlist" aria-label="Add To Wishlist" class="action-btn hover-up" data-product-id="<%= product_details._id %>"><i class="fi-rs-heart"></i></a>
                                             </div>
                                         </div>
                                         <ul class="product-meta font-xs color-grey mt-50">
@@ -752,6 +754,51 @@
                                     <script>
                                         document.addEventListener("DOMContentLoaded", ()=>{
                                             const addtoCart = document.querySelectorAll('#addtoCart');
+                                            const addtoWishlist = document.querySelectorAll('#add-to-wishlist');
+
+
+                                            addtoWishlist.forEach(add => {
+                                                add.addEventListener('click', (e)=>{
+                                                    e.preventDefault()
+                                                    const productId = add.getAttribute('data-product-id')
+                                                    console.log(productId);
+                                                    fetch(`/addtoWishlist?productId=${productId}`,{method:'POST'} )
+                                                    .then((response)=>{
+                                                        if(!response.ok){
+                                                        throw new Error(`HTTP error! status: ${Response.status}`)
+                                                        }
+                                                        return response.json();
+                                                    })
+
+                                                    .then((data)=>{
+                                                        console.log("Response from server", data);
+                                                        console.log('here')
+                                                        if(data.message){
+                                                        Swal.fire({
+                                                        position: 'top-center',
+                                                        icon: 'success',
+                                                        title: data.message,
+                                                        showConfirmButton: false,
+                                                        timer: 1500
+                                                    });
+                                                        }else if (data.error){
+                                                            Swal.fire({
+                                                            position: 'top-center',
+                                                            icon: 'error',
+                                                            title: data.error,
+                                                            showConfirmButton: false,
+                                                            timer: 1500
+                                                            });
+                                                            // window.location.href = '/login';
+                                                        }
+                                                    }).catch(error => {
+                                                        window.location.href = '/login'
+                                                        console.error("Error:", error);
+                                                    });
+
+                                                })
+                                                
+                                            });
             
                                             addtoCart.forEach(add => {
                                                 add.addEventListener('click', (e)=>{
@@ -926,7 +973,7 @@
                     <div class="col-lg-4 col-md-6">
                         <div class="widget-about font-md mb-md-5 mb-lg-0">
                             <div class="logo logo-width-1 wow fadeIn animated">
-                                <a href="index.html"><img src="user_assets/imgs/theme/logo.png" alt="logo"></a>
+                                <a href="/"><img src="user_assets/imgs/theme/logo.png" alt="logo"></a>
                             </div>
                             <h5 class="mt-20 mb-10 fw-600 text-grey-4 wow fadeIn animated">Contact</h5>
                             <p class="wow fadeIn animated">
@@ -1006,7 +1053,7 @@
         </div>
     </footer>
     <!-- Preloader Start -->
-    <div id="preloader-active">
+    <!-- <div id="preloader-active">
         <div class="preloader d-flex align-items-center justify-content-center">
             <div class="preloader-inner position-relative">
                 <div class="text-center">
@@ -1019,7 +1066,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
     <!-- Vendor JS-->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="user_assets/js/vendor/modernizr-3.6.0.min.js"></script>
