@@ -7,6 +7,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Invoice</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/user_assets/imgs/theme/favicon.webp">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
 </head>
 
@@ -51,11 +52,11 @@
                 <p>Order ID: order_<%=order._id.toString().slice(0, 8)%> </p>
                 <p>Order Date: <%= moment(order.orderDate).format("MMM Do YY") %> </p>
                 <p> Order Status : 
-                    <% if (order.orderStatus === "Delivered" || "Order Placed") { %>
+                    <% if (order.orderStatus == "Delivered" || order.orderStatus == "Order Placed") { %>
                         <span class="badge rounded-pill alert-success"><%=order.orderStatus%></span>
-                        <%}else if(order.orderStatus === "Cancelled"){%>
+                        <%}else if(order.orderStatus == "Cancelled"){%>
                           <span class="badge rounded-pill alert-danger"><%=order.orderStatus%></span>
-                        <%}else if(order.orderStatus === "Returned"){%>
+                        <%}else if(order.orderStatus == "Returned"){%>
                           <span class="badge rounded-pill alert-success"><%=order.orderStatus%></span>
                         <%}else{%>
                           <span class="badge rounded-pill alert-warning"><%=order.orderStatus%></span>

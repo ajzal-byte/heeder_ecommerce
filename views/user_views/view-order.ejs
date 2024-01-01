@@ -427,7 +427,7 @@
                     <div class="card-body">
                         
                       <div class="table-responsive">
-                          <table class="table">
+                          <table class="table mb-20">
                               <thead>
                                   <tr>
                                       <th>Product</th>
@@ -461,35 +461,37 @@
                           <% if (orderDetails.couponDiscount != 0) { %>
                             <h5 class="d-flex justify-content-end mb-10">Coupon Discount: ₹ <%= orderDetails.couponDiscount %></h5>
                           <% } %>
-                          <h5 class="d-flex justify-content-end">Total Amount: ₹ <%= orderDetails.totalAmount - orderDetails.couponDiscount %></h5>
+                          <h5 class="d-flex justify-content-end">Total Paid: ₹ <%= orderDetails.totalAmount - orderDetails.couponDiscount %></h5>
                           <div class="d-flex justify-content-center">
-                            <div class="d-flex justify-content-between col-3">
+                            <div class="d-flex justify-content-between col-12 align-items-center mt-20">
                               
                                 <% if(orderDetails.orderStatus === "Order Placed" || orderDetails.orderStatus === "Shipped") {%> 
-                                  <a href="#" id="cancel-button" class="btn btn-sm action-button" data-action="/cancel-order/<%= orderDetails._id %>" style="background-color: rgb(180, 36, 36);">Cancel Order</a>
+                                  <a href="#" id="cancel-button" class="btn btn-sm" data-action="/cancel-order/<%= orderDetails._id %>" style="background-color: rgb(180, 36, 36);">Cancel Order</a>
                                   <%} else if(orderDetails.orderStatus === "Delivered") {%> 
                                     <% if (expiryDate.getTime()  > Date.now()) { %>
-                                        <a href="#" id="returnButton" class="btn btn-sm action-button" data-action="/return-order/<%= orderDetails._id %>" style="background-color: rgb(180, 36, 36);">Return Order</a>
-                                    <% }else{
-                                    } %>
+                                    <a id="return-button" class="btn btn-sm" style="background-color: rgb(180, 36, 36);">Return Order</a>
+                                    <% }else{ %>
+                                        <h5 style="color: rgb(177, 29, 29);">The return period is over</h5>
+                                    <% } %>
                                     <%} else if(orderDetails.orderStatus === "Cancelled") {%> 
                                       <h5 style="color: rgb(177, 29, 29);">The order is cancelled</h5>
                                       <%} else if (orderDetails.orderStatus === "Returned") {%> 
-                                          <h5 style="color: rgb(177, 29, 29);">The order is returned</h5>
-                                          <%}%>
-                                          <a href="/" class="btn btn-sm">Continue Shopping</a> 
-                            </div>
-                        </div>  
-
+                                        <h5 style="color: rgb(177, 29, 29);">The order is returned</h5>
+                                        <%}%>
+                                        <a href="/" class="btn btn-sm">Continue Shopping</a> 
+                                    </div>
+                                </div>  
+                                
                         <script>
                             document.addEventListener("DOMContentLoaded", () => {
-                              const actionButtons = document.querySelectorAll('.action-button');
+                              const cancelButton = document.getElementById('cancel-button');
                           
-                              actionButtons.forEach((button) => {
-                                button.addEventListener('click', (e) => {
+                                cancelButton.addEventListener('click', (e) => {
                                   e.preventDefault();
+                                  console.log(cancelButton);
+                                  console.log(returnButton);
                           
-                                  const action = button.getAttribute('data-action');
+                                  const action = cancelButton.getAttribute('data-action');
                           
                                   Swal.fire({
                                     title: "Are you sure?",
@@ -505,12 +507,40 @@
                                     }
                                   });
                                 });
+                            });
+
+                            document.addEventListener("DOMContentLoaded", ()=>{
+                                const returnButton = document.getElementById('return-button');
+                                returnButton.addEventListener("click", (e)=>{
+                                    console.log(returnButton);
+                                    e.preventDefault();
+                                
+                                const action = returnButton.getAttribute('data-action');
+                                
+                                Swal.fire({
+                                    title: 'Return Order',
+                                    input: 'select',
+                                    inputOptions: {
+                                        'dislike': "Didn't like it",
+                                        'priceDifference': 'Price Decreased',
+                                        'defective': 'Defective Product'
+                                    },
+                                    inputPlaceholder: 'Select a reason',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#d33',
+                                    cancelButtonColor: '#3085d6',
+                                    confirmButtonText: 'Return Order'
+                                }).then((result) => {
+                                if (result.isConfirmed) {
+                                  const selectedReason = result.value;
+                                  if(selectedReason){
+                                    window.location.href = `/return-order/<%= orderDetails._id %>?returnReason=${selectedReason}`
+                                  }
+                                }
                               });
                             });
+                            })
                           </script>
-                          
-                        
-
 
                       </div>
                   </div>
