@@ -51,6 +51,18 @@ const productSchema = new mongoose.Schema({
       path: String,
     },
   ],
+  offerStatus: {
+    type: String,
+  },
+  discountPercentage: {
+    type: Number,
+  },
+  startDate: {
+    type: Date,
+  },
+  endDate: {
+    type: Date,
+  },
 },
 { timestamps: true }
 );

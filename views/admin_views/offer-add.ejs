@@ -198,8 +198,11 @@
                                     <select class="form-select" name="offerName" id="offerNameProductSelect">
                                         <option value="" disabled selected>Select Product</option>
                                         <% products.reverse().forEach(product => { %>
-                                        <option><%= product.productName %></option>
-                                        <% }) %>
+                                            <% if (product.status == 'Active') { %>
+                                              <option data-action="<%= product._id %>"><%= product.productName %></option>
+                                            <% } %>
+                                          <% }) %>
+                                          
                                     </select>
                                   <div id="offerNameProductSelectError" class="error-message"></div>
                                 </div>
@@ -310,20 +313,20 @@
             e.preventDefault();
 
             if (validateForm()) {
-              const offerType = document.getElementById('offerType').value;
-              const offerName = (offerType === 'category') ? document.getElementById('offerNameCategorySelect').value : document.getElementById('offerNameProductSelect').value;
               const discountPercentage = document.getElementById('discountPercentage').value;
               const offerStatus = document.getElementById('status').value;
               const startDate = new Date(document.getElementById('startDate').value);
               const endDate = new Date(document.getElementById('endDate').value);
 
+              const productId = (offerType === 'category') ? null : document.getElementById('offerNameProductSelect').options[document.getElementById('offerNameProductSelect').selectedIndex].getAttribute('data-action');
+                
+                
               const offerData = {
-                  offerType,
-                  offerName,
                   discountPercentage,
                   offerStatus,
                   startDate,
-                  endDate
+                  endDate,
+                  productId
               };
               
               fetch('/admin/post-add-offer', {
@@ -353,13 +356,6 @@
                 }
               })
             }
-
-            
-
-
-
-          
-
 
         });
 

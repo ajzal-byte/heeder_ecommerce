@@ -181,13 +181,13 @@
                     <div class="card mb-4">
                         <div class="card-body">
                           <form id="offer-form">
-                            <input type="hidden" name="offerId" id="offerId" value="<%= offer._id %>">
+                            <input type="hidden" name="offerId" id="offerId" value="<%= offerProduct._id %>">
                             <div class="col-lg-6 mb-4">
                                 <label class="form-label">Offer Type</label>
                                 <select class="form-select" name="offerType" id="offerType">
                                     <option value="" disabled>Select Type</option>
-                                    <option value="product" <%= offer.offerType === 'product' ? 'selected' : '' %>>Product</option>
-                                    <!-- <option value="category" <%= // offer.offerType === 'category' ? 'selected' : '' %>>Category</option> -->
+                                    <option value="product">Product</option>
+                                    <!-- <option value="category">Category</option> -->
                                 </select>
                                 <div id="offerTypeError" class="error-message"></div>
                             </div>
@@ -198,7 +198,9 @@
                                 <select class="form-select" name="offerNameProduct" id="offerNameProductSelect">
                                     <option value="" disabled>Select Product</option>
                                     <% products.reverse().forEach(product => { %>
-                                        <option <%= product.productName === offer.offerName ? 'selected' : '' %>><%= product.productName %></option>
+                                        <% if (product.status == 'Active') { %>
+                                            <option data-action="<%= product._id %>"><%= product.productName %></option>
+                                          <% } %>
                                     <% }) %>
                                 </select>
                                 <div id="offerNameProductSelectError" class="error-message"></div>
@@ -220,7 +222,7 @@
                                 <div class="col-lg-6">
                                     <div class="mb-4">
                                         <label class="form-label">Discount Percentage</label>
-                                        <input required placeholder="Percentage" type="number" class="form-control" name="discountPercentage" id="discountPercentage" value="<%= offer.discountPercentage %>">
+                                        <input required placeholder="Percentage" type="number" class="form-control" name="discountPercentage" id="discountPercentage" value="<%= offerProduct.discountPercentage %>">
                                         <div id="discountPercentageValueError" class="error-message"></div>
                                     </div>
                                 </div>
@@ -228,8 +230,8 @@
                                 <div class="col-lg-6">
                                     <label class="form-label">Status</label>
                                     <select required class="form-select" name="status" id="status">
-                                        <option value="Active" <%= offer.offerStatus === 'Active' ? 'selected' : '' %>>Active</option>
-                                        <option value="Inactive" <%= offer.offerStatus === 'Inactive' ? 'selected' : '' %>>Inactive</option>
+                                        <option value="Active" <%= offerProduct.offerStatus === 'Active' ? 'selected' : '' %>>Active</option>
+                                        <option value="Inactive" <%= offerProduct.offerStatus === 'Inactive' ? 'selected' : '' %>>Inactive</option>
                                     </select>
                                 </div>
                             </div>
@@ -239,7 +241,7 @@
                                     <div class="mb-4">
                                         <label class="form-label">Starting Date</label>
                                         <div class="row gx-2">
-                                            <input required placeholder="₹" type="date" class="form-control" name="startDate" id="startDate" value="<%= offer.startDate.toISOString().split('T')[0] %>">
+                                            <input required placeholder="₹" type="date" class="form-control" name="startDate" id="startDate" value="<%= offerProduct.startDate.toISOString().split('T')[0] %>">
                                             <div id="startDateError" class="error-message"></div>
                                         </div>
                                     </div>
@@ -248,7 +250,7 @@
                                 <div class="col-lg-6">
                                     <div class="mb-4">
                                         <label class="form-label">Ending Date</label>
-                                        <input required placeholder="₹" type="date" class="form-control" name="endDate" id="endDate" value="<%= offer.endDate.toISOString().split('T')[0] %>">
+                                        <input required placeholder="₹" type="date" class="form-control" name="endDate" id="endDate" value="<%= offerProduct.endDate.toISOString().split('T')[0] %>">
                                         <div id="endDateError" class="error-message"></div>
                                     </div>
                                 </div>
@@ -312,17 +314,15 @@
             e.preventDefault();
 
             if (validateForm()) {
-              const offerId = document.getElementById('offerId').value;
-              const offerType = document.getElementById('offerType').value;
-              const offerName = (offerType === 'category') ? document.getElementById('offerNameCategorySelect').value : document.getElementById('offerNameProductSelect').value;
               const discountPercentage = document.getElementById('discountPercentage').value;
               const offerStatus = document.getElementById('status').value;
               const startDate = new Date(document.getElementById('startDate').value);
               const endDate = new Date(document.getElementById('endDate').value);
 
+              const productId = (offerType === 'category') ? null : document.getElementById('offerNameProductSelect').options[document.getElementById('offerNameProductSelect').selectedIndex].getAttribute('data-action');
+
               const offerData = {
-                  offerType,
-                  offerName,
+                  productId,
                   discountPercentage,
                   offerStatus,
                   startDate,
