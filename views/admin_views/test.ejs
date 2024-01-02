@@ -1,0 +1,105 @@
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('offer-form');
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      if (validateForm()) {
+        const offerType = document.getElementById('offerType').value;
+
+        let offerName;
+        if (offerType === 'category') {
+          offerName = document.getElementById('offerNameCategorySelect').value;
+        } else if (offerType === 'product') {
+          offerName = document.getElementById('offerNameProductSelect').value;
+        }
+
+        const discountPercentage = document.getElementById('discountPercentage').value;
+        const status = document.getElementById('status').value;
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
+
+        const jsonData = {
+          offerType,
+          offerName,
+          discountPercentage,
+          status,
+          startDate,
+          endDate
+        };
+
+        fetch('/admin/postadd-offer', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(jsonData),
+        })
+          .then(response => response.json())
+          .then(data => {
+            if (data.error) {
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: data.error,
+                showConfirmButton: false,
+                timer: 1500,
+              });
+            } else {
+              Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: data.message,
+                showConfirmButton: false,
+                timer: 1500,
+              });
+              window.location.href = '/admin/offer-list';
+            }
+          })
+          .catch(error => {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Failed to communicate with the server. Please try again.',
+              showConfirmButton: false,
+              timer: 1500,
+            });
+            console.error("Error:", error);
+          });
+      }
+    });
+
+    function validateForm() {
+    
+      const offerType = document.getElementById('offerType').value;
+      const discountPercentage = document.getElementById('discountPercentage').value;
+      const status = document.getElementById('status').value;
+      const startDate = document.getElementById('startDate').value;
+      const endDate = document.getElementById('endDate').value;
+
+      if (!offerType || !discountPercentage || !status || !startDate || !endDate) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Validation Error',
+          text: 'All fields are required.',
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        return false;
+      }
+
+      if (discountPercentage < 0 || discountPercentage > 100) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Validation Error',
+          text: 'Discount percentage must be between 0 and 100.',
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        return false;
+      }
+
+      return true;
+    }
+  });
+</script>

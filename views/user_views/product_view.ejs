@@ -686,7 +686,7 @@
                                         <div class="product-image-slider">
                                             <% for (let i = 0; i < product_details.productImage.length; i++) { %>
                                             <figure class="border-radius-10" style="width: 300px;">
-                                                <img src="<%= product_details.productImage[i].path %>" alt="<%= product_details.productName %>" class="img-fluid" loading="lazy">
+                                                <img src="<%= product_details.productImage[i]?.path %>" alt="<%= product_details.productName %>" class="img-fluid" loading="lazy">
                                             </figure>
                                             <% } %>
                                         </div>
@@ -694,7 +694,7 @@
                                         <div class="slider-nav-thumbnails pl-15 pr-15">
                                             <% for (let i = 0; i < product_details.productImage.length; i++) { %>
                                             <div>
-                                                <img src="<%= product_details.productImage[i].path %>" alt="<%= product_details.productName %>" class="img-fluid" loading="lazy">
+                                                <img src="<%= product_details.productImage[i]?.path %>" alt="<%= product_details.productName %>" class="img-fluid" loading="lazy">
                                             </div>
                                             <% } %>
                                         </div>        
@@ -888,11 +888,11 @@
                                             <div class="product-img-action-wrap">
                                                 <div class="product-img product-img-zoom">
                                                     <a href="/productDetails/<%= product._id %>">
-                                                        <img class="default-img" src="<%= product.productImage[0].path %>" alt="<%= product.productName %>">
+                                                        <img class="default-img" src="<%= product.productImage[0]?.path %>" alt="<%= product.productName %>">
                                                         <% if(product.productImage.length>1){ %>
-                                                            <img class="hover-img" src="<%= product.productImage[1].path %>" alt="<%= product.productName %>">
+                                                            <img class="hover-img" src="<%= product.productImage[1]?.path %>" alt="<%= product.productName %>">
                                                             <% } else { %>
-                                                                <img class="hover-img" src="<%= product.productImage[0].path %>" alt="<%= product.productName %>">
+                                                                <img class="hover-img" src="<%= product.productImage[0]?.path %>" alt="<%= product.productName %>">
                                                                 <% } %>
                                                     </a>
                                                 </div>

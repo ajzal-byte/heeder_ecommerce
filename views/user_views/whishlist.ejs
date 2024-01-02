@@ -693,7 +693,7 @@
                                     <% userWishlist.products.forEach(product => { %>
                                       
                                       <tr>
-                                        <td class="image product-thumbnail"> <a href="/productDetails/<%= product.productId._id %>"><img src="<%= product.productId.productImage[0].path %>"></a> </td>
+                                        <td class="image product-thumbnail"> <a href="/productDetails/<%= product.productId._id %>"><img src="<%= product.productId.productImage[0]?.path %>"></a> </td>
                                         <td class="product-des product-name">
                                           <h5 class="product-name"><a href="/productDetails/<%= product.productId._id %>">
                                             <%=product.productId.productName%>
