@@ -396,7 +396,7 @@
             isValid = false;
           }
 
-          if (isNaN(startDateValue) || startDateValue <= new Date()) {
+          if (isNaN(startDateValue) || startDateValue < new Date()) {
             showError('startDateError', 'Starting Date cannot be in the past');
             isValid = false;
           }

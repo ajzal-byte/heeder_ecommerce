@@ -83,6 +83,8 @@ admin_router.get('/add-offer', adminAuth.adminSession, offers.getAddOffer );
 admin_router.post('/post-add-offer', adminAuth.adminSession, offers.postAddOffer );
 admin_router.get('/edit-offer/:offerId', adminAuth.adminSession, offers.getEditOffer );
 admin_router.post('/post-edit-offer/:offerId', adminAuth.adminSession, offers.postEditOffer );
+admin_router.get('/block-offer/:offerId', adminAuth.adminSession, offers.blockOffer );
+admin_router.get('/unblock-offer/:offerId', adminAuth.adminSession, offers.unblockOffer );
 
 
 

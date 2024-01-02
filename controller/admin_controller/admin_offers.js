@@ -80,3 +80,25 @@ module.exports.postEditOffer = async (req, res)=>{
     console.error(error);
   }
 }
+
+module.exports.blockOffer = async (req, res)=>{
+  try{
+    await offerCollection.findByIdAndUpdate(req.params.offerId, {
+      offerStatus: 'Inactive'
+    });
+    res.redirect('/admin/offers')
+  }catch(error){
+    console.error(error);
+  }
+}
+
+module.exports.unblockOffer = async (req, res)=>{
+  try{
+    await offerCollection.findByIdAndUpdate(req.params.offerId, {
+      offerStatus: 'Active'
+    });
+    res.redirect('/admin/offers')
+  }catch(error){
+    console.error(error);
+  }
+}
