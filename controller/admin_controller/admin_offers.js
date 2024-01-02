@@ -56,3 +56,27 @@ module.exports.getEditOffer = async (req, res)=>{
     console.error(error);
   }
 }
+
+module.exports.postEditOffer = async (req, res)=>{
+  try{
+    const { offerType, offerName, discountPercentage, offerStatus, startDate, endDate } = req.body;
+    if (!offerType || !offerName || !discountPercentage || !offerStatus || !startDate || !endDate) {
+      return res.status(200).json({ error: "Missing required fields" });
+    }
+    const ifExist = await offerCollection.findOne({ offerName, _id: { $ne: req.params.offerId } });
+    if(ifExist){
+     return res.status(200).json({error: "Offer for this product already exists"});
+    }
+    await offerCollection.findByIdAndUpdate(req.params.offerId, {
+      offerType, 
+      offerName,
+      discountPercentage,
+      offerStatus,
+      startDate,
+      endDate
+  });
+  res.status(200).json({ success: true });
+  }catch(error){
+    console.error(error);
+  }
+}
