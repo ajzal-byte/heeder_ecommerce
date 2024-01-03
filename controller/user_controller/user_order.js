@@ -80,7 +80,12 @@ try{
     });
     
 userCart.products.forEach(product=>{
- totalAmount += product.quantity * product.productId.salePrice;
+  if (product.productId.offerStatus == 'Active' && product.productId.endDate > Date.now()) {
+    let discountPrice = product.productId.salePrice * product.productId.discountPercentage / 100 * product.quantity;
+  totalAmount += product.productId.salePrice * product.quantity - discountPrice;
+  }else{
+    totalAmount += product.productId.salePrice * product.quantity;
+  }
 })
 
   const couponCode = req.query.couponCode;
@@ -164,9 +169,14 @@ module.exports.orderViaOnline = async (req, res, next)=>{
   
       });
       
-  userCart.products.forEach(product=>{
-   totalAmount += product.quantity * product.productId.salePrice;
-  })
+      userCart.products.forEach(product=>{
+        if (product.productId.offerStatus == 'Active' && product.productId.endDate > Date.now()) {
+          let discountPrice = product.productId.salePrice * product.productId.discountPercentage / 100 * product.quantity;
+        totalAmount += product.productId.salePrice * product.quantity - discountPrice;
+        }else{
+          totalAmount += product.productId.salePrice * product.quantity;
+        }
+      })
   
     const couponCode = req.query.couponCode;
     console.log(couponCode);
@@ -196,7 +206,7 @@ module.exports.orderViaOnline = async (req, res, next)=>{
 
 
     var options = {
-      amount: totalAmount * 100,
+      amount: (totalAmount - couponDiscount) * 100,
       currency: "INR",
       receipt: "order_rcptid_11",
     };

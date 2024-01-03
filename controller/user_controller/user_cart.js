@@ -83,7 +83,13 @@ module.exports.updateCart = async (req, res, next)=>{
     }).populate({path: 'products.productId', model: 'Product'})
      // Find the updated product in the cart
     const updatedProduct = cart.products.find(product => product.productId._id.toString() === productId.toString());
-    const subTotal = updatedProduct.productId.salePrice * updatedProduct.quantity;
+    let subTotal = 0;
+    if (updatedProduct.productId.offerStatus == 'Active' && updatedProduct.productId.endDate > Date.now()) {
+      let discountPrice = updatedProduct.productId.salePrice * updatedProduct.productId.discountPercentage / 100 * updatedProduct.quantity;
+      subTotal = updatedProduct.productId.salePrice * updatedProduct.quantity - discountPrice;
+    } else {
+      subTotal = updatedProduct.productId.salePrice * updatedProduct.quantity;
+    }
     const stock = updatedProduct.productId.stock
     return res.status(200).json({newQuantity: updatedProduct.quantity, subTotal, stock})
 

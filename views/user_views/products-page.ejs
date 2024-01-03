@@ -88,9 +88,9 @@
                         <div class="header-action-right">
                             <div class="header-action-2">
                                 <div class="header-action-icon-2">
-                                    <a href="shop-wishlist.html">
+                                    <a href="/wishlist">
                                         <img class="svgInject" alt="Evara" src="/user_assets/imgs/theme/icons/icon-heart.svg">
-                                        <span class="pro-count blue">4</span>
+                                        <!-- <span class="pro-count blue">4</span> -->
                                     </a>
                                 </div>
                                 <div class="header-action-icon-2">
@@ -169,9 +169,9 @@
                     <div class="header-action-right d-block d-lg-none">
                         <div class="header-action-2">
                             <div class="header-action-icon-2">
-                                <a href="shop-wishlist.html">
+                                <a href="/wishlist">
                                     <img alt="Evara" src="/user_assets/imgs/theme/icons/icon-heart.svg">
-                                    <span class="pro-count white">4</span>
+                                    <!-- <span class="pro-count white">4</span> -->
                                 </a>
                             </div>
                             <div class="header-action-icon-2">
@@ -476,9 +476,13 @@
                                         <h2><a href="/productDetails/<%= product._id %>"><%= product.productName %></a></h2>
                                         
                                         <div class="product-price">
-                                            <span>₹<%= product.salePrice%></span>
-                                            <span class="old-price">₹   <%= product.regularPrice%></span>
-                                            <span class="save-price  font-md color3 ml-5 text-danger" style="font-size: small;"> - <%=Math.round((1 - (product.salePrice / product.regularPrice)) * 100)%>% </span>
+                                            <% if (product.offerStatus == 'Active' && product.endDate > Date.now()) { %>
+                                                <span>₹<%= product.salePrice - (product.salePrice * product.discountPercentage) / 100 %></span>
+                                                <span class="old-price">₹  <%= product.salePrice%></span>
+                                                <span class="save-price  font-md color3 ml-5 text-danger" style="font-size: small;"> - <%= product.discountPercentage %>% </span>
+                                            <% }else{ %>
+                                                <span>₹<%= product.salePrice%></span>
+                                                <% } %>
                                         </div>
                                         <div class="product-action-1 show">
                                             <% if(product.stock>0){%>

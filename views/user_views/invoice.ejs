@@ -79,8 +79,17 @@
                                 <tr>
                                     <td><%=product.productId.productName%></td>
                                     <td><%=product.quantity%></td>
-                                    <td><%=product.productId.salePrice%></td>
-                                    <td><%= product.productId.salePrice * product.quantity %></td>
+                                    <% if (product.productId.offerStatus == "Active" && product.productId.endDate > Date.now()) { %>
+                                        <td><%=product.productId.salePrice - product.productId.salePrice * product.productId.discountPercentage / 100%></td>
+                                    <% }else{ %>
+                                        <td><%=product.productId.salePrice%></td>
+                                    <% } %>
+                                    <% if (product.productId.offerStatus == "Active" && product.productId.endDate > Date.now()) { %>
+                                        <% let discountPrice = product.productId.salePrice * product.productId.discountPercentage / 100 * product.quantity; %>
+                                        <td><%= product.productId.salePrice * product.quantity - discountPrice %></td>
+                                    <% }else{ %>
+                                        <td><%= product.productId.salePrice * product.quantity %></td>
+                                    <% } %>    
                                 </tr>
                             <%})%>
                         <%}else{%>

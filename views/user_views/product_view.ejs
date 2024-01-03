@@ -442,15 +442,15 @@
                     <div class="header-action-right d-block d-lg-none">
                         <div class="header-action-2">
                             <div class="header-action-icon-2">
-                                <a href="shop-wishlist.html">
+                                <a href="/wishlist">
                                     <img alt="Evara" src="user_assets/imgs/theme/icons/icon-heart.svg">
-                                    <span class="pro-count white">4</span>
+                                    <!-- <span class="pro-count white">4</span> -->
                                 </a>
                             </div>
                             <div class="header-action-icon-2">
-                                <a class="mini-cart-icon" href="shop-cart.html">
+                                <a class="mini-cart-icon" href="/cart">
                                     <img alt="Evara" src="user_assets/imgs/theme/icons/icon-cart.svg">
-                                    <span class="pro-count white">2</span>
+                                    <!-- <span class="pro-count white">2</span> -->
                                 </a>
                                 <div class="cart-dropdown-wrap cart-dropdown-hm2">
                                     <ul>
@@ -718,9 +718,13 @@
                                         </div>
                                         <div class="clearfix product-price-cover">
                                             <div class="product-price primary-color float-left">
+                                                <% if (product_details.offerStatus == 'Active' && product_details.endDate > Date.now()) { %>
+                                                    <ins><span class="text-brand">₹<%= product_details.salePrice - (product_details.salePrice * product_details.discountPercentage) / 100 %></span></ins>
+                                                    <ins><span class="old-price font-md ml-15">₹<%= product_details.salePrice%></span></ins>
+                                                    <span class="save-price  font-md color3 ml-15"><%= product_details.discountPercentage %>% Off</span>
+                                            <% }else{ %>
                                                 <ins><span class="text-brand">₹<%= product_details.salePrice %></span></ins>
-                                                <ins><span class="old-price font-md ml-15">₹<%= product_details.regularPrice%></span></ins>
-                                                <span class="save-price  font-md color3 ml-15"><%=Math.round((1 - (product_details.salePrice / product_details.regularPrice)) * 100)%>% Off</span>
+                                                <% } %>
                                             </div>
                                         </div>
                                         <div class="bt-1 border-color-1 mt-15 mb-15"></div>

@@ -102,7 +102,7 @@
                         <div class="header-action-right">
                             <div class="header-action-2">
                                 <div class="header-action-icon-2">
-                                    <a href="shop-wishlist.html">
+                                    <a href="/wishlist">
                                         <img class="svgInject" alt="Evara" src="/user_assets/imgs/theme/icons/icon-heart.svg">
                                         <span class="pro-count blue">4</span>
                                     </a>
@@ -442,7 +442,7 @@
                     <div class="header-action-right d-block d-lg-none">
                         <div class="header-action-2">
                             <div class="header-action-icon-2">
-                                <a href="shop-wishlist.html">
+                                <a href="/wishlist">
                                     <img alt="Evara" src="/user_assets/imgs/theme/icons/icon-heart.svg">
                                     <span class="pro-count white">4</span>
                                 </a>
@@ -885,7 +885,11 @@
                                             <td>
                                                 <h5><a href="shop-product-full.html"> <%=userCart.products[i].productId.productName%> </a></h5> <span class="product-qty"> x <%= userCart.products[i].quantity %> </span>
                                             </td>
+                                            <% if (userCart.products[i].productId.offerStatus == 'Active' && userCart.products[i].productId.endDate > Date.now()) { %>
+                                            <td> <%= userCart.products[i].productId.salePrice * userCart.products[i].quantity - (userCart.products[i].productId.salePrice * userCart.products[i].productId.discountPercentage) / 100 *  userCart.products[i].quantity %> </td>
+                                            <% }else{ %>
                                             <td> <%= userCart.products[i].productId.salePrice * userCart.products[i].quantity %> </td>
+                                            <% } %>
                                         </tr>
                                         <% } %>
                                         <tr>
@@ -894,7 +898,7 @@
                                             <span>₹</span>  <span class="sub-total"> <%= grandTotal %> </span>
                                             </td>
                                           </tr>
-                                          <tr>
+                                          <tr class="coupon-discount-tr hidden">
                                             <th>Coupon Discount</th>
                                             <td colspan="2"> - <span>₹</span> <em class="coupon-discount" ><%= couponDiscount %></em></td>
                                           </tr>
@@ -997,6 +1001,7 @@
         const applyButton = document.getElementById('apply-button');
         const couponInput = document.getElementById('coupon-input');
         const couponDiscount = document.querySelector('.coupon-discount');
+        const couponDiscountTR = document.querySelector('.coupon-discount-tr');
         const grandTotalValue = document.querySelector('.grand-total').textContent.trim();
         const grandTotal = document.querySelector('.grand-total');
         const removeButton = document.getElementById('remove-button');
@@ -1041,6 +1046,7 @@
                         couponDiscount.innerText = data.couponDiscount;
                         applyButton.style.display = 'none';
                         removeButton.style.display = 'inline';
+                        couponDiscountTR.classList.remove('hidden');
                         couponInput.readOnly = true;
                         couponCode = couponInput.value;
                     }
@@ -1055,6 +1061,7 @@
             couponInput.value = "";
             removeButton.style.display = 'none';
             applyButton.style.display = 'inline';
+            couponDiscountTR.classList.add('hidden');
             couponInput.readOnly = false;
             grandTotal.innerText = originalGrandTotal;
             couponDiscount.innerText = 0;
@@ -1089,7 +1096,6 @@
             e.preventDefault();
             const radioButtons = document.querySelectorAll('.select-address');
             let selectedAddressValue = null;
-            console.log(couponInput);
             for (const radioButton of radioButtons) {
                 
                 if(radioButton.checked){

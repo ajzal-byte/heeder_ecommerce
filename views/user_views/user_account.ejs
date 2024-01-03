@@ -222,9 +222,9 @@
                         </div>
                         <div class="header-action-2">
                             <div class="header-action-icon-2">
-                                <a href="shop-wishlist.html">
+                                <a href="/wishlist">
                                     <img class="svgInject" alt="Evara" src="/user_assets/imgs/theme/icons/icon-heart.svg">
-                                    <span class="pro-count blue">4</span>
+                                    <!-- <span class="pro-count blue">4</span> -->
                                 </a>
                             </div>
                             <div class="header-action-icon-2">
@@ -501,7 +501,11 @@
                                                                 <tr>
                                                                     <td><%= moment(order.orderDate).format("MMM Do YY") %></td> 
                                                                     <td><%= order.orderStatus %></td>
+                                                                    <% if (order.couponDiscount > 0) { %>
+                                                                    <td> ₹<%= order.totalAmount - order.couponDiscount%> for <%= order.products.length %> item[s]</td>
+                                                                    <% } else { %>
                                                                     <td> ₹<%= order.totalAmount%> for <%= order.products.length %> item[s]</td>
+                                                                     <% } %>
                                                                     <td><a href="/view-order?orderId=<%= order._id %>" class="btn-small d-block">View</a></td>
                                                                 </tr>
                                                             <% }); %>

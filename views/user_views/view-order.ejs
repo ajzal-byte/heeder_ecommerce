@@ -222,7 +222,7 @@
                     </div>
                     <div class="header-action-2">
                         <div class="header-action-icon-2">
-                            <a href="shop-wishlist.html">
+                            <a href="/wishlist">
                                 <img class="svgInject" alt="Evara" src="/user_assets/imgs/theme/icons/icon-heart.svg">
                                 <span class="pro-count blue">4</span>
                             </a>
@@ -450,7 +450,12 @@
                                       <td><%= orderDetails.orderStatus %></td>
                                       <td><%= orderDetails.paymentStatus %></td>
                                       <td><%= orderDetails.paymentMethod %></td>
-                                      <td>₹<%= item.price * item.quantity %> for <%= item.quantity%> item</td>
+                                    <% if (item.productId.offerStatus == "Active" && item.productId.endDate > Date.now()) { %>
+                                        <% let discountPrice = item.productId.salePrice * item.productId.discountPercentage / 100 * item.quantity; %>
+                                        <td>₹<%= item.price * item.quantity - discountPrice %> for <%= item.quantity%> item</td>
+                                    <% } else { %>
+                                        <td>₹<%= item.price * item.quantity %> for <%= item.quantity%> item</td>
+                                    <% } %>
                                   </tr>
                                   
                                   <% }); %>
@@ -488,8 +493,6 @@
                           
                                 cancelButton.addEventListener('click', (e) => {
                                   e.preventDefault();
-                                  console.log(cancelButton);
-                                  console.log(returnButton);
                           
                                   const action = cancelButton.getAttribute('data-action');
                           
@@ -512,7 +515,6 @@
                             document.addEventListener("DOMContentLoaded", ()=>{
                                 const returnButton = document.getElementById('return-button');
                                 returnButton.addEventListener("click", (e)=>{
-                                    console.log(returnButton);
                                     e.preventDefault();
                                 
                                 const action = returnButton.getAttribute('data-action');

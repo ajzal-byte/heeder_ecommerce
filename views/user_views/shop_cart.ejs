@@ -190,15 +190,15 @@
                     <div class="header-action-right d-block d-lg-none">
                         <div class="header-action-2">
                             <div class="header-action-icon-2">
-                                <a href="shop-wishlist.html">
+                                <a href="/wishlist">
                                     <img alt="Evara" src="/user_assets/imgs/theme/icons/icon-heart.svg">
-                                    <span class="pro-count white">4</span>
+                                    <!-- <span class="pro-count white">4</span> -->
                                 </a>
                             </div>
                             <div class="header-action-icon-2">
-                                <a class="mini-cart-icon" href="shop-cart.html">
+                                <a class="mini-cart-icon" href="/cart">
                                     <img alt="Evara" src="/user_assets/imgs/theme/icons/icon-cart.svg">
-                                    <span class="pro-count white">2</span>
+                                    <!-- <span class="pro-count white">2</span> -->
                                 </a>
                                 <div class="cart-dropdown-wrap cart-dropdown-hm2">
                                     <ul>
@@ -391,9 +391,13 @@
                                 <%= userCart.products[i].productId.brand.brandName %>
                               </p>
                             </td>
-                            <td class="price" data-title="Price">₹<span>
-                              <%=userCart.products[i].productId.salePrice%>
-                              </span></td>
+                            <td class="price" data-title="Price">₹
+                                <% if (userCart.products[i].productId.offerStatus == 'Active' && userCart.products[i].productId.endDate > Date.now()) { %>
+                                    <span><%= userCart.products[i].productId.salePrice - (userCart.products[i].productId.salePrice * userCart.products[i].productId.discountPercentage) / 100 %></span>
+                                <% }else{ %>
+                                    <span><%=userCart.products[i].productId.salePrice%></span> 
+                                    <% } %>
+                              </td>
                             <td class="text-center" data-title="Stock">
                               <div class="detail-qty border radius m-auto">
                                 <a href="#" class="qty-down qty-button" data-productId="<%= userCart.products[i].productId._id %>">
@@ -409,10 +413,16 @@
                               </div>
                             </td>
                         <td class="text-right" data-title="Subtotal">
-                            <div class="subtotalElement" data-productId="<%= userCart.products[i].productId._id %>" >
-                                ₹<span id="Subtotal" class="subtotal" data-productId="<%= userCart.products[i].productId._id %>">
-                                    <%= userCart.products[i].productId.salePrice * userCart.products[i].quantity %>
-                                </span>
+                            <div class="subtotalElement" data-productId="<%= userCart.products[i].productId._id %>" >₹
+                                <% if (userCart.products[i].productId.offerStatus == 'Active' && userCart.products[i].productId.endDate > Date.now()) { %>
+                                    <span id="Subtotal" class="subtotal" data-productId="<%= userCart.products[i].productId._id %>">
+                                        <%= userCart.products[i].productId.salePrice * userCart.products[i].quantity - (userCart.products[i].productId.salePrice * userCart.products[i].productId.discountPercentage) / 100 *  userCart.products[i].quantity %>
+                                    </span>
+                                <% }else{ %>
+                                    <span id="Subtotal" class="subtotal" data-productId="<%= userCart.products[i].productId._id %>">
+                                        <%= userCart.products[i].productId.salePrice * userCart.products[i].quantity %>
+                                    </span>
+                                    <% } %>
                             </div>
                             <div class="out-of-stock-element" data-productId="<%= userCart.products[i].productId._id %>" >
                                 <span class="out-of-stock text-danger" data-productId="<%= userCart.products[i].productId._id %>" >

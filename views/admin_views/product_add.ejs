@@ -288,15 +288,6 @@
                                 <div class="row">
                                     <div class="col-lg-4">
                                         <div class="mb-4">
-                                            <label class="form-label">Regular price</label>
-                                            <div class="row gx-2">
-                                                <input placeholder="₹" type="number" class="form-control" name="product_reg_price" id="productRegPrice" >
-                                                <div id="productRegPriceError" class="error-message"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <div class="mb-4">
                                             <label class="form-label">Sale price</label>
                                             <input placeholder="₹" type="number" class="form-control" name="product_sale_price" id="productSalePrice" >
                                             <div id="productSalePriceError" class="error-message"></div>
@@ -411,7 +402,6 @@
                     { id: 'productBrand', name: 'Product Brand' },
                     { id: 'productColour', name: 'Product Colour' },
                     { id: 'productStock', name: 'Product Stock' },
-                    { id: 'productRegPrice', name: 'Product Regular Price' },
                     { id: 'productSalePrice', name: 'Product Sale Price' }
                 ];
 
@@ -434,7 +424,6 @@
 
                 // Validations for stock and prices
                 const stockValue = parseFloat(document.getElementById('productStock').value);
-                const regPriceValue = parseFloat(document.getElementById('productRegPrice').value);
                 const salePriceValue = parseFloat(document.getElementById('productSalePrice').value);
 
                 if (isNaN(stockValue) || stockValue < 0) {
@@ -442,18 +431,8 @@
                     isValid = false;
                 }
 
-                if (isNaN(regPriceValue) || regPriceValue <= 0) {
-                    showError('productRegPriceError', 'Regular Price must be a number and greater than 0');
-                    isValid = false;
-                }
-
                 if (isNaN(salePriceValue) || salePriceValue <= 0) {
                     showError('productSalePriceError', 'Sale Price must be a number and greater than 0');
-                    isValid = false;
-                }
-
-                if (salePriceValue >= regPriceValue) {
-                    showError('productSalePriceError', 'Sale Price must be less than Regular Price');
                     isValid = false;
                 }
 

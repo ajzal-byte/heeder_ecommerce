@@ -29,10 +29,6 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  regularPrice: {
-    type: Number,
-    required: true,
-  },
   salePrice: {
     type: Number,
     required: true,

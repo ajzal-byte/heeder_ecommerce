@@ -1,5 +1,5 @@
 const productCollection = require('../../models/products_schema');
-const catgoryCollection = require('../../models/category_schema');
+// const catgoryCollection = require('../../models/category_schema');
 
 
 module.exports.getOffers = async (req, res)=>{

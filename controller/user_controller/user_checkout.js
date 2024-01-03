@@ -6,6 +6,7 @@ const couponCollection = require('../../models/coupon_schema');
 
 module.exports.checkout = async (req, res, next)=>{
   try{
+    let subTotal = 0;
     let grandTotal = 0;
     let couponDiscount = 0;
     const userSession = req.session.user;
@@ -26,8 +27,13 @@ module.exports.checkout = async (req, res, next)=>{
           for(let i = 0; i < userCart.products.length; i++){
             if(userCart.products[i].quantity > userCart.products[i].productId.stock || userCart.products[i].productId.stock == 0){
               return res.redirect('/cart')
+            }
+            if (userCart.products[i].productId.offerStatus == 'Active' && userCart.products[i].productId.endDate > Date.now()) {
+              let discountPrice = userCart.products[i].productId.salePrice * userCart.products[i].productId.discountPercentage / 100 * userCart.products[i].quantity;
+              subTotal = userCart.products[i].productId.salePrice * userCart.products[i].quantity - discountPrice;
+            } else {
+              subTotal = userCart.products[i].productId.salePrice * userCart.products[i].quantity;
             } 
-            let subTotal = userCart.products[i].quantity * userCart.products[i].productId.salePrice;
             grandTotal += subTotal;
             }
         }else{
@@ -47,7 +53,8 @@ module.exports.checkout = async (req, res, next)=>{
 module.exports.applyCoupon = async (req, res, next)=>{
   try{
     const userSession = req.session.user;
-    const user = await userCollection.findOne({email: userSession.email})
+    const user = await userCollection.findOne({email: userSession.email});
+    let subTotal = 0;
     let grandTotal = 0;
     let couponDiscount = 0;
     const userCart = await cartCollection.findOne({userId: user._id}).populate({path: 'products.productId', model: 'Product'});
@@ -55,8 +62,14 @@ module.exports.applyCoupon = async (req, res, next)=>{
       for(let i = 0; i < userCart.products.length; i++){
         if(userCart.products[i].quantity > userCart.products[i].productId.stock || userCart.products[i].productId.stock == 0){
           return res.redirect('/cart')
+        }
+        if (userCart.products[i].productId.offerStatus == 'Active' && userCart.products[i].productId.endDate > Date.now()) {
+          let discountPrice = userCart.products[i].productId.salePrice * userCart.products[i].productId.discountPercentage / 100 * userCart.products[i].quantity;
+          subTotal = userCart.products[i].productId.salePrice * userCart.products[i].quantity - discountPrice;
+        } else {
+          subTotal = userCart.products[i].productId.salePrice * userCart.products[i].quantity;
         } 
-        grandTotal += userCart.products[i].quantity * userCart.products[i].productId.salePrice;
+        grandTotal += subTotal;
         }
     }else{
       return res.redirect('/cart')

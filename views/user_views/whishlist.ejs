@@ -441,15 +441,15 @@
                     <div class="header-action-right d-block d-lg-none">
                         <div class="header-action-2">
                             <div class="header-action-icon-2">
-                                <a href="shop-wishlist.html">
+                                <a href="/wishlist">
                                     <img alt="Evara" src="user_assets/imgs/theme/icons/icon-heart.svg">
-                                    <span class="pro-count white">4</span>
+                                    <!-- <span class="pro-count white">4</span> -->
                                 </a>
                             </div>
                             <div class="header-action-icon-2">
-                                <a class="mini-cart-icon" href="shop-cart.html">
+                                <a class="mini-cart-icon" href="/cart">
                                     <img alt="Evara" src="user_assets/imgs/theme/icons/icon-cart.svg">
-                                    <span class="pro-count white">2</span>
+                                    <!-- <span class="pro-count white">2</span> -->
                                 </a>
                                 <div class="cart-dropdown-wrap cart-dropdown-hm2">
                                     <ul>
@@ -701,7 +701,11 @@
                                           <p class="font-xs"><%= product.productId.brand.brandName %>
                                           </p>
                                         </td>
-                                        <td class="price" data-title="Price"><span>₹<%= product.productId.salePrice%> </span></td>
+                                        <% if (product.productId.offerStatus == 'Active' && product.productId.endDate > Date.now()) { %>
+                                            <td class="price" data-title="Price"><span>₹<%= product.productId.salePrice - (product.productId.salePrice * product.productId.discountPercentage) / 100%> </span></td>
+                                        <% }else{ %>
+                                            <td class="price" data-title="Price"><span>₹<%= product.productId.salePrice%> </span></td>
+                                        <% } %>
                                         <td class="text-center" data-title="Stock">
                                             <% if (product.productId.stock > 0) { %>
                                             <span class="color3 font-weight-bold">In Stock</span>
