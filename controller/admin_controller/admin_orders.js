@@ -88,7 +88,7 @@ try{
 module.exports.deliverOrder = async (req, res)=>{
 try{
   const orderId = req.params.orderId;
-  await orderCollection.findByIdAndUpdate(orderId, {orderStatus: 'Delivered', paymentStatus: 'Success'});
+  await orderCollection.findByIdAndUpdate(orderId, {orderStatus: 'Delivered', paymentStatus: 'Success', deliveryDate: Date.now()});
   res.redirect(`/admin/view-order/${orderId}`)
 }catch(error){
   console.error(error);

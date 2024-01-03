@@ -28,7 +28,7 @@ const orderSchema = new mongoose.Schema({
   ],
   orderDate: {
     type: Date,
-    default: Date.now,
+    default: Date.now(),
   },
   totalAmount: {
     type: Number,
@@ -57,6 +57,9 @@ const orderSchema = new mongoose.Schema({
   },
   cancelReason: {
     type: String,
+  },
+  deliveryDate:{
+    type: Date,
   }
 },
 { timestamps: true }
