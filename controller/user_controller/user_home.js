@@ -25,6 +25,7 @@ module.exports.getHomePage = async(req, res, next)=>{
   }
   };
 
+//all products page
 module.exports.getProducts = async (req, res)=>{
 try{
   let perPage = 6;
@@ -33,7 +34,7 @@ try{
   .sort({updatedAt: -1})
   .skip(perPage * page - perPage)
   .limit(perPage)
-  .exec()
+  const categories = await categoryCollection.find({isListed:"Active"});
   const totalProducts = await productCollection.countDocuments();
   const userSession = req.session.user;
   let cartLength;
@@ -48,10 +49,12 @@ try{
   }
   res.render('products-page', {
     products, 
+    categories,
     userSession, 
     cartLength, 
     user, 
     current: page,
+    pagination: true,
     totalPages: Math.ceil(totalProducts / perPage)});
 }catch(error){
   next(error);
@@ -85,12 +88,12 @@ module.exports.getProductDetails = async (req, res, next)=>{
   }
 };
 
-
+//search product
 module.exports.searchProduct = async (req, res, next)=>{
   try{
   let perPage = 6;
   let page = req.query.page || 1;
-  const searchInput = req.query.searchInput;
+  const searchInput = req.query.searchInput || "";
   const regexPattern = new RegExp(searchInput, 'i');
   const products = await productCollection.find({
     $and: [
@@ -103,8 +106,13 @@ module.exports.searchProduct = async (req, res, next)=>{
   .limit(perPage)
   .exec() 
   
-
-  const totalProducts = await products.length;
+  const categories = await categoryCollection.find({isListed:"Active"});
+  const totalProducts = await productCollection.countDocuments({
+    $and: [
+        { productName: { $regex: regexPattern } },
+        { status: 'Active' },
+    ],
+  });
   const userSession = req.session.user;
   let cartLength;
   let user;
@@ -118,10 +126,12 @@ module.exports.searchProduct = async (req, res, next)=>{
   }
   res.render('products-page', {
     products, 
+    categories,
     userSession, 
     cartLength, 
     user, 
     current: page,
+    pagination: true,
     totalPages: Math.ceil(totalProducts / perPage)});
 
  
@@ -130,3 +140,56 @@ module.exports.searchProduct = async (req, res, next)=>{
   }
 }
   
+//filter products
+module.exports.filterProduct = async (req, res, next)=>{
+try{
+  let products = [];
+  const categoryId = req.query.categoryId;
+  console.log(categoryId);
+  const sort = req.query.sort;
+  const categories = await categoryCollection.find({isListed:"Active"});
+  const userSession = req.session.user;
+  let cartLength;
+  let user;
+  if(userSession){
+      user = await userCollection.findOne({email: userSession.email})
+      cartLength = await cartCollection.findOne({userId: user._id});
+      if (cartLength && cartLength.products) {
+        // Check if the cart and its products for the user exists
+        cartLength = cartLength.products.length;
+      }
+  }
+
+  if (categoryId && sort) {
+    products = await productCollection.find({
+        status: { $ne: 'Inactive' },
+        category: categoryId
+    }).sort({ salePrice: parseFloat(sort) }).populate({ path: 'category', model: 'Categories' });
+    console.log('category and sort');
+} else if (categoryId && !sort) {
+    products = await productCollection.find({
+        status: { $ne: 'Inactive' },
+        category: categoryId
+    }).populate({ path: 'category', model: 'Categories' });
+    console.log('category only');
+} else if (!categoryId && sort) {
+    products = await productCollection.find({ status: { $ne: 'Inactive' } }).sort({ salePrice: parseFloat(sort) }).populate({ path: 'category', model: 'Categories' });
+    console.log('sort only');
+} else {
+    products = await productCollection.find({ status: { $ne: 'Inactive' } }).populate({ path: 'category', model: 'Categories' });
+    console.log('none');
+}
+  const totalProducts = products.length;
+  console.log(products);
+  res.render('products-page', {
+    products, 
+    categories,
+    userSession, 
+    cartLength, 
+    user, 
+    pagination: false,
+  });
+}catch(error){
+    next(error);
+  }
+}

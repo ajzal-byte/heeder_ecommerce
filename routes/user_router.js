@@ -46,6 +46,7 @@ user_router.post('/forgotChangePassword', user_login.forgotChangePassword);
 user_router.get('/products', userBlock.ifBlocked, user_home.getProducts);
 user_router.get('/productDetails/:product_id', userBlock.ifBlocked,  user_home.getProductDetails);
 user_router.get('/search-product', user_home.searchProduct);
+user_router.get('/filter-product', user_home.filterProduct);
 
 //wishlist
 user_router.get('/wishlist', userAuth.userSession, userBlock.ifBlocked, user_wishlist.getWishlist);
