@@ -1227,7 +1227,7 @@
 
         // Function to update the payment status in the database
         function updatePaymentStatus(paymentStatus, razorOrderId, response, orderId) {
-            const url = `/update-payment-status?paymentStatus=${paymentStatus}&razorOrderId=${razorOrderId}&orderId=${orderId}`
+            const url = `/update-payment-status?paymentStatus=${paymentStatus}&razorOrderId=${razorOrderId}&orderId=${orderId}&couponCode=${couponCode || ''}`
 
             fetch(url, {
                 method: 'POST',

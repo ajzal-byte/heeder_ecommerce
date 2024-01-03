@@ -89,7 +89,6 @@ userCart.products.forEach(product=>{
 })
 
   const couponCode = req.query.couponCode;
-  console.log(couponCode);
   if(couponCode){
     const coupon = await couponCollection.findOne({couponCode});
     if(!coupon){
@@ -179,7 +178,6 @@ module.exports.orderViaOnline = async (req, res, next)=>{
       })
   
     const couponCode = req.query.couponCode;
-    console.log(couponCode);
     if(couponCode){
       const coupon = await couponCollection.findOne({couponCode});
       if(!coupon){
@@ -198,8 +196,6 @@ module.exports.orderViaOnline = async (req, res, next)=>{
         return res.status(200).json({ error: "Coupon has already been redeemed" });
       }
       couponDiscount = coupon.discountAmount;
-      coupon.redeemedUsers.push(user._id);
-      await coupon.save();
     }
   
     const paymentMethod = "Online Payment"
@@ -219,6 +215,8 @@ module.exports.orderViaOnline = async (req, res, next)=>{
       userId: user._id, 
       orderId: razorOrder.id,
       products: productArray,
+      orderStatus: "Order Failed",
+      paymentStatus: "Failed",
       totalAmount,
       couponDiscount,
       paymentMethod,
@@ -228,16 +226,6 @@ module.exports.orderViaOnline = async (req, res, next)=>{
 
     const createdOrderView = await orderCollection.findById(createdOrder.id);
 
-    //stock updation
-    for (const product of userCart.products){
-      await productCollection.updateOne(
-        {_id : product.productId._id},
-        {$inc: {stock: -product.quantity}}
-        );
-      }
-
-      //cart removal
-      await cartCollection.deleteOne({userId: user._id});
       // ID of the created order
       const orderId = createdOrder._id;
       return res.status(200).json({razorOrderId: razorOrder.id, orderId});
@@ -249,26 +237,39 @@ module.exports.orderViaOnline = async (req, res, next)=>{
 
 module.exports.updatePaymentStatus = async (req, res, next)=>{
 try{
+  const userSession = req.session.user;
   const paymentStatus = req.query.paymentStatus;
   const orderId = req.query.orderId;
   await orderCollection.findByIdAndUpdate(orderId, {
     paymentStatus
   })
   if(paymentStatus == "Success"){
-    return res.status(200).json({paymentStatus: "Success"}); 
-  }else{
-    const order = await orderCollection.findById(orderId);
-    if (order) {
-      await orderCollection.findByIdAndUpdate(orderId, {
-        orderStatus: "Order Failed"
-      })
-      for (const product of order.products) {
-        await productCollection.updateOne(
-          { _id: product.productId },
-          {$inc: {stock: product.quantity}}
+    await orderCollection.findByIdAndUpdate(orderId, {
+      orderStatus: "Order Placed"
+    });
+    const user = await userCollection.findOne({email: userSession.email});
+    const userCart = await cartCollection.findOne(
+    {userId: user._id}).populate({path: 'products.productId', model:'Product', populate:{path: 'brand', model: 'brandCollection'}});
+
+      //stock decreasing
+      for (const product of userCart.products){
+      await productCollection.updateOne(
+        {_id : product.productId._id},
+        {$inc: {stock: -product.quantity}}
         );
       }
-    }
+
+      //cart removal
+      await cartCollection.deleteOne({userId: user._id});
+
+      const couponCode = req.query.couponCode;
+      if (couponCode) {
+        const coupon = await couponCollection.findOne({couponCode});
+        coupon.redeemedUsers.push(user._id);
+        await coupon.save();
+      }
+    return res.status(200).json({paymentStatus: "Success"}); 
+  }else{
     return res.status(200).json({paymentStatus: "Failed"});
 }
 }catch(error){
