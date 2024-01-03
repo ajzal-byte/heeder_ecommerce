@@ -181,19 +181,21 @@
                 <header class="card-header">
                     <div class="row gx-3 d-flex">
                         <div class="col-lg-8 col-md-6 me-auto">
-                            <form method="post" action="/admin/filter-report">
+                            <form action="/admin/filter-report">
                                 <div class="row">
                                     <div class="col-lg-3">
                                         <label>Start date</label>
-                                        <input type="date" name="startDate" class="form-control" />
+                                        <input type="date" name="startDate" id="startDate" class="form-control" />
+                                        <div id="startDateError" class="error-message"></div>
                                     </div>
                                     <div class="col-lg-3">
                                         <label>End date</label>
-                                        <input type="date" name="endDate" class="form-control" />
+                                        <input type="date" name="endDate" id="endDate" class="form-control" />
+                                        <div id="endDateError" class="error-message"></div>
                                     </div>
                                     <div class="col-lg-3">
                                         <br>
-                                        <button type="submit" id="filter" class="btn btn-primary"><i class="text-muted material-icons md-tune"></i>Filter</button>
+                                        <button style="width: 150px;" type="submit" id="filter" class="btn btn-primary"><i class="text-muted material-icons md-tune"></i>Filter</button>
                                     </div>
                                 </div>
                             </form>
@@ -203,11 +205,53 @@
                             <a id="createReport" class="btn btn-primary"><i class="text-muted material-icons md-post_add"></i>Create report</a>
                         </div>
                     </div>
+                    <button id="clearFilter" onclick="window,location.href = '/admin/sales-report'" class="btn btn-primary mt-10"><i class="text-muted material-icons md-tune"></i>Clear Filter</button>
                 </header>
+
+                <script>
+                  document.addEventListener("DOMContentLoaded", ()=>{
+                    const filterButton = document.getElementById('filter');
+                    filterButton.addEventListener("click", (e)=>{
+                      if (!validateForm()) {
+                        e.preventDefault();
+                      }
+                    });
+                    function validateForm(){
+                      resetErrorMessages(); 
+                      const startDate = document.getElementById('startDate').value;
+                      const endDate = document.getElementById('endDate').value;
+
+                      let isValid = true;
+
+                      if (startDate == "") {
+                        showError('startDateError', 'Enter a date');
+                        isValid = false;
+                      }else if(endDate == ""){
+                        showError('endDateError', 'Enter a date');
+                        isValid = false;
+                      }
+                      return isValid;
+                    }
+
+                    function showError(elementId, message) {
+                    const errorElement = document.getElementById(elementId);
+                    errorElement.textContent = message;
+                    errorElement.style.color = 'red';
+                    }   
+
+                    function resetErrorMessages() { 
+                    const errorElements = document.querySelectorAll('.error-message');
+                    errorElements.forEach((element) => {
+                        element.textContent = '';
+                    });
+                    }
+
+                  })
+                </script>
                 <!-- card-header end// -->
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-hover sales">
+                        <table class="table table-hover" id="sales" >
                             <thead>
                                 <tr>
                                     <th>Order Id</th>
@@ -217,10 +261,10 @@
                                     <th>Order Status</th>
                                     <th>Delivered on</th>
                                     <th>Total Amount</th>
-                                    <th><Address></Address></th>
                                 </tr>
                             </thead>
                             <tbody>
+                              <% if(orders && orders.length > 0){ %>
                                 <% orders.forEach((order)=>{ %>
                                     <tr>
                                         <td>orderId_<%= order._id.toString().slice(0, 6) %></td>
@@ -236,10 +280,12 @@
                                         <% }else{ %>
                                           <td><span class="badge rounded-pill alert-primary" ><%= order.orderStatus %></span></td>
                                         <% } %>
-                                        <td><%= moment(order.deliveryDate).format("MMM Do YY") %></td>
+                                        
+                                        <td><%= order.deliveryDate? moment(order.deliveryDate).format("MMM Do YY") : 'Not delivered' %></td>
                                         <td>₹ <%= order.totalAmount %></td>
                                     </tr>
                                 <% }) %>
+                                <% } %>
                             </tbody>
                         </table>
                     </div> <!-- table-responsive//end -->
@@ -277,7 +323,7 @@
        <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
        <script>
           $(document).ready(function () {
-              new DataTable('#orders', {
+              new DataTable('#sales', {
                   order: [[0, 'desc']] 
               });
           });
@@ -295,12 +341,14 @@
             document.getElementById('offcanvas_aside').style.display = 'none';
             document.querySelector('.navbar').style.display = 'none';
             document.getElementById('filter').style.display = 'none';
+            document.getElementById('clearFilter').style.display = 'none';
             document.getElementById('createReport').style.display = 'none';
             document.getElementById('main-wrap').style.marginLeft = '0';
             window.print()
             document.querySelector('.navbar').style.display = 'block';
             document.getElementById('offcanvas_aside').style.display = 'block';
             document.getElementById('filter').style.display = 'block';
+            document.getElementById('clearFilter').style.display = 'block';
             document.getElementById('createReport').style.display = 'block';
             document.getElementById('main-wrap').style.marginLeft = '300px';
         })

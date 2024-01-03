@@ -89,6 +89,7 @@ admin_router.get('/unblock-offer/:offerId', adminAuth.adminSession, offers.unblo
 
 //sales
 admin_router.get('/sales-report', adminAuth.adminSession, sales.getSalesReport);
+admin_router.get('/filter-report', adminAuth.adminSession, sales.filterSalesReport);
 
 
 module.exports = admin_router

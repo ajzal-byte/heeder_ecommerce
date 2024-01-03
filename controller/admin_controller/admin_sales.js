@@ -7,7 +7,7 @@ module.exports.getSalesReport = async (req, res)=>{
         const orders = await orderCollection
         .find()
         .populate({path:'userId', model:'userCollection'})
-        .sort({createdAt: -1})
+        .sort({createdAt: -1});
 
         const count = await orderCollection.countDocuments({});
         res.render('sales-report', {
@@ -19,6 +19,26 @@ module.exports.getSalesReport = async (req, res)=>{
   }
 }
 
+module.exports.filterSalesReport = async (req, res)=>{
+try{
+  const { startDate, endDate } = req.query;
+  console.log(startDate, endDate);
+  let orders = [];
+  if (startDate && endDate) {
+    orders = await orderCollection.find({
+    orderDate: {$gte: startDate, $lte: `${endDate}T23:59:59.999Z`}
+    }).populate({path:'userId', model:'userCollection'})
+    .sort({createdAt: -1});
+  }
+  const count = orders.length;
+  res.render('sales-report', {
+    orders,
+    count,
+  });
 
+}catch(error){
+    console.error(error);
+  }
+}
 
 

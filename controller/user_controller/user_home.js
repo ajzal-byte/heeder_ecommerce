@@ -145,7 +145,6 @@ module.exports.filterProduct = async (req, res, next)=>{
 try{
   let products = [];
   const categoryId = req.query.categoryId;
-  console.log(categoryId);
   const sort = req.query.sort;
   const categories = await categoryCollection.find({isListed:"Active"});
   const userSession = req.session.user;
