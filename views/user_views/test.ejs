@@ -1,30 +1,276 @@
-﻿<table id="wallet-orders">
-  <thead>
-    <tr>
-      <th>Date</th>
-      <th>Type</th>
-      <th>Amount</th>
-      <th>Payment status</th>
-      <th>Transaction ID</th>
-    </tr>
-  </thead>
-  <% if(!userOrders || userOrders.length == 0 ){%>
-  <tr>
-    <td colspan="6">No Orders</td>
-  </tr>
-  <% }else {%>
-  <tbody>
-    <% userOrders.reverse().forEach(items => { %>
-    <tr>
-      <%if(items.paymentMethod === "Wallet"){%>
-        <td><%= moment(items.orderDate.format("MMM Do YY")) %></td>
-        <td><%=items.paymentMethod%></td>
-      <td><%=items.totalAmount%></td>
-      <td><%=items.paymentStatus%></td>
-      <td><%=items._id%></td>
-    </tr>
-    <% } %>
-    <% }) %>
-    <% }%>
-  </tbody>
-</table>
+﻿<section class="content-main">
+  <div class="content-header">
+    <div>
+      <h2 class="content-title card-title">Dashboard</h2>
+      <p>Whole data about your business here</p>
+    </div>
+    <div>
+      <button class="btn btn-primary" id="excelButton" onclick="downloadExcel()">
+        <i class="text-muted material-icons md-post_add"></i>Download Report
+      </button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-4">
+      <div class="card card-body mb-4">
+        <article class="icontext">
+          <span class="icon icon-sm rounded-circle bg-primary-light"><i
+              class="text-primary material-icons md-monetization_on"></i></span>
+          <div class="text">
+            <h6 class="mb-1 card-title">Revenue</h6>
+            <span>₹<%= totalRevenue %></span>
+            <span class="text-sm"> Shipping fees are included </span>
+          </div>
+        </article>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="card card-body mb-4">
+        <article class="icontext">
+          <span class="icon icon-sm rounded-circle bg-success-light"><i
+              class="text-success material-icons md-local_shipping"></i></span>
+          <div class="text">
+            <h6 class="mb-1 card-title">Orders</h6>
+            <span>
+              <%= orders.length %>
+            </span>
+            <span class="text-sm"> Including cancelled orders </span>
+          </div>
+        </article>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="card card-body mb-4">
+        <article class="icontext">
+          <span class="icon icon-sm rounded-circle bg-warning-light"><i
+              class="text-warning material-icons md-shopping_bag"></i></span>
+          <div class="text">
+            <h6 class="mb-1 card-title">Products</h6>
+            <span>
+              <%= products.length %>
+            </span>
+            <span class="text-sm"> From all categories </span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-4">
+      <div class="card card-body mb-4">
+        <article class="icontext">
+          <span class="icon icon-sm rounded-circle bg-primary-light"><i
+              class="text-primary material-icons md-calculate"></i></span>
+          <div class="text">
+            <h6 class="mb-1 card-title">AOV</h6>
+            <span>₹<%= aov %></span>
+            <span class="text-sm"> Average Order Value </span>
+          </div>
+        </article>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="card card-body mb-4">
+        <article class="icontext">
+          <span class="icon icon-sm rounded-circle bg-warning-light"><i
+              class="text-warning material-icons md-cancel"></i></span>
+          <div class="text">
+            <h6 class="mb-1 card-title">Cancelled Orders</h6>
+            <span>
+              <%= cancelledOrders.length %>
+            </span>
+            <span class="text-sm"> Including user cancellations </span>
+          </div>
+        </article>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="card card-body mb-4">
+        <article class="icontext">
+          <span class="icon icon-sm rounded-circle bg-success-light"><i
+              class="text-success material-icons md-category"></i></span>
+          <div class="text">
+            <h6 class="mb-1 card-title">Categories</h6>
+            <span>
+              <%= categories.length %>
+            </span>
+            <span class="text-sm"> Including men, women, & more </span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xl-8 col-lg-12">
+      <div class="card mb-4">
+        <article class="card-body">
+          <h5 class="card-title">Sale statistics</h5>
+          <canvas id="myChart" height="120px"></canvas>
+        </article>
+      </div>
+    </div>
+    <div class="col-xl-4 col-lg-12">
+      <div class="card mb-4">
+        <article class="card-body">
+          <h5 class="card-title">New Users</h5>
+          <div class="new-member-list">
+            <% newUsers.forEach(user=> { %>
+              <div class="d-flex align-items-center justify-content-between mb-4">
+                <div class="row">
+                  <div class="col">
+                    <h6>
+                      <%= user.firstName + " " + user.lastName %> -
+                        <span class="font-xs">
+                          <%= user.email %>
+                        </span>
+                    </h6>
+
+                    <p class="text-muted font-xs">
+                      Joined: <%= moment(user.createdAt).format("DD/MM/YYYY") %>
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <% }) %>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+  <div class="card mb-4">
+    <header class="card-header">
+      <h4 class="card-title">Latest orders</h4>
+    </header>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-responsive">
+          <thead>
+            <tr>
+              <th scope="col">Order Id</th>
+              <th scope="col">Customer Name</th>
+              <th scope="col">Customer Email</th>
+              <th scope="col">Order Status</th>
+              <th scope="col">Order Date</th>
+              <th scope="col">Total Amount</th>
+              <th class="text-end" scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% latestOrders.forEach((order, id)=> { %>
+              <tr>
+                <td>
+                  <%= order._id.toString().slice(0, 6) + "..." %>
+                </td>
+                <td>
+                  <%= order.customerName %>
+                </td>
+                <td>
+                  <%= order.customerEmail %>
+                </td>
+                <td>
+                  <span
+                    class="badge rounded-pill text-capitalize <%= order.status == 'pending' ? 'alert-warning text-warning' : order.status == 'cancelled' || order.status == 'failed' ? 'alert-danger text-danger' : order.status == 'delivered' ? 'alert-success text-success' : 'alert-primary' %>">
+                    <%= order.status %>
+                  </span>
+                </td>
+                <td>
+                  <%= moment(order.createdAt).format("DD/MM/YYYY"); %>
+                </td>
+                <td>₹<%= order.totalAmount %>
+                </td>
+                <td class="text-end">
+                  <a href="/admin/orders/view/<%= order._id %>" class="btn-sm btn-success-light">View</a>
+                  <a href="/admin/orders/edit/<%= order._id %>" class="btn-sm btn-warning">Edit</a>
+                </td>
+              </tr>
+              <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+  const downloadExcel = async () => {
+    try {
+      const response = await fetch("/admin/downloadExcel");
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "SalesReport.xlsx";
+        a.style.display = "none";
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  yearlySales = JSON.parse(
+    `<%= JSON.stringify(yearlySales) %>`
+      .replace(/&#34;/g, '"')
+      .replace(/&#123;/g, "{")
+      .replace(/&#125;/g, "}")
+  );
+  monthlySales = JSON.parse(
+    `<%= JSON.stringify(monthlySales) %>`
+      .replace(/&#34;/g, '"')
+      .replace(/&#123;/g, "{")
+      .replace(/&#125;/g, "}")
+  );
+  weeklySales = JSON.parse(
+    `<%= JSON.stringify(weeklySales) %>`
+      .replace(/&#34;/g, '"')
+      .replace(/&#123;/g, "{")
+      .replace(/&#125;/g, "}")
+  );
+
+  var ctx = document.getElementById("myChart").getContext("2d");
+  var chart = new Chart(ctx, {
+    type: "line",
+    data: {
+      datasets: [
+        {
+          label: "Last 5 Years",
+          tension: 0.3,
+          fill: true,
+          backgroundColor: "rgba(44, 120, 220, 0.2)",
+          borderColor: "rgba(44, 120, 220)",
+          data: yearlySales,
+        },
+        {
+          label: "Last 5 Months",
+          tension: 0.3,
+          fill: true,
+          backgroundColor: "rgba(4, 209, 130, 0.2)",
+          borderColor: "rgb(4, 209, 130)",
+          data: monthlySales,
+        },
+        {
+          label: "Last 5 Weeks",
+          tension: 0.3,
+          fill: true,
+          backgroundColor: "rgba(380, 200, 230, 0.2)",
+          borderColor: "rgb(380, 200, 230)",
+          data: weeklySales,
+        },
+      ],
+    },
+    options: {
+      plugins: {
+        legend: {
+          labels: {
+            usePointStyle: true,
+          },
+        },
+      },
+    },
+  });
+</script>

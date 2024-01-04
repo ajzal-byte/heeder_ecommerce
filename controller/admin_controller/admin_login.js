@@ -1,4 +1,7 @@
-const adminCollection = require("../../models/admin_schema")
+const { generateChart } = require("../../helpers/generateChart");
+const adminCollection = require("../../models/admin_schema");
+const orderCollection = require('../../models/orders_schema');
+const userCollection = require('../../models/user_schema');
 // const user_schema = require('.../models/user_schema');
 
 module.exports.getAdminRoute = async(req, res)=>{
@@ -52,7 +55,15 @@ module.exports.getAdminLogout = async(req, res)=>{
 
 module.exports.getAdminDashboard = async(req, res)=>{
   try{
-    res.render('admin_index');
+    const newMembers = await userCollection.find().limit(3);
+    const totalSales = await orderCollection.find({orderStatus: "Delivered"});
+    const {yearlySales, monthlySales, weeklySales} = generateChart(totalSales)
+    res.render('admin_index', {
+    yearlySales,
+    monthlySales,
+    weeklySales,
+    newMembers
+  });
   }catch (error) {
     console.error(error);
   }
