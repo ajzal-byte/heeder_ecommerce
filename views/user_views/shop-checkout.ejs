@@ -885,7 +885,7 @@
                                             <td>
                                                 <h5><a href="shop-product-full.html"> <%=userCart.products[i].productId.productName%> </a></h5> <span class="product-qty"> x <%= userCart.products[i].quantity %> </span>
                                             </td>
-                                            <% if (userCart.products[i].productId.offerStatus == 'Active' && userCart.products[i].productId.endDate > Date.now()) { %>
+                                            <% if (userCart.products[i].productId.offerStatus == 'Active' &&  userCart.products[i].productId.startDate <= Date.now() && userCart.products[i].productId.endDate > Date.now()) { %>
                                             <td> <%= userCart.products[i].productId.salePrice * userCart.products[i].quantity - (userCart.products[i].productId.salePrice * userCart.products[i].productId.discountPercentage) / 100 *  userCart.products[i].quantity %> </td>
                                             <% }else{ %>
                                             <td> <%= userCart.products[i].productId.salePrice * userCart.products[i].quantity %> </td>
@@ -1264,7 +1264,8 @@
                 
                 if(radioButton.checked){
                     selectedAddressValue = radioButton.value;
-                    fetch(`place-order-wallet/${selectedAddressValue}?couponCode=${couponCode || ''}`)
+                    fetch(`place-order-wa
+                    llet/${selectedAddressValue}?couponCode=${couponCode || ''}`)
                     .then(response=>{
                         if(!response.ok){
                             throw new Error(`HTTP Error! status:${response.status}`)

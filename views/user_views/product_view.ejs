@@ -718,7 +718,7 @@
                                         </div>
                                         <div class="clearfix product-price-cover">
                                             <div class="product-price primary-color float-left">
-                                                <% if (product_details.offerStatus == 'Active' && product_details.endDate > Date.now()) { %>
+                                                <% if (product_details.offerStatus == 'Active' &&  product_details.startDate <= Date.now() && product_details.endDate > Date.now()) { %>
                                                     <ins><span class="text-brand">₹<%= product_details.salePrice - (product_details.salePrice * product_details.discountPercentage) / 100 %></span></ins>
                                                     <ins><span class="old-price font-md ml-15">₹<%= product_details.salePrice%></span></ins>
                                                     <span class="save-price  font-md color3 ml-15"><%= product_details.discountPercentage %>% Off</span>

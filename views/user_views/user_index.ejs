@@ -401,7 +401,7 @@
                                         <h2><a href="/productDetails/<%= product._id %>"><%= product.productName %></a></h2>
                                         
                                         <div class="product-price">
-                                            <% if (product.offerStatus == 'Active' && product.endDate > Date.now()) { %>
+                                            <% if (product.offerStatus == 'Active' &&  product.startDate <= Date.now() && product.endDate > Date.now()) { %>
                                                 <span>₹<%= product.salePrice - (product.salePrice * product.discountPercentage) / 100 %></span>
                                                 <span class="old-price">₹  <%= product.salePrice%></span>
                                                 <span class="save-price  font-md color3 ml-5 text-danger" style="font-size: small;"> - <%= product.discountPercentage %>% </span>

@@ -701,7 +701,7 @@
                                           <p class="font-xs"><%= product.productId.brand.brandName %>
                                           </p>
                                         </td>
-                                        <% if (product.productId.offerStatus == 'Active' && product.productId.endDate > Date.now()) { %>
+                                        <% if (product.productId.offerStatus == 'Active' &&  product.productId.startDate <= Date.now() && product.productId.endDate > Date.now()) { %>
                                             <td class="price" data-title="Price"><span>₹<%= product.productId.salePrice - (product.productId.salePrice * product.productId.discountPercentage) / 100%> </span></td>
                                         <% }else{ %>
                                             <td class="price" data-title="Price"><span>₹<%= product.productId.salePrice%> </span></td>

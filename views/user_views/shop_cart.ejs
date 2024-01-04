@@ -392,7 +392,7 @@
                               </p>
                             </td>
                             <td class="price" data-title="Price">₹
-                                <% if (userCart.products[i].productId.offerStatus == 'Active' && userCart.products[i].productId.endDate > Date.now()) { %>
+                                <% if (userCart.products[i].productId.offerStatus == 'Active' &&  userCart.products[i].productId.startDate <= Date.now() && userCart.products[i].productId.endDate > Date.now()) { %>
                                     <span><%= userCart.products[i].productId.salePrice - (userCart.products[i].productId.salePrice * userCart.products[i].productId.discountPercentage) / 100 %></span>
                                 <% }else{ %>
                                     <span><%=userCart.products[i].productId.salePrice%></span> 
