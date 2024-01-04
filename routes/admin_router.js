@@ -10,6 +10,7 @@ const orders = require('../controller/admin_controller/admin_orders')
 const coupons = require('../controller/admin_controller/admin_coupon')
 const offers = require('../controller/admin_controller/admin_offers');
 const sales = require('../controller/admin_controller/admin_sales');
+const salesReport = require('../helpers/salesReportExcel');
 const {upload} = require('../middleware/multer');
 const path = require('path')
 
@@ -90,6 +91,7 @@ admin_router.get('/unblock-offer/:offerId', adminAuth.adminSession, offers.unblo
 //sales
 admin_router.get('/sales-report', adminAuth.adminSession, sales.getSalesReport);
 admin_router.get('/filter-report', adminAuth.adminSession, sales.filterSalesReport);
+admin_router.get('/sales-excel', adminAuth.adminSession, salesReport.salesExcel)
 
 
 module.exports = admin_router
