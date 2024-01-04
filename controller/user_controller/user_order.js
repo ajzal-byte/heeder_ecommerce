@@ -349,7 +349,7 @@ if(userWallet){
       await coupon.save();
   }
 
-  const paymentMethod = "Walllet"
+  const paymentMethod = "Wallet"
   //order creation
   const createdOrder = await orderCollection.create({
     userId: user._id, 
