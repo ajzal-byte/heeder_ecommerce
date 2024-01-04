@@ -233,7 +233,7 @@ module.exports.orderViaOnline = async (req, res, next)=>{
   }catch(error){
     next(error);
   }
-  }
+}
 
 module.exports.updatePaymentStatus = async (req, res, next)=>{
 try{
@@ -277,6 +277,112 @@ try{
 }
 }
 
+module.exports.orderViaWallet = async (req, res, next)=>{
+try{
+  let totalAmount = 0;
+  let couponDiscount = 0;
+  const userSession = req.session.user;
+  const user = await userCollection.findOne({email: userSession.email});
+  const userAddress = await addressCollection.findOne({"address._id": req.params.addressId}, { "address.$": 1 });
+  const userCart = await cartCollection.findOne(
+    {userId: user._id}).populate({path: 'products.productId', model:'Product', populate:{path: 'brand', model: 'brandCollection'}});
+
+  userCart.products.forEach(product=>{
+    if(product.quantity > product.productId.stock || product.productId.stock == 0){
+      return res.status(200).json({backToCart: true})
+    }
+  });
+
+  const productArray = [];
+  userCart.products.forEach(product => {
+      productArray.push({
+        productId: product.productId._id,
+        price: product.productId.salePrice,
+        quantity: product.quantity
+      })
+
+    });
+    
+userCart.products.forEach(product=>{
+  if (product.productId.offerStatus == 'Active' && product.productId.endDate > Date.now()) {
+    let discountPrice = product.productId.salePrice * product.productId.discountPercentage / 100 * product.quantity;
+  totalAmount += product.productId.salePrice * product.quantity - discountPrice;
+  }else{
+    totalAmount += product.productId.salePrice * product.quantity;
+  }
+})
+
+
+  let couponRedeemed;
+  const couponCode = req.query.couponCode;
+  if(couponCode){
+    const coupon = await couponCollection.findOne({couponCode});
+    if(!coupon){
+      return res.status(200).json({error: "Invalid Coupon"});
+    }
+    if(coupon.status != 'Active'){
+      return res.status(200).json({error: "Coupon is blocked"});
+    }
+    if(coupon.expiryDate < new Date()){
+      return res.status(200).json({error: "Coupon is expired"});
+    }
+    if(coupon.minimumPurchase > totalAmount){
+      return res.status(200).json({error: `Minimum Purchase Amount is ₹${coupon.minimumPurchase}`});
+    }
+    if (coupon.redeemedUsers.includes(user._id)) {
+      return res.status(200).json({ error: "Coupon has already been redeemed" });
+    }
+      couponDiscount = coupon.discountAmount;
+      couponRedeemed = true;
+  }
+
+  const userWallet = user.wallet
+if(userWallet){
+  if (userWallet < totalAmount) {
+    return res.status(200).json({error: `You need ${(totalAmount - userWallet - couponDiscount).toFixed(2)} more in your wallet`});
+  }
+}
+
+  if (couponRedeemed) {
+    const coupon = await couponCollection.findOne({couponCode});
+    coupon.redeemedUsers.push(user._id);
+      await coupon.save();
+  }
+
+  const paymentMethod = "Walllet"
+  //order creation
+  const createdOrder = await orderCollection.create({
+    userId: user._id, 
+    products: productArray,
+    totalAmount,
+    couponDiscount, 
+    paymentMethod,
+    paymentStatus: "Success",
+    address: userAddress,
+  });
+
+  await userCollection.findByIdAndUpdate(user._id, {
+    $inc:{wallet: -totalAmount}
+  });
+
+  //stock updation
+  for (const product of userCart.products){
+    await productCollection.updateOne(
+      {_id : product.productId._id},
+      {$inc: {stock: -product.quantity}}
+      );
+    }
+
+    //cart removal
+    await cartCollection.deleteOne({userId: user._id});
+    // ID of the created order
+    const orderId = createdOrder._id;
+    return res.status(200).json({orderId});
+  
+}catch(error){
+  next(error);
+}
+}
 
 module.exports.cancelOrder = async (req, res, next)=>{
   try{

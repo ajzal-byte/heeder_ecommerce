@@ -470,7 +470,7 @@
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                <h4>You have ₹<%= userDetails.wallet %> in your wallet.</h4>
+                                                <h4>You have ₹<%= (userDetails.wallet).toFixed(2) %> in your wallet.</h4>
                                                 </div>
                                                 <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

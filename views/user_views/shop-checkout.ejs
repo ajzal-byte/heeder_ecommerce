@@ -1255,6 +1255,57 @@
         }
 
 
+        const walletOrderButton = document.getElementById('wallet-orderButton');
+        walletOrderButton.addEventListener("click", (e)=>{
+            e.preventDefault();
+            const radioButtons = document.querySelectorAll('.select-address');
+            let selectedAddressValue = null;
+            for (const radioButton of radioButtons) {
+                
+                if(radioButton.checked){
+                    selectedAddressValue = radioButton.value;
+                    fetch(`place-order-wallet/${selectedAddressValue}?couponCode=${couponCode || ''}`)
+                    .then(response=>{
+                        if(!response.ok){
+                            throw new Error(`HTTP Error! status:${response.status}`)
+                        }
+                        return response.json();
+                    })
+                    .then(data=>{
+                        if(data.backToCart){
+                            window.location.href = '/cart';
+                        }
+                        if(data.error){
+                            Swal.fire({
+                            position: 'center',
+                            icon: 'error',
+                            title: data.error,
+                            showConfirmButton: false,
+                            timer: 1500
+                            });
+                        }else if(data.orderId){
+                            window.location.href = `/order-placed/${data.orderId}`
+                        }
+                    }).catch(error=>{
+                        window.location.href = '/login';
+                        console.error(error);
+                    })
+                    break;
+                }
+            }
+
+            if (selectedAddressValue !== null) {
+            console.log("Selected Address ID:", selectedAddressValue);
+            } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'No Address is Selected!',
+            })
+            }
+        });
+
+
         });
 
 
@@ -1269,6 +1320,7 @@
                             </div>
                             <button class="btn btn-sm mr-10" id="cod-orderButton">Cash on Delivery</button>
                             <button class="btn btn-sm mr-10" id="rzp-orderButton">Pay with Razorpay</button>
+                            <button class="btn btn-sm mr-10" id="wallet-orderButton">Pay with Wallet</button>
                         </div>
                     </div>
                 </div>
