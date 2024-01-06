@@ -1264,8 +1264,7 @@
                 
                 if(radioButton.checked){
                     selectedAddressValue = radioButton.value;
-                    fetch(`place-order-wa
-                    llet/${selectedAddressValue}?couponCode=${couponCode || ''}`)
+                    fetch(`place-order-wallet/${selectedAddressValue}?couponCode=${couponCode || ''}`)
                     .then(response=>{
                         if(!response.ok){
                             throw new Error(`HTTP Error! status:${response.status}`)

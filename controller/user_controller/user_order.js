@@ -337,9 +337,9 @@ userCart.products.forEach(product=>{
   }
 
   const userWallet = user.wallet
-if(userWallet){
+if(userWallet || userWallet == 0){
   if (userWallet < totalAmount) {
-    return res.status(200).json({error: `You need ${(totalAmount - userWallet - couponDiscount).toFixed(2)} more in your wallet`});
+    return res.status(200).json({error: `You need ₹${(totalAmount - userWallet - couponDiscount).toFixed(2)} more in your wallet`});
   }
 }
 
