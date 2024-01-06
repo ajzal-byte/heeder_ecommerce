@@ -19,11 +19,16 @@ module.exports.getAddCoupon = async (req, res)=>{
 
 module.exports.postAddCoupon = async (req, res)=>{
   try{
-    const {couponCode, description, discountAmount, minimumPurchase, status, expiryDate} = req.body;
+    const couponCode = req.query.couponCode;
+    const ifExist = await couponCollection.findOne({couponCode});
+    if (ifExist) {
+      return res.status(200).json({error: "This Coupon already exists"});
+    }
+    const { description, discountAmount, minimumPurchase, status, expiryDate} = req.body;
     await couponCollection.create({
       couponCode, description, discountAmount, minimumPurchase, status, expiryDate
     });
-    res.redirect('/admin/coupons')
+    return res.status(200).json({success : true});
   }catch(error){
     console.error(error);
   }
@@ -41,12 +46,17 @@ module.exports.getEditCoupon = async (req, res)=>{
 
 module.exports.postEditCoupon = async (req, res)=>{
   try{
-    const coupon_id = req.params.coupon_id;
-    const {couponCode, description, discountAmount, minimumPurchase, status, expiryDate} = req.body;
+    const coupon_id = req.params.coupon_id; 
+    const couponCode = req.query.couponCode;
+    const ifExist = await couponCollection.findOne({ couponCode, _id: { $ne: coupon_id } });
+    if (ifExist) {
+      return res.status(200).json({error: "This Coupon already exists"});
+    }
+    const { description, discountAmount, minimumPurchase, status, expiryDate} = req.body;
     await couponCollection.findByIdAndUpdate(coupon_id, {
       couponCode, description, discountAmount, minimumPurchase, status, expiryDate
     })
-    res.redirect('/admin/coupons')
+    return res.status(200).json({success : true});
   }catch(error){
     console.error(error);
   }

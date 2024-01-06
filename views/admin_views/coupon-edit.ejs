@@ -191,7 +191,7 @@
                           <h4>Basic</h4>
                       </div> -->
                       <div class="card-body">
-                          <form action="/admin/post-edit-coupon/<%= coupon_edit._id %>" id="coupon-form" method="post">
+                          <form  id="coupon-form" method="post">
                               <div class="mb-4">
                                   <label for="couponCode" class="form-label">Coupon Code</label>
                                   <input type="text" placeholder="Type here" value="<%= coupon_edit.couponCode %>" class="form-control" name="couponCode" id="couponCode">
@@ -250,9 +250,51 @@
       <script>
         document.addEventListener("DOMContentLoaded", function () {
           const submitButton = document.getElementById('submitButton');
-            submitButton.addEventListener("click", (e)=>{
-              if(!validateForm()){
+          submitButton.addEventListener("click", (e)=>{
                 e.preventDefault();
+              if(validateForm()){
+                const couponId  = '<%= coupon_edit._id %>';
+                const couponCode = document.getElementById('couponCode').value;
+                const description = document.getElementById('description').value;
+                const discountAmount = document.getElementById('discountAmount').value;
+                const minimumPurchase = document.getElementById('minimumPurchase').value;
+                const status = document.getElementById('status').value;
+                const expiryDate = document.getElementById('expiryDate').value;
+
+                
+                fetch(`/admin/post-edit-coupon/${couponId}?couponCode=${couponCode}`, {
+                    method: 'POST',
+                    headers:{
+                    'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        couponCode,
+                        description,
+                        discountAmount,
+                        minimumPurchase,
+                        status,
+                        expiryDate,
+                    }),
+                }).then(response=>{
+                    if (!response.ok) {
+                        throw new Error(`HTTP Error! status:${response.status}`);
+                    }
+                    return response.json();
+                }).then(data=>{
+                    if(data.success){
+                    window.location.href = '/admin/coupons'; 
+                    }else if(data.error){
+                        Swal.fire({
+                        position: 'top-center',
+                        icon: 'error',
+                        title: data.error,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    }
+                })
+
+                
               }
             });
 
@@ -301,7 +343,7 @@
                 }
 
                 if (discountAmount >= minimumPurchase) {
-                    showError('discountAmountError', 'Discount Amount must be less than Regular Price');
+                    showError('discountAmountError', 'Discount Amount must be less than Minimum Purchase');
                     isValid = false;
                 }
 
@@ -346,6 +388,7 @@
             </div>
         </footer>
     </main>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="/admin_assets/js/vendors/jquery-3.6.0.min.js"></script>
     <script src="/admin_assets/js/vendors/bootstrap.bundle.min.js"></script>
     <script src="/admin_assets/js/vendors/select2.min.js"></script>
