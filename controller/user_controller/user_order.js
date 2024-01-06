@@ -396,7 +396,7 @@ module.exports.cancelOrder = async (req, res, next)=>{
         );
       }
     }
-    if(order.paymentMethod == "Online Payment"){
+    if(order.paymentMethod == "Online Payment" || order.paymentMethod == "Wallet"){
       const user = await userCollection.findOne({_id: order.userId});
       if(user){
         if(user.wallet){
