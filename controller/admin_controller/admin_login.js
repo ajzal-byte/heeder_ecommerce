@@ -2,6 +2,11 @@ const { generateChart } = require("../../helpers/generateChart");
 const adminCollection = require("../../models/admin_schema");
 const orderCollection = require('../../models/orders_schema');
 const userCollection = require('../../models/user_schema');
+const porductCollection  = require('../../models/products_schema'); 
+const categoryCollection  = require('../../models/category_schema'); 
+const brandCollection  = require('../../models/brand_schema'); 
+
+
 // const user_schema = require('.../models/user_schema');
 
 module.exports.getAdminRoute = async(req, res)=>{
@@ -55,14 +60,31 @@ module.exports.getAdminLogout = async(req, res)=>{
 
 module.exports.getAdminDashboard = async(req, res)=>{
   try{
+    let revenue = 0
+    const products = await porductCollection.find();
+    const category = await categoryCollection.find();
+    const brands = await brandCollection.find();
     const newMembers = await userCollection.find().limit(3);
     const totalSales = await orderCollection.find({orderStatus: "Delivered"});
+    totalSales.forEach(sales=>{
+      revenue += sales.totalAmount;
+    })
+    const orders = await orderCollection
+      .find()
+      .populate({path:'userId', model:'userCollection'})
+      .sort({createdAt: -1}).limit(5);
     const {yearlySales, monthlySales, weeklySales} = generateChart(totalSales)
     res.render('admin_index', {
     yearlySales,
     monthlySales,
     weeklySales,
-    newMembers
+    newMembers,
+    orderCount: totalSales.length,
+    productsCount: products.length,
+    categoryCount: category.length,
+    brandsCount: brands.length,
+    revenue,
+    orders
   });
   }catch (error) {
     console.error(error);
