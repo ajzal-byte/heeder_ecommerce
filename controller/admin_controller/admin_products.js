@@ -35,7 +35,7 @@ module.exports.getAddProduct = async (req, res)=>{
 module.exports.postAddProduct = async (req, res)=>{
   try{
   
-    const {product_name, product_desc, product_brand,product_cat,product_colour,product_factor,product_connect,product_reg_price,product_sale_price,product_stock,product_status} = req.body
+    const {product_name, product_desc, product_brand,product_cat,product_colour,product_factor,product_connect,product_sale_price,product_stock,product_status} = req.body;
 
     const productImages = [];
 

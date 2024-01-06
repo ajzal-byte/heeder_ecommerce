@@ -2,10 +2,10 @@
 <html lang="en">
 
 
-<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-categories.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:21 GMT -->
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-form-product-1.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:31 GMT -->
 <head>
     <meta charset="utf-8">
-    <title>View Order</title>
+    <title>Edit Banner</title>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -43,10 +43,10 @@
                     </a>
                     <div class="submenu">
                         <a href="/admin/products">Product View</a>
-                        <a href="/admin/addProduct">Add Product</a>
+                        <a href="/admin/addProduct" class="active">Add Product</a>
                     </div>
                 </li>
-                <li class="menu-item active">
+                <li class="menu-item">
                     <a class="menu-link" href="/admin/orders"> <i class="icon material-icons md-shopping_cart"></i>
                         <span class="text">Orders</span>
                     </a>
@@ -70,7 +70,7 @@
                         <span class="text">Coupons</span>
                     </a>
                     <div class="submenu">
-                        <a href="/admin/coupons">Coupon View</a>
+                        <a href="/admin/coupons" >Coupon View</a>
                         <a href="/admin/add-coupon">Add Coupon</a>
                     </div>
                 </li>
@@ -83,6 +83,15 @@
                         <a href="/admin/add-offer">Add Offer</a>
                     </div>
                 </li>
+                <li class="menu-item has-submenu active">
+                  <a class="menu-link" href="page-products-list.html"> <i class="icon material-icons md-request_quote"></i>
+                      <span class="text">Banners</span>
+                  </a>
+                  <div class="submenu">
+                      <a href="/admin/banners" class="active">Banner View</a>
+                      <a href="/admin/add-banner">Add Banner</a>
+                  </div>
+              </li>
                 <li class="menu-item">
                     <a class="menu-link" href="/admin/sales-report"> <i class="icon material-icons md-pie_chart"></i>
                         <span class="text">Sales Report</span>
@@ -159,137 +168,144 @@
                             <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
                             <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help center</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item text-danger" href="/admin/logout"><i class="material-icons md-exit_to_app"></i>Logout</a>
+                            <a class="dropdown-item text-danger" href="#"><i class="material-icons md-exit_to_app"></i>Logout</a>
                         </div>
                     </li>
                 </ul>
             </div>
         </header>
-        <section class="mt-50 mb-50">   
-          <div class="container">
-            <div class="row">
-              <div class="col-12">
-                  
-                <div class="tab-pane " id="orders" role="tabpanel" aria-labelledby="orders-tab">
-                  <div class="card">
-                      <div class="card-header">
-                          <h5 class="mb-0">Your Orders</h5>
-                      </div>
-                      <div class="card-body">
-                          <div class="table-responsive">
-                              <table class="table">
-                                  <thead>
-                                      <tr>
-                                          <th>Product</th>
-                                          <th>Date</th>
-                                          <th>OrderStatus</th>
-                                          <th>PaymentStatus</th>
-                                          <th>PaymentMethod</th>
-                                          <th>Total</th>
-                                      </tr>
-                                  </thead>
-                                  <tbody>
-                                      <% if (!orderDetails || orderDetails.length === 0) { %>
-                                          <h6>No orders</h6>
-                                      <% } else { %>
-                                          <% orderDetails.products.forEach((item) => { %>
-                                            
-                                      <tr>
-                                          <td><%= item.productId.productName %></td>
-                                          <td><%= orderDetails.createdAt.toLocaleDateString() %></td>
-                                          <td><%= orderDetails.orderStatus %></td>
-                                          <td><%= orderDetails.paymentStatus %></td>
-                                          <td><%= orderDetails.paymentMethod %></td>
-                                          <td>₹<%= item.price * item.quantity %> for <%= item.quantity%> item</td>
-                                      </tr>
-                                      
-                                      <% }); %>
-                                      
-                                  <% } %>
-                                  </tbody>
-                              </table>
-                              <h5 class="d-flex justify-content-end">Total Amount: ₹ <%= orderDetails.totalAmount %></h5>
-                              <div class="d-flex justify-content-center">
-                                  
-                                <div class="d-flex justify-content-between col-3">
-                                 
-                                    <% if(orderDetails.orderStatus === "Order Placed" ) {%> 
-                                      <a  data-action="/admin/dispatch-order/<%= orderDetails._id %>" id="dispatchButton" class="btn btn-warning btn-sm" >Dispatch product</a>
-                                      <a  data-action="/admin/cancel-order/<%= orderDetails._id %>" id="cancelButton" class="btn btn-danger btn-sm cancelButton" >Cancel product</a>
-                                      <%} else if(orderDetails.orderStatus === "Shipped") {%> 
-                                        <a  data-action="/admin/deliver-order/<%= orderDetails._id %>" id="deliveryButton" class="btn btn-success btn-sm" >Deliver product</a>
-                                        <a data-action="/admin/cancel-order/<%= orderDetails._id %>" id="cancelButton2" class="btn btn-danger btn-sm cancelButton" >Cancel product</a>
-                                        <%} else if(orderDetails.orderStatus === "Delivered") {%>
-                                          <h5 >The order is Delivered</h5>
-                                          <%} else if(orderDetails.orderStatus === "Cancelled") {%> 
-                                              <div class="text-center"><h5 style="color: rgb(202, 32, 32);">The order is Cancelled</h5></div>
-                                          <%} %>
-                                </div>
-
-                                <script>
-                                   document.addEventListener("DOMContentLoaded", () => {
-                                    const dispatchButton = document.getElementById('dispatchButton');
-                                    const cancelButton = document.getElementById('cancelButton');
-                                    const cancelButton2 = document.getElementById('cancelButton2');
-                                    const deliveryButton = document.getElementById('deliveryButton');
-                                    if(dispatchButton){
-                                        dispatchButton.addEventListener('click', (e) => {
-                                            handleButtonClick(e, dispatchButton);
-                                        });
-                                    }
-
-                                    if (cancelButton) {
-                                        cancelButton.addEventListener('click', (e) => {
-                                            handleButtonClick(e, cancelButton);
-                                        });
-                                    }
-
-                                    if (cancelButton2) {
-                                        cancelButton2.addEventListener('click', (e) => {
-                                            handleButtonClick(e, cancelButton2);
-                                        });
-                                    }
-                                    
-                                    if(deliveryButton){
-                                        deliveryButton.addEventListener('click', (e) => {
-                                            handleButtonClick(e, deliveryButton);
-                                        });
-                                    }
-                                    });
-
-                                    function handleButtonClick(event, button) {
-                                    event.preventDefault();
-                                    console.log(`${button.id} clicked`);
-                                    const action = button.getAttribute('data-action');
-                                    console.log('Action:', action);
-                                    Swal.fire({
-                                        title: "Are you sure?",
-                                        text: "You will not be able to revert this!",
-                                        icon: "warning",
-                                        showCancelButton: true,
-                                        confirmButtonColor: "#3085d6",
-                                        cancelButtonColor: "#d33",
-                                        confirmButtonText: "Yes!"
-                                    }).then((result) => {
-                                        if (result.isConfirmed) {
-                                        window.location.href = action;
-                                        }
-                                    });
-                                    }
-
-                            
-                                </script>
-
-
-                            </div>  
-                          </div>
-                      </div>
+        <section class="content-main">
+          <div class="row">
+              <div class="col-9">
+                  <div class="content-header">
+                      <h3 class="content-title">Edit Banner</h3>
+                      <!-- <div>
+                          <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button>
+                          <button class="btn btn-md rounded font-sm hover-up">Publich</button>
+                      </div> -->
                   </div>
               </div>
+              <div class="col-lg-12">
+                  <div class="card mb-4">
+                      <!-- <div class="card-header">
+                          <h4>Basic</h4>
+                      </div> -->
+                      <div class="card-body">
+                          <form action="/admin/post-edit-banner/<%= banner._id %>" name="enq" id="banner-form" method="post" enctype="multipart/form-data">
+                              <div class="mb-4">
+                                  <label for="title class="form-label">Banner Title</label>
+                                  <input value="<%= banner.title %>" type="text" placeholder="Enter banner title" class="form-control" name="title" id="title">
+                                  <div id="titleError" class="error-message"></div>
+                              </div>
+                              <div class="mb-4">
+                                <label for="subtitle" class="form-label">Banner Subtitle</label>
+                                <input value="<%= banner.subtitle %>" type="text" placeholder="Enter banner subtitle" class="form-control" name="subtitle" id="subtitle">
+                                <div id="subtitleError" class="error-message"></div>
+                            </div>
+                            <div class="row d-flex">
+                              <div class="col-lg-6 mb-4">
+                                <label class="form-label" for="image">Banner Image:</label>
+                                <input class="form-control" type="file" name="image" id="image" />
+                              </div>
+                              <div id="existingImagesContainer" class="col-lg-6 mb-4">
+                                <div class="image-container existing-image" style=" width: 100px; height: 70px;">
+                                  <figure class="border-radius-10">
+                                    <img src="<%= banner.image %>" alt="<%= banner.title %>" class="img-fluid" loading="lazy" style="max-width: 100%; max-height: 100%;">
+                                  </figure>
+                                </div>
+                              </div>
+                              </div>
+                                  <div class="col-lg-6 mb-4">
+                                      <label class="form-label">Status</label>
+                                      <select class="form-select" name="status" id="status">
+                                        <option <%= banner.status === 'Active' ? 'selected' : '' %>>Active</option>
+                                        <option <%= banner.status === 'Inactive' ? 'selected' : '' %>>Inactive</option>
+                                      </select>
+                                      <div id="statusError" class="error-message"></div>
+                                  </div>
+                              <div class="mb-4">
+                                  <label class="form-label">Expiry Date</label>
+                                  <input type="date" placeholder="%" class="form-control" name="expiryDate" id="expiryDate" value="<%= banner.expiryDate.toISOString().split('T')[0] %>">
+                                  <div id="expiryDateError" class="error-message"></div>
+                              </div>
+                              <div>
+                                  <button class="btn btn-md" id="submitButton" type="submit">Submit</button>
+                              </div>
+                          </form>
+                          
+                      </div>
+                  </div> 
+                  
               </div>
-            </div>
+              
           </div>
-        </section>
+      </section> <!-- content-main end// -->
+
+      <!-- coupon additon form validation -->
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const submitButton = document.getElementById('submitButton');
+            submitButton.addEventListener("click", (e)=>{
+              if(!validateForm()){
+                e.preventDefault();
+              }
+            });
+
+            function validateForm(){
+              resetErrorMessages();
+              const inputFields = [
+                    { id: 'title', name: 'Banner Title' },
+                    { id: 'subtitle', name: 'Banner Subtitle' },
+                    { id: 'status', name: 'Banner Status' },
+                    { id: 'expiryDate', name: 'Expiry Date' },
+                ];
+
+                let isValid = true;
+
+                inputFields.forEach((field) => {
+                    const originalValue = document.getElementById(field.id).value;
+                    const trimmedValue = originalValue.trim();
+
+                    if (trimmedValue.length === 0) {
+                        showError(`${field.id}Error`, `${field.name} cannot be empty`);
+                        isValid = false;
+                    }
+
+                    if (originalValue !== trimmedValue) {
+                        showError(`${field.id}Error`, `${field.name} cannot have whitespaces`);
+                        isValid = false;
+                    }
+                });
+
+                const expiryDateInput = document.getElementById('expiryDate');
+                const expiryDate = new Date(expiryDateInput.value);
+
+                if (expiryDate < new Date()) {
+                showError('expiryDateError', 'Expiry Date must be in the future');
+                isValid = false;
+                }
+
+                return isValid;
+            }
+
+            function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = message;
+            errorElement.style.color = 'red';
+            }   
+
+        
+            function resetErrorMessages() { 
+                const errorElements = document.querySelectorAll('.error-message');
+                errorElements.forEach((element) => {
+                    element.textContent = '';
+                });
+            }
+
+        });
+    </script>
+
+
         <footer class="main-footer font-xs">
             <div class="row pb-30 pt-15">
                 <div class="col-sm-6">
@@ -305,33 +321,16 @@
             </div>
         </footer>
     </main>
-
-
-
-
-
-
-
-
-
-
-
-
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
     <script src="/admin_assets/js/vendors/jquery-3.6.0.min.js"></script>
     <script src="/admin_assets/js/vendors/bootstrap.bundle.min.js"></script>
     <script src="/admin_assets/js/vendors/select2.min.js"></script>
     <script src="/admin_assets/js/vendors/perfect-scrollbar.js"></script>
     <script src="/admin_assets/js/vendors/jquery.fullscreen.min.js"></script>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-   
-
     <!-- Main Script -->
     <script src="/admin_assets/js/main.js" type="text/javascript"></script>
 </body>
 
 
-<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-categories.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:21 GMT -->
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-form-product-1.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:32 GMT -->
 </html>
+

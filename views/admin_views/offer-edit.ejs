@@ -191,12 +191,8 @@
                             <div class="mb-4" id="offerNameProduct">
                                 <label for="offerNameProduct" class="form-label">Product Name</label>
                                 <select class="form-select" name="offerNameProduct" id="offerNameProductSelect">
-                                    <option value="" disabled>Select Product</option>
-                                    <% products.reverse().forEach(product => { %>
-                                        <% if (product.status == 'Active') { %>
-                                            <option data-action="<%= product._id %>"><%= product.productName %></option>
-                                          <% } %>
-                                    <% }) %>
+                                    <!-- <option value="" disabled>Select Product</option> -->
+                                    <option selected data-action="<%= offerProduct._id %>"><%= offerProduct.productName %></option>                                          
                                 </select>
                                 <div id="offerNameProductSelectError" class="error-message"></div>
                             </div>
@@ -382,8 +378,12 @@
 
 
           const discountPercentageValue = document.getElementById('discountPercentage').value;
-          const startDateValue = new Date(document.getElementById('startDate').value);
+          let startDateValue = new Date(document.getElementById('startDate').value);
           const endDateValue = new Date(document.getElementById('endDate').value);
+          startDateValue.setHours(23, 59, 59, 999);
+
+          console.log(startDateValue.getTime());
+          console.log(Date.now());
 
 
           if (discountPercentageValue <= 0 || discountPercentageValue >=  100) {
@@ -391,12 +391,12 @@
             isValid = false;
           }
 
-          if (isNaN(startDateValue) || startDateValue < new Date()) {
+          if (isNaN(startDateValue) || startDateValue.getTime() < new Date()) {
             showError('startDateError', 'Starting Date cannot be in the past');
             isValid = false;
           }
 
-          if (isNaN(endDateValue) || endDateValue < new Date()) {
+          if (isNaN(endDateValue) || endDateValue.getTime() < new Date()) {
             showError('endDateError', 'Ending Date must be in future');
             isValid = false;
           }

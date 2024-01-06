@@ -16,8 +16,8 @@ const user_checkout = require('../controller/user_controller/user_checkout');
 const {userProfileUpload} = require('../middleware/multer');
 
 user_router.use('/', express.static('public'));
-user_router.use('/productDetails', express.static('public'));
-user_router.use('/view-order', express.static('public'));
+// user_router.use('/productDetails', express.static('public'));
+// user_router.use('/view-order', express.static('public'));
 
 
 //home

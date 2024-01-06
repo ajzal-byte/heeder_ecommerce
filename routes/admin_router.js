@@ -10,8 +10,9 @@ const orders = require('../controller/admin_controller/admin_orders')
 const coupons = require('../controller/admin_controller/admin_coupon')
 const offers = require('../controller/admin_controller/admin_offers');
 const sales = require('../controller/admin_controller/admin_sales');
+const banner = require('../controller/admin_controller/admin_banner');
 const salesReport = require('../helpers/salesReportExcel');
-const {upload} = require('../middleware/multer');
+const {upload, bannerUpload} = require('../middleware/multer');
 const path = require('path')
 
 // admin_router.use('/uploads', express.static('uploads'));
@@ -93,5 +94,13 @@ admin_router.get('/sales-report', adminAuth.adminSession, sales.getSalesReport);
 admin_router.get('/filter-report', adminAuth.adminSession, sales.filterSalesReport);
 admin_router.get('/sales-excel', adminAuth.adminSession, salesReport.salesExcel)
 
+//banner
+admin_router.get('/banners', adminAuth.adminSession, banner.getBanners);
+admin_router.get('/add-banner', adminAuth.adminSession, banner.getAddBanner);
+admin_router.post('/post-add-banner', adminAuth.adminSession, bannerUpload.single('image'), banner.postAddBanner);
+admin_router.get('/edit-banner/:bannerId', adminAuth.adminSession, banner.getEditBanner);
+admin_router.post('/post-edit-banner/:bannerId', adminAuth.adminSession, bannerUpload.single('image'), banner.postEditBanner);
+admin_router.get('/block-banner/:bannerId', adminAuth.adminSession, banner.blockBanner);
+admin_router.get('/unblock-banner/:bannerId', adminAuth.adminSession, banner.unblockBanner);
 
 module.exports = admin_router

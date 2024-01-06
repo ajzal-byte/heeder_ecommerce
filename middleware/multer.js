@@ -25,5 +25,17 @@ const userProfile = multer.diskStorage({
 const userProfileUpload = multer({storage: userProfile})
 
 
-module.exports = {upload, userProfileUpload};
+const bannerImage = multer.diskStorage({
+  destination: (req, file, cb)=>{
+    cb(null, path.join(__dirname, '../public/banner_uploads'));
+  },
+  filename: (req, file, cb)=>{
+    cb(null,Date.now() + path.extname(file.originalname));
+  }
+});
+
+const bannerUpload = multer({storage: bannerImage})
+
+
+module.exports = {upload, userProfileUpload, bannerUpload};
 

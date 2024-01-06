@@ -2,10 +2,12 @@ const userCollection = require('../../models/user_schema');
 const productCollection = require('../../models/products_schema');
 const cartCollection = require('../../models/cart_schema');
 const categoryCollection = require('../../models/category_schema');
+const bannerCollection = require('../../models/banner_schema');
 
 //home page
 module.exports.getHomePage = async(req, res, next)=>{
   try{
+    const banners = await bannerCollection.find();
     const products = await productCollection.find({ status: { $ne: 'Inactive' } }).populate({ path: 'category', model: 'Categories' })
     .sort({ updatedAt: -1 }).limit(6);
     const userSession = req.session.user;
@@ -19,7 +21,7 @@ module.exports.getHomePage = async(req, res, next)=>{
           cartLength = cartLength.products.length;
         }
     }
-    res.render('user_index', {products, userSession, cartLength, user});
+    res.render('user_index', {products, userSession, cartLength, user, banners});
   }catch(error){
     next(error);
   }
@@ -76,6 +78,7 @@ module.exports.getProductDetails = async (req, res, next)=>{
     let user;
     if(userSession){
       user = await userCollection.findOne({email: userSession.email})
+      console.log(user.userProfile);
       cartLength = await cartCollection.findOne({userId: user._id});
       if (cartLength && cartLength.products) {
         // Check if the cart and its products for the user exists

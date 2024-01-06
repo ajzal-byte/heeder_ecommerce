@@ -383,8 +383,9 @@
 
 
           const discountPercentageValue = document.getElementById('discountPercentage').value;
-          const startDateValue = new Date(document.getElementById('startDate').value);
+          let startDateValue = new Date(document.getElementById('startDate').value);
           const endDateValue = new Date(document.getElementById('endDate').value);
+          startDateValue.setHours(23, 59, 59, 999);
 
 
           if (discountPercentageValue <= 0 || discountPercentageValue >=  100) {
@@ -393,13 +394,13 @@
           }
 
           console.log(startDateValue);
-          if (isNaN(startDateValue) || startDateValue <= new Date()) {
+          if (isNaN(startDateValue) || startDateValue.getTime() < new Date()) {
             showError('startDateError', 'Starting Date cannot be in the past');
             isValid = false;
           }
 
           console.log(endDateValue);
-          if (isNaN(endDateValue) || endDateValue < new Date()) {
+          if (isNaN(endDateValue) || endDateValue.getTime() < new Date()) {
             showError('endDateError', 'Ending Date must be in future');
             isValid = false;
           }

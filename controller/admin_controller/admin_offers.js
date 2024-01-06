@@ -56,15 +56,7 @@ module.exports.postAddOffer = async (req, res)=>{
 module.exports.getEditOffer = async (req, res)=>{
   try{
     const offerProduct = await productCollection.findById(req.params.offerId);
-    const nonOfferProducts = await productCollection.find({
-      $or: [
-        { offerStatus: { $ne: 'Active' } },
-        { endDate: { $lt: new Date() } }
-      ]
-    });
-    const products = [offerProduct, ...nonOfferProducts];
-    // const categories = await catgoryCollection.find();
-    res.render('offer-edit', {offerProduct, products});
+    res.render('offer-edit', {offerProduct});
   }catch(error){
     console.error(error);
   }
@@ -75,14 +67,6 @@ module.exports.postEditOffer = async (req, res)=>{
     const { productId, discountPercentage, offerStatus, startDate, endDate } = req.body;
     if (!discountPercentage || !offerStatus || !startDate || !endDate) {
       return res.status(200).json({ error: "Missing required fields" });
-    }
-    const ifExist = await productCollection.findOne({
-      _id: productId,
-      offerStatus: 'Active',
-      endDate: { $gte: new Date() } 
-    });
-    if(ifExist){
-     return res.status(200).json({error: "An active Offer for this product already exists"});
     }
     await productCollection.findByIdAndUpdate(productId,{ 
       discountPercentage,

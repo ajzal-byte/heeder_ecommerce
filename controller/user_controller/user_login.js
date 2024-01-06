@@ -134,7 +134,7 @@ module.exports.getSendOtp = async (req, res, next)=>{
         // Compose and send an email
         const mailOptions = {
           from:{
-            name : "audiophile",
+            name : "heeder.",
             address : process.env.EMAIL_USER,
           },
           to: email,
@@ -211,7 +211,7 @@ module.exports.getforgotSendOtp = async (req, res, next)=>{
       // Compose and send an email
       const mailOptions = {
         from:{
-          name : "audiophile",
+          name : "heeder.",
           address : process.env.EMAIL_USER,
         },
         to: email,
