@@ -13,6 +13,7 @@ const user_profile = require('../controller/user_controller/user_profile');
 const user_address = require('../controller/user_controller/user_address');
 const user_order = require('../controller/user_controller/user_order');
 const user_checkout = require('../controller/user_controller/user_checkout');
+const user_contact = require('../controller/user_controller/user_contact')
 const {userProfileUpload} = require('../middleware/multer');
 
 user_router.use('/', express.static('public'));
@@ -87,6 +88,8 @@ user_router.get('/order-invoice/:orderId', userAuth.userSession, userBlock.ifBlo
 user_router.get('/checkout', userAuth.userSession, userBlock.ifBlocked, user_checkout.checkout);
 user_router.get('/apply-coupon', userAuth.userSession, userBlock.ifBlocked, user_checkout.applyCoupon);
 
+//contact
+user_router.get('/contact', userBlock.ifBlocked, user_contact.getContactPage);
 
 user_router.use(userError.errorHandler);
 user_router.get('/*',userError.errorHandler2);
