@@ -298,6 +298,7 @@
                     subTotalElement.style.display = 'none';
                     outOfStockElement.style.display = 'inline';
                     hasOutOfStockProduct = true;
+
                 }else{
                     subTotalElement.style.display = 'inline';
                     outOfStockElement.style.display = 'none';
@@ -314,16 +315,6 @@
                     noTotal.style.display = 'none'
                 }
 
-                if(quantity > productStock){
-                    Swal.fire({
-                        position: 'top-center',
-                        icon: 'error',
-                        title: "Insufficient Stock",
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                    
-                }
             });
         }
         outOfStock();
