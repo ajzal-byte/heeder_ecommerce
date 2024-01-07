@@ -142,6 +142,7 @@
                                       <th>OrderStatus</th>
                                       <th>PaymentStatus</th>
                                       <th>PaymentMethod</th>
+                                      <th>Delivered on</th>
                                       <th>Total</th>
                                   </tr>
                               </thead>
@@ -157,6 +158,7 @@
                                       <td><%= orderDetails.orderStatus %></td>
                                       <td><%= orderDetails.paymentStatus %></td>
                                       <td><%= orderDetails.paymentMethod %></td>
+                                      <td><%= orderDetails.deliveryDate? moment(orderDetails.deliveryDate).format("MMM Do YY") : 'Not delivered' %></td>
                                     <% if (item?.productId?.offerStatus == "Active" &&  item?.productId?.startDate <= Date.now() && item?.productId?.endDate > Date.now()) { %>
                                         <% let discountPrice = item?.productId?.salePrice * item?.productId?.discountPercentage / 100 * item?.quantity; %>
                                         <td>₹<%= item?.price * item?.quantity - discountPrice %> for <%= item?.quantity%> item</td>
