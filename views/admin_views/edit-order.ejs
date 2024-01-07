@@ -209,7 +209,12 @@
                                           <td><%= orderDetails.orderStatus %></td>
                                           <td><%= orderDetails.paymentStatus %></td>
                                           <td><%= orderDetails.paymentMethod %></td>
-                                          <td>₹<%= item.price * item.quantity %> for <%= item.quantity%> item</td>
+                                          <% if (item?.productId?.offerStatus == "Active" &&  item?.productId?.startDate <= Date.now() && item?.productId?.endDate > Date.now()) { %>
+                                            <% let discountPrice = item?.productId?.salePrice * item?.productId?.discountPercentage / 100 * item?.quantity; %>
+                                            <td>₹<%= item?.price * item?.quantity - discountPrice %> for <%= item?.quantity%> item</td>
+                                        <% } else { %>
+                                            <td>₹<%= item?.price * item?.quantity %> for <%= item?.quantity%> item</td>
+                                        <% } %>
                                       </tr>
                                       
                                       <% }); %>
@@ -217,7 +222,11 @@
                                   <% } %>
                                   </tbody>
                               </table>
-                              <h5 class="d-flex justify-content-end">Total Amount: ₹ <%= orderDetails.totalAmount %></h5>
+                              <h5 class="d-flex justify-content-end">Subtotal: ₹ <%= orderDetails.totalAmount %></h5>
+                              <% if (orderDetails.couponDiscount != 0) { %>
+                                <h5 class="d-flex justify-content-end mb-10">Coupon Discount: ₹ <%= orderDetails.couponDiscount %></h5>
+                              <% } %>
+                              <h5 class="d-flex justify-content-end">Total Paid: ₹ <%= orderDetails.totalAmount - orderDetails.couponDiscount %></h5>
                               <div class="d-flex justify-content-center">
                                   
                                 <div class="d-flex justify-content-between col-3">
