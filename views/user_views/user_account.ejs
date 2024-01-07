@@ -342,10 +342,11 @@
                                                             <label>Profile Image</label>
                                                             <!-- Display current profile image -->
                                                             <div class="profile-pic">
-                                                                <img src="<%= userDetails.userProfile %>" alt="User Profile Picture" style="width: 50px; height: 50px; object-fit: cover;">
+                                                                <img src="/<%= userDetails.userProfile %>" alt="User Profile Picture" style="width: 50px; height: 50px; object-fit: cover;">
                                                             </div>
                                                             <!-- Input for uploading a new profile image -->
                                                             <input required class="form-control" type="file" name="profileImage" id="profileImage">
+                                                            <div id="profileImageError" class="error-message"></div>
                                                         </div>
                                                         <div class="form-group col-md-12 input-upload">
                                                             <label>Phone Number <span class="required">*</span></label>
@@ -426,6 +427,21 @@
 
                                                     if (isNaN(phoneNumber) || phoneNumber.length !== 10 || phoneNumber[0] === '0') {
                                                         showError('phoneNumberError', 'Phone number must be a number with exactly 10 digits and should not start with 0');
+                                                        return false;
+                                                    }
+
+                                                    const fileInput = document.getElementById('profileImage');
+                                                    const allowedFormats = ['jpg', 'jpeg', 'png', 'webp'];
+                                                    const selectedFiles = Array.from(fileInput.files);
+
+                                                    const invalidFormat = selectedFiles.some(file=>{
+                                                        const fileNameParts = file.name.split('.');
+                                                        const fileFormat = fileNameParts[fileNameParts.length - 1].toLowerCase();
+                                                        return !allowedFormats.includes(fileFormat);
+                                                    })
+
+                                                    if(invalidFormat){
+                                                        showError('profileImageError', 'Invalid image format');
                                                         return false;
                                                     }
                                                     return true;
@@ -509,6 +525,7 @@
                                                     function showError(elementId, message) {
                                                         const errorElement = document.getElementById(elementId);
                                                         errorElement.textContent = message;
+                                                        errorElement.style.color = 'red';
                                                     }
 
                                                     // Function to reset error messages
