@@ -19,6 +19,9 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+const nocache = require('nocache');
+app.use(nocache());
+
 app.set('view engine', 'ejs');
 app.set('views', [path.join(__dirname,'views/user_views'), path.join(__dirname,'views/admin_views')]);
 
