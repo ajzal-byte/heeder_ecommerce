@@ -324,7 +324,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <% if (orders && orders.length) { %>
+                                    <% if (orders && orders.length > 0) { %>
                                     <% orders.forEach(order => { %>
                                     <tr>
                                         <td><a href="#" class="fw-bold">orderId_<%= order._id.toString().slice(0, 6) %></a> </td>

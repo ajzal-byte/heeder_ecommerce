@@ -152,16 +152,16 @@
                                       <% orderDetails.products.forEach((item) => { %>
                                         
                                   <tr>
-                                      <td> <a href="/productDetails/<%= item.productId._id %>"><%= item.productId.productName %></a> </td>
+                                      <td> <a href="/productDetails/<%= item?.productId?._id %>"><%= item?.productId?.productName %></a> </td>
                                       <td><%= moment(orderDetails.createdAt).format("MMM Do YY") %></td>
                                       <td><%= orderDetails.orderStatus %></td>
                                       <td><%= orderDetails.paymentStatus %></td>
                                       <td><%= orderDetails.paymentMethod %></td>
-                                    <% if (item.productId.offerStatus == "Active" &&  item.productId.startDate <= Date.now() && item.productId.endDate > Date.now()) { %>
-                                        <% let discountPrice = item.productId.salePrice * item.productId.discountPercentage / 100 * item.quantity; %>
-                                        <td>₹<%= item.price * item.quantity - discountPrice %> for <%= item.quantity%> item</td>
+                                    <% if (item?.productId?.offerStatus == "Active" &&  item?.productId?.startDate <= Date.now() && item?.productId?.endDate > Date.now()) { %>
+                                        <% let discountPrice = item?.productId?.salePrice * item?.productId?.discountPercentage / 100 * item?.quantity; %>
+                                        <td>₹<%= item?.price * item?.quantity - discountPrice %> for <%= item?.quantity%> item</td>
                                     <% } else { %>
-                                        <td>₹<%= item.price * item.quantity %> for <%= item.quantity%> item</td>
+                                        <td>₹<%= item?.price * item?.quantity %> for <%= item?.quantity%> item</td>
                                     <% } %>
                                   </tr>
                                   

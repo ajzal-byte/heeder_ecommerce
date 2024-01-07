@@ -258,21 +258,25 @@
                                                                         <th>Date</th>
                                                                         <th>Order ID</th>
                                                                         <th>Amount</th>
-                                                                        <th>Payment Status</th>
+                                                                        <th>Wallet Status</th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
                                                                     <% userOrders.reverse().forEach(order => { %>
-                                                                        <% if (order.paymentMethod == "Wallet") { %>
+                                                                        <% if ((order.paymentMethod === "Wallet" && order.paymentStatus === "Success") || (order.paymentMethod === "Online Payment" && order.orderStatus === "Cancelled")) { %>
                                                                         <tr>
                                                                             <td class="col-lg-3" ><%= moment(order.orderDate).format("MMM Do YY") %></td> 
-                                                                            <td><%= order._id %></td>
+                                                                            <td>orderId_<%= order._id.toString().slice(0, 6) %></td>
                                                                             <% if (order.couponDiscount > 0) { %>
                                                                             <td> ₹<%= (order.totalAmount - order.couponDiscount).toFixed(2) %> </td>
                                                                             <% } else { %>
                                                                             <td> ₹<%= (order.totalAmount).toFixed(2) %> </td>
                                                                              <% } %>
-                                                                            <td> <%= order.paymentStatus %> </td>
+                                                                            <% if (order.paymentMethod == "Online Payment") { %>
+                                                                            <td class="text-success" >Credited</td>
+                                                                            <% }else{ %>
+                                                                                <td class="text-danger" >Debited</td>
+                                                                            <% } %>
                                                                         </tr>
                                                                     <% }%>
                                                                     <% }); %>
