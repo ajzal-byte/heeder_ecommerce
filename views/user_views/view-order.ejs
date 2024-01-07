@@ -137,6 +137,7 @@
                           <table class="table mb-20">
                               <thead>
                                   <tr>
+                                      <th>Image</th>
                                       <th>Product</th>
                                       <th>Date</th>
                                       <th>OrderStatus</th>
@@ -153,6 +154,7 @@
                                       <% orderDetails.products.forEach((item) => { %>
                                         
                                   <tr>
+                                      <td> <a href="/productDetails/<%= item?.productId?._id %>"><img class="img-sm" src="<%= item.productId?.productImage[0]?.path %>" height="68" width="68"></a></td>
                                       <td> <a href="/productDetails/<%= item?.productId?._id %>"><%= item?.productId?.productName %></a> </td>
                                       <td><%= moment(orderDetails.createdAt).format("MMM Do YY") %></td>
                                       <td><%= orderDetails.orderStatus %></td>
