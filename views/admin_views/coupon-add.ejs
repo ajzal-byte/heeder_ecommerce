@@ -194,12 +194,12 @@
                           <form action="/admin/post-add-coupon" id="coupon-form" method="post">
                               <div class="mb-4">
                                   <label for="couponCode" class="form-label">Coupon Code</label>
-                                  <input type="text" placeholder="Type here" class="form-control" name="couponCode" id="couponCode">
+                                  <input type="text" placeholder="Type here" class="form-control" name="couponCode" id="couponCode" maxlength="10">
                                   <div id="couponCodeError" class="error-message"></div>
                               </div>
                               <div class="mb-4">
                                   <label class="form-label">Coupon description</label>
-                                  <textarea placeholder="Type here" class="form-control" rows="3" name="description" id="description"></textarea>
+                                  <textarea placeholder="Type here" class="form-control" rows="3" name="description" id="description" maxlength="100" ></textarea>
                                   <div id="descriptionError" class="error-message"></div>
                               </div>
                               <div class="row">
