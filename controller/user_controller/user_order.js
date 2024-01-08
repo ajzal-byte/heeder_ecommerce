@@ -15,7 +15,7 @@ var instance = new razorpay({
   key_secret: RAZOR_PAY_key_secret,
 });
 
-module.exports.viewOrders = async (req, res, next)=>{
+const viewOrders = async (req, res, next)=>{
   try{
     const orderId = req.query.orderId;
     const userSession = req.session.user;
@@ -41,7 +41,7 @@ module.exports.viewOrders = async (req, res, next)=>{
   }
 }
 
-module.exports.getOrderPlaced = async (req, res, next)=>{
+const getOrderPlaced = async (req, res, next)=>{
   try{
     const userSession = req.session.user;
     const ifOrderExist = await orderCollection.findById(req.params.orderId);
@@ -53,7 +53,7 @@ module.exports.getOrderPlaced = async (req, res, next)=>{
   }
 }
 
-module.exports.orderViaCod = async (req, res, next)=>{
+const orderViaCod = async (req, res, next)=>{
 try{
   let totalAmount = 0;
   let couponDiscount = 0;
@@ -142,7 +142,7 @@ userCart.products.forEach(product=>{
 }
 }
 
-module.exports.orderViaOnline = async (req, res, next)=>{
+const orderViaOnline = async (req, res, next)=>{
   try{
     let totalAmount = 0;
     let couponDiscount = 0;
@@ -234,7 +234,7 @@ module.exports.orderViaOnline = async (req, res, next)=>{
   }
 }
 
-module.exports.updatePaymentStatus = async (req, res, next)=>{
+const updatePaymentStatus = async (req, res, next)=>{
 try{
   const userSession = req.session.user;
   const paymentStatus = req.query.paymentStatus;
@@ -276,7 +276,7 @@ try{
 }
 }
 
-module.exports.orderViaWallet = async (req, res, next)=>{
+const orderViaWallet = async (req, res, next)=>{
 try{
   let totalAmount = 0;
   let couponDiscount = 0;
@@ -383,7 +383,7 @@ if(userWallet || userWallet == 0){
 }
 }
 
-module.exports.cancelOrder = async (req, res, next)=>{
+const cancelOrder = async (req, res, next)=>{
   try{
     const orderId = req.params.orderId;
     const order = await orderCollection.findById(orderId);
@@ -416,7 +416,7 @@ module.exports.cancelOrder = async (req, res, next)=>{
   }
 }
 
-module.exports.returnOrder = async (req, res, next)=>{
+const returnOrder = async (req, res, next)=>{
   try{
     const orderId = req.params.orderId;
     const order = await orderCollection.findById(orderId);
@@ -451,7 +451,19 @@ module.exports.returnOrder = async (req, res, next)=>{
   }
 }
 
-module.exports.getInvoice = async (req, res)=>{
+const getInvoice = async (req, res)=>{
   const order = await orderCollection.findById(req.params.orderId).populate({path: 'products.productId', model:'Product', populate:{path: 'brand', model: 'brandCollection'}});
   res.render('invoice', {order});
+}
+
+module.exports = {
+  viewOrders,
+  getOrderPlaced,
+  orderViaCod,
+  orderViaOnline,
+  updatePaymentStatus,
+  orderViaWallet,
+  cancelOrder,
+  returnOrder,
+  getInvoice
 }

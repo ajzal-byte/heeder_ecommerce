@@ -5,7 +5,7 @@ const cartCollection = require('../../models/cart_schema');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
-module.exports.getProfile = async (req, res, next)=>{
+const getProfile = async (req, res, next)=>{
 try{
   const userSession = req.session.user;
   let cartLength;
@@ -26,7 +26,7 @@ try{
 }
 }
 
-module.exports.editProfile = async (req, res, next)=>{
+const editProfile = async (req, res, next)=>{
 try{
   const userSession = req.session.user;
   const username = req.body.username;
@@ -49,7 +49,7 @@ try{
 }
 }
 
-module.exports.changePassword = async (req, res, next)=>{
+const changePassword = async (req, res, next)=>{
 try{
 const userSession = req.session.user;
 const user = await userCollection.findOne({email: userSession.email});
@@ -80,4 +80,10 @@ if(!passwordMatch){
 }catch(error){
   next(error);
 }
+}
+
+module.exports = {
+  getProfile,
+  editProfile,
+  changePassword
 }

@@ -3,7 +3,7 @@ const productCollection = require('../../models/products_schema');
 const userCollection = require('../../models/user_schema');
 const cartCollection = require('../../models/cart_schema');
 
-module.exports.getWishlist = async (req, res, next)=>{
+const getWishlist = async (req, res, next)=>{
 try{
   const userSession = req.session.user;
   let cartLength;
@@ -24,7 +24,7 @@ try{
 }
 }
 
-module.exports.addToWishlist = async (req, res, next)=>{
+const addToWishlist = async (req, res, next)=>{
 try{
   const userSession = req.session.user
   if(userSession){
@@ -58,7 +58,7 @@ try{
 }
 }
 
-module.exports.removeFromWishlist = async (req, res, next)=>{
+const removeFromWishlist = async (req, res, next)=>{
   try{
     const userSession = req.session.user;
     const user = await userCollection.findOne({email: userSession.email});
@@ -80,4 +80,10 @@ module.exports.removeFromWishlist = async (req, res, next)=>{
   }catch(error){
     next(error);
   }
+}
+
+module.exports = {
+  getWishlist,
+  addToWishlist,
+  removeFromWishlist
 }
