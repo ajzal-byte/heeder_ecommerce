@@ -7,6 +7,7 @@ const userBlock = require('../middleware/userBlock');
 
 const user_home = require('../controller/user_controller/user_home');
 const user_login = require('../controller/user_controller/user_login');
+const user_signup = require('../controller/user_controller/user_signup');
 const user_wishlist = require('../controller/user_controller/user_whishlist');
 const user_cart = require('../controller/user_controller/user_cart');
 const user_profile = require('../controller/user_controller/user_profile');
@@ -30,18 +31,18 @@ user_router.post('/postLogin', user_login.postUserLogin);
 user_router.get('/logout', user_login.getUserLogout);
 
 //signup
-user_router.get('/signup', user_login.getUserSignup);
-user_router.post('/postSignup', user_login.postUserSignup);
+user_router.get('/signup', user_signup.getUserSignup);
+user_router.post('/postSignup', user_signup.postUserSignup);
 
 //otp
-user_router.get('/sendOtp', user_login.getSendOtp);
-user_router.post('/verifyOtp', user_login.verifyOTP);
+user_router.get('/sendOtp', user_signup.getSendOtp);
+user_router.post('/verifyOtp', user_signup.verifyOTP);
 
 //forgotPassword
-user_router.get('/forgotPassword', user_login.getforgotPassword);
-user_router.get('/forgotSendOtp', user_login.getforgotSendOtp);
-user_router.post('/forgotVerifyOtp', user_login.forgotVerifyOtp);
-user_router.post('/forgotChangePassword', user_login.forgotChangePassword);
+user_router.get('/forgotPassword', user_signup.getforgotPassword);
+user_router.get('/forgotSendOtp', user_signup.getforgotSendOtp);
+user_router.post('/forgotVerifyOtp', user_signup.forgotVerifyOtp);
+user_router.post('/forgotChangePassword', user_signup.forgotChangePassword);
 
 //products
 user_router.get('/products', userBlock.ifBlocked, user_home.getProducts);
