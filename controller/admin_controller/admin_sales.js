@@ -2,7 +2,7 @@ const orderCollection  = require('../../models/orders_schema');
 const userCollection = require('../../models/user_schema');
 const productCollection = require('../../models/products_schema');
 
-module.exports.getSalesReport = async (req, res)=>{
+const getSalesReport = async (req, res)=>{
   try{
   let totalRevenue = 0;
   const orders = await orderCollection
@@ -23,7 +23,7 @@ module.exports.getSalesReport = async (req, res)=>{
   }
 }
 
-module.exports.filterSalesReport = async (req, res)=>{
+const filterSalesReport = async (req, res)=>{
 try{
   const { startDate, endDate } = req.query;
   let totalRevenue = 0;
@@ -54,3 +54,7 @@ try{
 }
 
 
+module.exports = {
+ getSalesReport,
+ filterSalesReport
+}

@@ -5,7 +5,7 @@ const categoryCollection = require('../../models/category_schema');
 const bannerCollection = require('../../models/banner_schema');
 
 //home page
-module.exports.getHomePage = async(req, res, next)=>{
+const getHomePage = async(req, res, next)=>{
   try{
     const banners = await bannerCollection.find();
     const products = await productCollection.find({ status: { $ne: 'Inactive' } }).populate({ path: 'category', model: 'Categories' })
@@ -28,7 +28,7 @@ module.exports.getHomePage = async(req, res, next)=>{
   };
 
 //all products page
-module.exports.getProducts = async (req, res)=>{
+const getProducts = async (req, res)=>{
 try{
   let perPage = 6;
   let page = req.query.page || 1;
@@ -64,7 +64,7 @@ try{
 }
 
 //single product page
-module.exports.getProductDetails = async (req, res, next)=>{
+const getProductDetails = async (req, res, next)=>{
   try{
     const userSession = req.session.user;
     const product_id = req.params.product_id;
@@ -91,7 +91,7 @@ module.exports.getProductDetails = async (req, res, next)=>{
 };
 
 //search product
-module.exports.searchProduct = async (req, res, next)=>{
+const searchProduct = async (req, res, next)=>{
   try{
   let perPage = 6;
   let page = req.query.page || 1;
@@ -143,7 +143,7 @@ module.exports.searchProduct = async (req, res, next)=>{
 }
   
 //filter products
-module.exports.filterProduct = async (req, res, next)=>{
+const filterProduct = async (req, res, next)=>{
 try{
   let products = [];
   const categoryId = req.query.categoryId;
@@ -188,4 +188,13 @@ try{
 }catch(error){
     next(error);
   }
+}
+
+
+module.exports = {
+  getHomePage,
+  getProducts,
+  getProductDetails,
+  searchProduct,
+  filterProduct
 }

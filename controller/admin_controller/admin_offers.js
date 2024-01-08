@@ -2,7 +2,7 @@ const productCollection = require('../../models/products_schema');
 // const catgoryCollection = require('../../models/category_schema');
 
 
-module.exports.getOffers = async (req, res)=>{
+const getOffers = async (req, res)=>{
   try{
     const offers = await productCollection.find({ offerStatus: { $exists: true } });
     res.render('offer-page', {offers});
@@ -11,7 +11,7 @@ module.exports.getOffers = async (req, res)=>{
   }
 }
 
-module.exports.getAddOffer = async (req, res)=>{
+const getAddOffer = async (req, res)=>{
   try{
     const products = await productCollection.find({
       $or: [
@@ -26,7 +26,7 @@ module.exports.getAddOffer = async (req, res)=>{
   }
 }
 
-module.exports.postAddOffer = async (req, res)=>{
+const postAddOffer = async (req, res)=>{
   try{
     const { productId, discountPercentage, offerStatus, startDate, endDate } = req.body;
     if (!discountPercentage || !offerStatus || !startDate || !endDate) {
@@ -53,7 +53,7 @@ module.exports.postAddOffer = async (req, res)=>{
   }
 }
 
-module.exports.getEditOffer = async (req, res)=>{
+const getEditOffer = async (req, res)=>{
   try{
     const offerProduct = await productCollection.findById(req.params.offerId);
     res.render('offer-edit', {offerProduct});
@@ -62,7 +62,7 @@ module.exports.getEditOffer = async (req, res)=>{
   }
 }
 
-module.exports.postEditOffer = async (req, res)=>{
+const postEditOffer = async (req, res)=>{
   try{
     const { productId, discountPercentage, offerStatus, startDate, endDate } = req.body;
     if (!discountPercentage || !offerStatus || !startDate || !endDate) {
@@ -80,7 +80,7 @@ module.exports.postEditOffer = async (req, res)=>{
   }
 }
 
-module.exports.blockOffer = async (req, res)=>{
+const blockOffer = async (req, res)=>{
   try{
     await productCollection.findByIdAndUpdate(req.params.offerId, {
       offerStatus: 'Inactive'
@@ -91,7 +91,7 @@ module.exports.blockOffer = async (req, res)=>{
   }
 }
 
-module.exports.unblockOffer = async (req, res)=>{
+const unblockOffer = async (req, res)=>{
   try{
     await productCollection.findByIdAndUpdate(req.params.offerId, {
       offerStatus: 'Active'
@@ -100,4 +100,14 @@ module.exports.unblockOffer = async (req, res)=>{
   }catch(error){
     console.error(error);
   }
+}
+
+module.exports = {
+  getOffers,
+  getAddOffer,
+  postAddOffer,
+  getEditOffer,
+  postEditOffer,
+  blockOffer,
+  unblockOffer
 }

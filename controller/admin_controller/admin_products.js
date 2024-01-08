@@ -9,7 +9,7 @@ const fs = require('fs');
 
 
 //get product page
-module.exports.getProducts = async (req, res)=>{
+const getProducts = async (req, res)=>{
   try{
       const products = await productCollection.find().sort({updatedAt: -1})
       res.render('products_grid', {products});
@@ -20,7 +20,7 @@ module.exports.getProducts = async (req, res)=>{
 
 
 //get add product page
-module.exports.getAddProduct = async (req, res)=>{
+const getAddProduct = async (req, res)=>{
   try{
     const categories = await category.find();
     const brands = await brandCollection.find();
@@ -32,7 +32,7 @@ module.exports.getAddProduct = async (req, res)=>{
 
 
 //post add product
-module.exports.postAddProduct = async (req, res)=>{
+const postAddProduct = async (req, res)=>{
   try{
   
     const {product_name, product_desc, product_brand,product_cat,product_colour,product_factor,product_connect,product_sale_price,product_stock,product_status} = req.body;
@@ -81,7 +81,7 @@ module.exports.postAddProduct = async (req, res)=>{
 }
 
 //block product
-module.exports.blockProduct = async (req, res)=>{
+const blockProduct = async (req, res)=>{
   try{
     const product_id = req.params.product_id;
     await productCollection.findByIdAndUpdate(product_id, {status: 'Inactive'});
@@ -93,7 +93,7 @@ module.exports.blockProduct = async (req, res)=>{
 
 
 //unblock product
-module.exports.unblockProduct = async (req, res)=>{
+const unblockProduct = async (req, res)=>{
   try{
     const product_id = req.params.product_id;
     await productCollection.findByIdAndUpdate(product_id, {status: 'Active'});
@@ -106,7 +106,7 @@ module.exports.unblockProduct = async (req, res)=>{
 
 
 //view edit product page
-module.exports.editProduct = async (req, res)=>{
+const editProduct = async (req, res)=>{
   try{
     const product_id = req.params.product_id;
   const product_edit = await productCollection.findById(product_id).populate({path:'category', model:'Categories'}).populate({path:'brand', model: 'brandCollection'})
@@ -119,7 +119,7 @@ module.exports.editProduct = async (req, res)=>{
 }
 
 //post edit product
-module.exports.updateProduct = async (req, res)=>{
+const updateProduct = async (req, res)=>{
   try{
     const product_id = req.params.product_id;
     const {product_name, product_desc, product_brand,product_cat,product_colour,product_factor,
@@ -182,7 +182,7 @@ module.exports.updateProduct = async (req, res)=>{
 
 
 //delete image
-module.exports.deleteImage = async(req, res)=>{
+const deleteImage = async(req, res)=>{
 try{
   const productId = req.query.productId;
   const imagePath = req.query.image;
@@ -198,3 +198,13 @@ try{
 }
 
 
+module.exports = {
+  getProducts,
+  getAddProduct,
+  postAddProduct,
+  blockProduct,
+  unblockProduct,
+  editProduct,
+  updateProduct,
+  deleteImage
+}

@@ -2,7 +2,7 @@ const brandCollection = require('../../models/brand_schema');
 
 
 // view category
-module.exports.getBrands = async (req, res)=>{
+const getBrands = async (req, res)=>{
   try{
       const brands = await brandCollection.find();
       res.render('brand_page', {brands});
@@ -12,7 +12,7 @@ module.exports.getBrands = async (req, res)=>{
 }
 
 // add category
-module.exports.addBrands = async (req, res)=>{
+const addBrands = async (req, res)=>{
   try{
     const brandName = req.query.brandName;
     const ifExist = await brandCollection.findOne({brandName});
@@ -33,7 +33,7 @@ module.exports.addBrands = async (req, res)=>{
 }
 
 //view edit category page
-module.exports.editBrands = async (req, res)=>{
+const editBrands = async (req, res)=>{
   try{
     const brand_id = req.params.brand_id;
   const brand_edit = await brandCollection.findById(brand_id);
@@ -44,7 +44,7 @@ module.exports.editBrands = async (req, res)=>{
 }
 
 
-module.exports.updateBrands = async (req, res)=>{
+const updateBrands = async (req, res)=>{
   try{
     const brandID = req.query.brandID;
     const brandName = req.query.brandName;
@@ -63,7 +63,7 @@ module.exports.updateBrands = async (req, res)=>{
   }
 }
 
-module.exports.blockBrands = async (req, res)=>{
+const blockBrands = async (req, res)=>{
   try{
     const brand_id = req.params.brand_id;
     await brandCollection.findByIdAndUpdate(brand_id, {isListed: 'Inactive'});
@@ -73,7 +73,7 @@ module.exports.blockBrands = async (req, res)=>{
   }
 }
 
-module.exports.unblockBrands = async (req, res)=>{
+const unblockBrands = async (req, res)=>{
   try{
     const brand_id = req.params.brand_id;
     await brandCollection.findByIdAndUpdate(brand_id, {isListed: 'Active'});
@@ -81,4 +81,13 @@ module.exports.unblockBrands = async (req, res)=>{
   }catch (error) {
     console.error(error);
   }
+}
+
+module.exports = {
+  getBrands,
+  addBrands,
+  editBrands,
+  updateBrands,
+  blockBrands,
+  unblockBrands
 }

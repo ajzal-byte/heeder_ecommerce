@@ -2,7 +2,7 @@ const category = require('../../models/category_schema');
 
 
 // view category
-module.exports.getCategories = async (req, res)=>{
+const getCategories = async (req, res)=>{
   try{
       const categories = await category.find();
       res.render('page_categories', { categories});
@@ -12,7 +12,7 @@ module.exports.getCategories = async (req, res)=>{
 }
 
 // add category
-module.exports.addCategories = async (req, res)=>{
+const addCategories = async (req, res)=>{
   try{
     const categoryName = req.query.categoryName.toLowerCase();
     const ifExist = await category.findOne({categoryName});
@@ -31,7 +31,7 @@ module.exports.addCategories = async (req, res)=>{
 }
 
 //view edit category page
-module.exports.editCategories = async (req, res)=>{
+const editCategories = async (req, res)=>{
   try{
     const category_id = req.params.category_id;
   const category_edit = await category.findById(category_id);
@@ -42,7 +42,7 @@ module.exports.editCategories = async (req, res)=>{
 }
 
 
-module.exports.updateCategories = async (req, res)=>{
+const updateCategories = async (req, res)=>{
   try{
     const categoryID = req.query.categoryID;
     const categoryName = req.query.categoryName.toLowerCase();
@@ -62,7 +62,7 @@ module.exports.updateCategories = async (req, res)=>{
   }
 }
 
-module.exports.blockCategories = async (req, res)=>{
+const blockCategories = async (req, res)=>{
   try{
     const category_id = req.params.category_id;
     await category.findByIdAndUpdate(category_id, {isListed: 'Inactive'});
@@ -73,7 +73,7 @@ module.exports.blockCategories = async (req, res)=>{
   }
 }
 
-module.exports.unblockCategories = async (req, res)=>{
+const unblockCategories = async (req, res)=>{
   try{
     const category_id = req.params.category_id;
     await category.findByIdAndUpdate(category_id, {isListed: 'Active'});
@@ -82,4 +82,13 @@ module.exports.unblockCategories = async (req, res)=>{
   }catch (error) {
     console.error(error);
   }
+}
+
+module.exports = {
+  getCategories,
+  addCategories,
+  editCategories,
+  updateCategories,
+  blockCategories,
+  unblockCategories
 }

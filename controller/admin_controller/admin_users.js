@@ -1,6 +1,6 @@
 const userCollection = require('../../models/user_schema');
 
-module.exports.getUsers = async (req, res)=>{
+const getUsers = async (req, res)=>{
   try{
       const users = await userCollection.find();
       res.render('users_list', {users});
@@ -9,7 +9,7 @@ module.exports.getUsers = async (req, res)=>{
   }
 }
 
-module.exports.blockUser = async (req, res)=>{
+const blockUser = async (req, res)=>{
   try{
     const user_id = req.params.user_id;
     await userCollection.findByIdAndUpdate(user_id, {status: 'Inactive'});
@@ -21,7 +21,7 @@ module.exports.blockUser = async (req, res)=>{
   }
 }
 
-module.exports.unblockUser = async (req, res)=>{
+const unblockUser = async (req, res)=>{
   try{
     const user_id = req.params.user_id;
     await userCollection.findByIdAndUpdate(user_id, {status: 'Active'});
@@ -34,3 +34,8 @@ module.exports.unblockUser = async (req, res)=>{
 }
 
 
+module.exports = {
+  getUsers,
+  blockUser,
+  unblockUser
+}

@@ -9,7 +9,7 @@ const brandCollection  = require('../../models/brand_schema');
 
 // const user_schema = require('.../models/user_schema');
 
-module.exports.getAdminRoute = async(req, res)=>{
+const getAdminRoute = async(req, res)=>{
   try{
     if(req.session.admin){
       return res.redirect('/admin/dashboard');
@@ -23,7 +23,7 @@ module.exports.getAdminRoute = async(req, res)=>{
 
 
 //checking entered deatils and database deatils of admin
-module.exports.postAdminRoute = async (req, res) => {
+const postAdminRoute = async (req, res) => {
   try{
     const data = await adminCollection.findOne({ email: req.body.email });
     if(!data) {
@@ -49,7 +49,7 @@ module.exports.postAdminRoute = async (req, res) => {
   }
 };
 
-module.exports.getAdminLogout = async(req, res)=>{
+const getAdminLogout = async(req, res)=>{
   try{
   req.session.admin = null;
   res.redirect('/admin/login');
@@ -58,7 +58,7 @@ module.exports.getAdminLogout = async(req, res)=>{
   }
 }
 
-module.exports.getAdminDashboard = async(req, res)=>{
+const getAdminDashboard = async(req, res)=>{
   try{
     let revenue = 0
     const products = await porductCollection.find();
@@ -89,4 +89,11 @@ module.exports.getAdminDashboard = async(req, res)=>{
   }catch (error) {
     console.error(error);
   }
+}
+
+module.exports = {
+  getAdminRoute,
+  postAdminRoute,
+  getAdminLogout,
+  getAdminDashboard
 }

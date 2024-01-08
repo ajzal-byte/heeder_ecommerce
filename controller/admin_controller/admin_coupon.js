@@ -1,6 +1,6 @@
 const couponCollection = require("../../models/coupon_schema");
 
-module.exports.getCoupons = async (req, res)=>{
+const getCoupons = async (req, res)=>{
   try{
     const coupons = await couponCollection.find();
     res.render('coupon_page', {coupons});
@@ -9,7 +9,7 @@ module.exports.getCoupons = async (req, res)=>{
   }
 }
 
-module.exports.getAddCoupon = async (req, res)=>{
+const getAddCoupon = async (req, res)=>{
   try{
     res.render('coupon-add');
   }catch(error){
@@ -17,7 +17,7 @@ module.exports.getAddCoupon = async (req, res)=>{
   }
 }
 
-module.exports.postAddCoupon = async (req, res)=>{
+const postAddCoupon = async (req, res)=>{
   try{
     const couponCode = req.query.couponCode;
     const ifExist = await couponCollection.findOne({couponCode});
@@ -34,7 +34,7 @@ module.exports.postAddCoupon = async (req, res)=>{
   }
 }
 
-module.exports.getEditCoupon = async (req, res)=>{
+const getEditCoupon = async (req, res)=>{
   try{
     const coupon_id = req.params.coupon_id;
     const coupon_edit = await couponCollection.findOne({_id: coupon_id});
@@ -44,7 +44,7 @@ module.exports.getEditCoupon = async (req, res)=>{
   }
 }
 
-module.exports.postEditCoupon = async (req, res)=>{
+const postEditCoupon = async (req, res)=>{
   try{
     const coupon_id = req.params.coupon_id; 
     const couponCode = req.query.couponCode;
@@ -62,7 +62,7 @@ module.exports.postEditCoupon = async (req, res)=>{
   }
 }
 
-module.exports.blockCoupon = async(req, res)=>{
+const blockCoupon = async(req, res)=>{
   try{
     const coupon_id = req.params.coupon_id;
     await couponCollection.findByIdAndUpdate(coupon_id, {status: 'Inactive'});
@@ -72,7 +72,7 @@ module.exports.blockCoupon = async(req, res)=>{
   }
 }
 
-module.exports.unblockCoupon = async(req, res)=>{
+const unblockCoupon = async(req, res)=>{
   try{
     const coupon_id = req.params.coupon_id;
     await couponCollection.findByIdAndUpdate(coupon_id, {status: 'Active'});
@@ -80,4 +80,14 @@ module.exports.unblockCoupon = async(req, res)=>{
   }catch(error){
     console.error(error);
   }
+}
+
+module.exports = {
+  getCoupons,
+  getAddCoupon,
+  postAddCoupon,
+  getEditCoupon,
+  postEditCoupon,
+  blockCoupon,
+  unblockCoupon
 }

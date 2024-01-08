@@ -3,7 +3,7 @@ const userCollection = require('../../models/user_schema');
 const productCollection = require('../../models/products_schema');
 
 
-module.exports.getOrders = async (req, res)=>{
+const getOrders = async (req, res)=>{
 try{
   let perPage = 5;
   let page = req.query.page || 1;
@@ -27,7 +27,7 @@ try{
 }
 }
 
-module.exports.viewOrder = async (req, res)=>{
+const viewOrder = async (req, res)=>{
 try{
   if(req.session.admin){
     const orderId = req.params.orderId;
@@ -41,7 +41,7 @@ try{
 }
 }
 
-module.exports.dispatchOrder = async (req, res)=>{
+const dispatchOrder = async (req, res)=>{
 try{
   const orderId = req.params.orderId;
   await orderCollection.findByIdAndUpdate(orderId, {orderStatus: 'Shipped'});
@@ -51,7 +51,7 @@ try{
 }
 }
 
-module.exports.cancelOrder = async (req, res)=>{
+const cancelOrder = async (req, res)=>{
 try{
   const orderId = req.params.orderId;
   const order = await orderCollection.findById(orderId);
@@ -84,7 +84,7 @@ try{
 }
 }
 
-module.exports.deliverOrder = async (req, res)=>{
+const deliverOrder = async (req, res)=>{
 try{
   const orderId = req.params.orderId;
   await orderCollection.findByIdAndUpdate(orderId, {orderStatus: 'Delivered', paymentStatus: 'Success', deliveryDate: Date.now()});
@@ -92,4 +92,12 @@ try{
 }catch(error){
   console.error(error);
 }
+}
+
+module.exports = {
+  getOrders,
+  viewOrder,
+  dispatchOrder,
+  cancelOrder,
+  deliverOrder
 }

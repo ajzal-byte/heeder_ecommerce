@@ -3,7 +3,7 @@ const productCollection = require('../../models/products_schema');
 const userCollection = require('../../models/user_schema');
 
 
-module.exports.getCart = async (req, res, next)=>{
+const getCart = async (req, res, next)=>{
   try{
       const userSession = req.session.user;
       let cartLength;
@@ -25,7 +25,7 @@ module.exports.getCart = async (req, res, next)=>{
   }
 }
 
-module.exports.addtoCart = async (req, res, next)=>{
+const addtoCart = async (req, res, next)=>{
   try{
     const userSession = req.session.user
     if(userSession){
@@ -62,7 +62,7 @@ module.exports.addtoCart = async (req, res, next)=>{
   }
 }
 
-module.exports.updateCart = async (req, res, next)=>{
+const updateCart = async (req, res, next)=>{
   try{
     const userSession = req.session.user;
     const user = await userCollection.findOne({email: userSession.email});
@@ -98,7 +98,7 @@ module.exports.updateCart = async (req, res, next)=>{
   }
 }
 
-module.exports.removeCart = async (req, res, next)=>{
+const removeCart = async (req, res, next)=>{
   try{
     const userSession = req.session.user;
     const user = await userCollection.findOne({email: userSession.email});
@@ -120,4 +120,11 @@ module.exports.removeCart = async (req, res, next)=>{
   }catch(error){
     next(error);
   }
+}
+
+module.exports = {
+  getCart,
+  addtoCart,
+  updateCart,
+  removeCart
 }

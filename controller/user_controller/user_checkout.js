@@ -4,7 +4,7 @@ const cartCollection = require('../../models/cart_schema');
 const couponCollection = require('../../models/coupon_schema');
 
 
-module.exports.checkout = async (req, res, next)=>{
+const checkout = async (req, res, next)=>{
   try{
     let subTotal = 0;
     let grandTotal = 0;
@@ -50,7 +50,7 @@ module.exports.checkout = async (req, res, next)=>{
   }
 }
 
-module.exports.applyCoupon = async (req, res, next)=>{
+const applyCoupon = async (req, res, next)=>{
   try{
     const userSession = req.session.user;
     const user = await userCollection.findOne({email: userSession.email});
@@ -99,4 +99,9 @@ module.exports.applyCoupon = async (req, res, next)=>{
   }catch(error){
     next(error);
   }
+}
+
+module.exports = {
+  checkout,
+  applyCoupon
 }

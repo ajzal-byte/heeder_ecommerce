@@ -1,7 +1,7 @@
 const bannerCollection = require('../../models/banner_schema');
 
 
-module.exports.getBanners = async (req, res)=>{
+const getBanners = async (req, res)=>{
   try{
     const banners = await bannerCollection.find();
     res.render('banners-page', {banners});
@@ -9,7 +9,7 @@ module.exports.getBanners = async (req, res)=>{
     console.error(error);
   }
 }
-module.exports.getAddBanner = async (req, res)=>{
+const getAddBanner = async (req, res)=>{
   try{
     res.render('banner-add.ejs');
   }catch(error){
@@ -17,7 +17,7 @@ module.exports.getAddBanner = async (req, res)=>{
   }
 }
 
-module.exports.postAddBanner = async (req, res)=>{
+const postAddBanner = async (req, res)=>{
   try{
     const { title, subtitle, status, expiryDate } = req.body;
     if(req.file){
@@ -38,7 +38,7 @@ module.exports.postAddBanner = async (req, res)=>{
   }
 }
 
-module.exports.getEditBanner = async (req, res)=>{
+const getEditBanner = async (req, res)=>{
   try{
     const banner = await bannerCollection.findById(req.params.bannerId)
     res.render('banner-edit.ejs', {banner});
@@ -47,7 +47,7 @@ module.exports.getEditBanner = async (req, res)=>{
   }
 }
 
-module.exports.postEditBanner = async (req, res)=>{
+const postEditBanner = async (req, res)=>{
   try{
     const { title, subtitle, status, expiryDate } = req.body;
     const banner = await bannerCollection.findById(req.params.bannerId);
@@ -70,7 +70,7 @@ module.exports.postEditBanner = async (req, res)=>{
   }
 }
 
-module.exports.blockBanner = async (req, res)=>{
+const blockBanner = async (req, res)=>{
   try{
     await bannerCollection.findByIdAndUpdate(req.params.bannerId,{
       status: "Inactive",
@@ -81,7 +81,7 @@ module.exports.blockBanner = async (req, res)=>{
   }
 }
 
-module.exports.unblockBanner = async (req, res)=>{
+const unblockBanner = async (req, res)=>{
   try{
     await bannerCollection.findByIdAndUpdate(req.params.bannerId,{
       status: "Active",
@@ -92,3 +92,12 @@ module.exports.unblockBanner = async (req, res)=>{
   }
 }
 
+module.exports = {
+  getBanners,
+  getAddBanner,
+  postAddBanner,
+  getEditBanner,
+  postEditBanner,
+  blockBanner,
+  unblockBanner,
+}
