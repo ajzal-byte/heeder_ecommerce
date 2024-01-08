@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const {v4: uuidv4} = require('uuid');
 require('dotenv').config();
-const LOCAL_STR = 'mongodb://localhost:27017/audiophile';
+const LOCAL_STR = process.env.mongoDBUrl;
 const moment = require('moment')
 
 
