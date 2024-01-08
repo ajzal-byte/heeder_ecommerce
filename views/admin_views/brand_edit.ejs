@@ -207,9 +207,7 @@
     
                 if(validateForm()){
                     const brandID = '<%= brand_edit._id %>'
-                    console.log(brandID);
                     const brandName = document.getElementById('brandName').value;
-                    console.log(brandName);
                 fetch(`/admin/updateBrands?brandID=${brandID}&brandName=${brandName}`, {method: 'POST'})
     
                 .then((response)=>{

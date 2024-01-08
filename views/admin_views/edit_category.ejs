@@ -207,9 +207,7 @@
     
                 if(validateForm()){
                     const categoryId = '<%= category_edit._id %>'
-                    console.log(categoryId);
                     const categoryName = document.getElementById('categoryName').value;
-                    console.log(categoryName);
                 fetch(`/admin/updateCategories?categoryID=${categoryId}&categoryName=${categoryName}`, {method: 'POST'})
     
                 .then((response)=>{

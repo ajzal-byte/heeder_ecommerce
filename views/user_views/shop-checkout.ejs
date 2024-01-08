@@ -198,7 +198,6 @@
                             document.addEventListener("DOMContentLoaded", ()=>{
                                 const submitButton = document.getElementById('submitButton');
                                 submitButton.addEventListener("click", (e)=>{
-                                    console.log(validateForm());
                                     if(!validateForm()){
                                         e.preventDefault();
                                     }
@@ -464,7 +463,6 @@
                         timer: 1500
                         });
                     }else if(data.message){
-                        console.log('success');
                         Swal.fire({
                         position: 'center',
                         icon: 'success',
@@ -578,7 +576,6 @@
             e.preventDefault();
             const radioButtons = document.querySelectorAll('.select-address');
             let selectedAddressValue = null;
-            console.log(couponInput);
             for (const radioButton of radioButtons) {
                 
                 if(radioButton.checked){
@@ -603,8 +600,6 @@
                             timer: 1500
                             });
                         }else if(data.razorOrderId){
-                            console.log('response received');
-                            console.log(razorOrderId);
                             var razorOrderId = data.razorOrderId;
                             var orderId = data.orderId
                             // Initialize the Razorpay payment with the order_id
@@ -617,9 +612,7 @@
                                 handlePaymentSuccess(razorOrderId, response, orderId)
                             }
                             };
-                            console.log(' new razorpay');
                             var rzp1 = new Razorpay(options);
-                            console.log('razorpay open()');
                             rzp1.open();
                             rzp1.on('payment.failed', response=>{
                                 console.log("Payment Failed");
@@ -628,8 +621,6 @@
                         }
                     }).catch(error=>{
                         console.error(error);
-                        console.log('some error');
-                        // window.location.href = '/login';
                     })
                     break;
                 }

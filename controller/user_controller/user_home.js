@@ -78,7 +78,6 @@ module.exports.getProductDetails = async (req, res, next)=>{
     let user;
     if(userSession){
       user = await userCollection.findOne({email: userSession.email})
-      console.log(user.userProfile);
       cartLength = await cartCollection.findOne({userId: user._id});
       if (cartLength && cartLength.products) {
         // Check if the cart and its products for the user exists
@@ -167,22 +166,17 @@ try{
         status: { $ne: 'Inactive' },
         category: categoryId
     }).sort({ salePrice: parseFloat(sort) }).populate({ path: 'category', model: 'Categories' });
-    console.log('category and sort');
 } else if (categoryId && !sort) {
     products = await productCollection.find({
         status: { $ne: 'Inactive' },
         category: categoryId
     }).populate({ path: 'category', model: 'Categories' });
-    console.log('category only');
 } else if (!categoryId && sort) {
     products = await productCollection.find({ status: { $ne: 'Inactive' } }).sort({ salePrice: parseFloat(sort) }).populate({ path: 'category', model: 'Categories' });
-    console.log('sort only');
 } else {
     products = await productCollection.find({ status: { $ne: 'Inactive' } }).populate({ path: 'category', model: 'Categories' });
-    console.log('none');
 }
   const totalProducts = products.length;
-  console.log(products);
   res.render('products-page', {
     products, 
     categories,

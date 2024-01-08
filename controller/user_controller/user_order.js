@@ -210,7 +210,6 @@ module.exports.orderViaOnline = async (req, res, next)=>{
     const razorOrder = await instance.orders.create(options);
 
     //order creation
-    console.log(razorOrder.id);
     const createdOrder = await orderCollection.create({
       userId: user._id, 
       orderId: razorOrder.id,

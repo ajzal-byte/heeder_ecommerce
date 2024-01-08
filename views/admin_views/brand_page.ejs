@@ -283,7 +283,6 @@
 
             if(validateForm()){
             const brandName = document.getElementById('brandName').value;
-            console.log(brandName);
             fetch(`/admin/addBrands?brandName=${brandName}`, {method: 'POST'})
 
             .then((response)=>{

@@ -44,7 +44,6 @@ try{
 module.exports.dispatchOrder = async (req, res)=>{
 try{
   const orderId = req.params.orderId;
-  console.log(orderId);
   await orderCollection.findByIdAndUpdate(orderId, {orderStatus: 'Shipped'});
   res.redirect(`/admin/view-order/${orderId}`)
 }catch(error){

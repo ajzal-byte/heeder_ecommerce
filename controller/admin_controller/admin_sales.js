@@ -27,7 +27,6 @@ module.exports.filterSalesReport = async (req, res)=>{
 try{
   const { startDate, endDate } = req.query;
   let totalRevenue = 0;
-  console.log(startDate, endDate);
   let orders = [];
   if (startDate && endDate) {
     orders = await orderCollection.find({

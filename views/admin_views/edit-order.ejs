@@ -261,9 +261,7 @@
 
                                     function handleButtonClick(event, button) {
                                     event.preventDefault();
-                                    console.log(`${button.id} clicked`);
                                     const action = button.getAttribute('data-action');
-                                    console.log('Action:', action);
                                     Swal.fire({
                                         title: "Are you sure?",
                                         text: "You will not be able to revert this!",

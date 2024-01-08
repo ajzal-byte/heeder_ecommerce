@@ -50,11 +50,8 @@ module.exports.getEditBanner = async (req, res)=>{
 module.exports.postEditBanner = async (req, res)=>{
   try{
     const { title, subtitle, status, expiryDate } = req.body;
-    console.log({ title, subtitle, status, expiryDate } );
-    console.log(req.file);
     const banner = await bannerCollection.findById(req.params.bannerId);
     let image = banner.image;
-    console.log(image);
     if(req.file){
       image = `/banner_uploads/${req.file.filename}`;
     }

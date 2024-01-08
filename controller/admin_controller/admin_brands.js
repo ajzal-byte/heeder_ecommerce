@@ -15,7 +15,6 @@ module.exports.getBrands = async (req, res)=>{
 module.exports.addBrands = async (req, res)=>{
   try{
     const brandName = req.query.brandName;
-    console.log(brandName);
     const ifExist = await brandCollection.findOne({brandName});
   if(ifExist){
     res.status(200).json({error: "Brand already exists"})
@@ -49,9 +48,7 @@ module.exports.updateBrands = async (req, res)=>{
   try{
     const brandID = req.query.brandID;
     const brandName = req.query.brandName;
-    console.log(brandName);
     const ifExist = await brandCollection.findOne({brandName, _id : {$ne:brandID}});
-    console.log(ifExist)
     if(ifExist){   
       res.status(200).json({error: "Brand already exists"})
     }else{

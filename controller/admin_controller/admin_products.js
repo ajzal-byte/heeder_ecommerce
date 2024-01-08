@@ -128,7 +128,6 @@ module.exports.updateProduct = async (req, res)=>{
       // Retrieve existing product data
       const existingProduct = await productCollection.findById(product_id);
 
-      // console.log(existingProduct.productImage)
       // Check if new images were uploaded
     let productImages = existingProduct.productImage;
     if (req.files && req.files.length > 0) {
@@ -187,7 +186,6 @@ module.exports.deleteImage = async(req, res)=>{
 try{
   const productId = req.query.productId;
   const imagePath = req.query.image;
-  console.log(imagePath)
   console.log("deleting image", imagePath);
   await productCollection.updateOne({_id: productId},  { $pull: { productImage: { path: imagePath } } } )
   const product_edit = await productCollection.findById(productId);

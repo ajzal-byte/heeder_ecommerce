@@ -102,9 +102,7 @@ module.exports.removeCart = async (req, res, next)=>{
   try{
     const userSession = req.session.user;
     const user = await userCollection.findOne({email: userSession.email});
-    console.log(user);
     const productId = req.query.productId;
-    console.log(productId);
     await cartCollection.findOneAndUpdate(
       {
         userId: user._id,

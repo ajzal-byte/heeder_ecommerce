@@ -11,10 +11,6 @@ module.exports.salesExcel = async (req, res)=>{
     .populate({path:'userId', model:'userCollection'})
     .sort({createdAt: -1})
     .exec();
-    orders.forEach(order=>{
-      console.log(order._id);
-      console.log(order.userId.username);
-    });
     const workbook = new excelJS.Workbook();
     const worksheet = workbook.addWorksheet('Sales Report');
     worksheet.columns = [

@@ -18,7 +18,6 @@ try{
       const user = await userCollection.findOne({email: userSession.email});
       const userWishlist = await wishlistCollection
       .findOne({userId: user._id}).populate({path:'products.productId', model:'Product', populate: {path:'brand', model: 'brandCollection'}});
-      console.log(userWishlist);
       res.render('whishlist', {userSession, userWishlist, cartLength, user});
 }catch(error){
   next(error)
@@ -64,7 +63,6 @@ module.exports.removeFromWishlist = async (req, res, next)=>{
     const userSession = req.session.user;
     const user = await userCollection.findOne({email: userSession.email});
     const productId = req.query.productId;
-    console.log(productId);
     await wishlistCollection.findOneAndUpdate(
       {
         userId: user._id,

@@ -406,7 +406,6 @@
                     add.addEventListener('click', (e)=>{
                         e.preventDefault()
                         const productId = add.getAttribute('data-product-id')
-                        console.log(productId);
                         fetch(`/addtoWishlist?productId=${productId}`,{method:'POST'} )
                         .then((response)=>{
                             if(!response.ok){
@@ -417,7 +416,6 @@
 
                         .then((data)=>{
                             console.log("Response from server", data);
-                            console.log('here')
                             if(data.message){
                             Swal.fire({
                             position: 'top-center',
@@ -449,7 +447,6 @@
                     add.addEventListener('click', (e)=>{
                         e.preventDefault()
                         const productId = add.getAttribute('data-product-id')
-                        console.log(productId);
                         fetch(`/addtoCart?productId=${productId}`,{method:'POST'} )
                         .then((response)=>{
                             if(!response.ok){
@@ -460,7 +457,6 @@
 
                         .then((data)=>{
                             console.log("Response from server", data);
-                            console.log('here')
                             if(data.message){
                             Swal.fire({
                             position: 'top-center',
