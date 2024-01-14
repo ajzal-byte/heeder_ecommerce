@@ -37,8 +37,7 @@
 - AWS EC2 for secure and reliable hosting (previously)
 - Render for current hosting, providing optimal performance
 
-
-
+## How to use:
 ```bash
 # Clone the repository
 git clone https://github.com/ajzal-byte/heeder_ecommerce.git
